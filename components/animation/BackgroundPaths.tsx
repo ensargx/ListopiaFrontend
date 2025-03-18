@@ -55,7 +55,7 @@ function FloatingPaths({ position }: { position: number }) {
 
 export default function BackgroundPaths({
   title = "Listopia",
-  logo = <Image src="listopia.svg" alt="Logo" width={150} height={50} className="mx-auto w-auto h-auto" />,
+  logo = <Image src="/listopia.svg" alt="Logo" width={150} height={50} className="mx-auto w-auto h-auto" />,
   description = "Track films you've watched. Save those you want to watch. Share with your friends what's good.",
 }: {
   title?: string
