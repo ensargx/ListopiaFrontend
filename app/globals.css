@@ -127,3 +127,18 @@
 .native-font {
   font-family: 'SF Pro Display', serif;
 }
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999; /* İçerik üstünde kalması için */
+  background-color: #fff; /* Arka plan rengi */
+  /* İsteğe bağlı ek stil tanımları */
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Kaydırma çubuklarını kaldırır ve kaydırmayı engeller */
+}

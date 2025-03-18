@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import BackgroundPaths from '../../components/animation/BackgroundPaths';
+import GetStartedPage from "@/app/get-started/GetStartedPage";
 
-export default function Banner(){
+export default function GetStarted(){
     return <div >
-        <BackgroundPaths/>
+        <GetStartedPage/>
         </div>
    
 };

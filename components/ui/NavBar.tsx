@@ -44,9 +44,9 @@ export default function NavBar() {
   // Pencere boyutuna göre isMobile durumunu ayarla
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 800);
+      setIsMobile(window.innerWidth < 860);
       // Eğer genişlik desktop boyutuna dönerse, animasyonlu menüyü kapat.
-      if (window.innerWidth >= 800) {
+      if (window.innerWidth >= 860) {
         setShowMenus(false);
       }
     };
@@ -66,7 +66,7 @@ export default function NavBar() {
   };
 
   return (
-    <Container className="bg-gray-900 h-20 backdrop-blur-md p-4 flex items-center">
+    <Container className=" relative bg-gray-900 h-20 backdrop-blur-md p-4 flex items-center justify-between">
       {/* Sol kısım: Logo */}
       <motion.button
         initial={{ opacity: 0 }}
@@ -80,7 +80,7 @@ export default function NavBar() {
       {/* Sağ kısım: Arama, menü ve profil ikonları */}
       <div className="flex items-center ml-auto space-x-6 text-white">
         <Separator orientation="vertical" className=" h-5" />
-        
+
         {/* Eğer mobil değilsek, SlideTabs her zaman gösterilsin */}
         {!isMobile ? (
           <SlideTabs />
@@ -113,7 +113,7 @@ export default function NavBar() {
                   animate={{ width: 200, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="overflow-auto max-h-[calc(160vh-80px)]"
+                  className="absolute right-0 top-full mt-2 ml-8 overflow-auto max-h-[calc(160vh-80px)]"
 
                 >
                   <SlideTabs />
@@ -124,7 +124,7 @@ export default function NavBar() {
         )}
 
         <Separator orientation="vertical" className="bg-white/20 h-5" />
-        
+
         <AnimatePresence>
           {showSearch && (
             <motion.div
@@ -143,7 +143,7 @@ export default function NavBar() {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Arama İkonu */}
         <button onClick={handleSearchIconClick} className="focus:outline-none">
           <svg
@@ -162,7 +162,7 @@ export default function NavBar() {
             <path d="m21 21-4.3-4.3" />
           </svg>
         </button>
-        
+
         {/* Profil İkonu */}
         <Button className="w-8 h-8 p-0">
           <Image

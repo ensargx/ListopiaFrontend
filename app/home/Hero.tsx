@@ -5,9 +5,9 @@ import React from 'react';
 import Image from 'next/image';
 
 
-function HeroBanner() {
+export default function HeroBanner() {
   return (
-    <AspectRatio ratio={16 / 9}>
+    <AspectRatio ratio={16 / 9} className="header opacity-50 blur-sm">
       <Image
         width={800}
         height={20}
@@ -19,9 +19,3 @@ function HeroBanner() {
   );
 }
 
-export default function Hero() {
-  return (
-    <HeroBanner/>
-     
-  );
-}

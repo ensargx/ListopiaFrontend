@@ -23,15 +23,12 @@ export default function SlideTabs(): React.ReactElement {
   const [position, setPosition] = useState<TabPosition>(activePosition);
 
   const handleClick1 = () => {
-    router.push("/home/main-menu");
-  };
-  const handleClick2 = () => {
     router.push("/home/new-releases");
   };
-  const handleClick3 = () => {
+  const handleClick2 = () => {
     router.push("/home/genre");
   };
-  const handleClick4 = () => {
+  const handleClick3 = () => {
     router.push("/home/movie");
   };
 
@@ -51,7 +48,7 @@ export default function SlideTabs(): React.ReactElement {
         setActivePosition={setActivePosition}
         onClick={handleClick1}
       >
-        Main Menu
+        New Releases
       </Tab>
       <Tab
         index={1}
@@ -61,7 +58,7 @@ export default function SlideTabs(): React.ReactElement {
         setActivePosition={setActivePosition}
         onClick={handleClick2}
       >
-        New Releases
+        Genre
       </Tab>
       <Tab
         index={2}
@@ -70,16 +67,6 @@ export default function SlideTabs(): React.ReactElement {
         setPosition={setPosition}
         setActivePosition={setActivePosition}
         onClick={handleClick3}
-      >
-        Genre
-      </Tab>
-      <Tab
-        index={3}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setPosition={setPosition}
-        setActivePosition={setActivePosition}
-        onClick={handleClick4}
       >
         Movie
       </Tab>
@@ -138,7 +125,7 @@ function Tab({
       ref={ref}
       onMouseEnter={handleMouseEnter}
       onClick={handleClick}
-      className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-white mix-blend-difference md:px-5 md:py-3 md:text-base"
+      className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-white mix-blend-difference md:px-5 md:py-2 md:text-base"
     >
       {children}
     </li>
@@ -155,7 +142,7 @@ function Cursor({ position }: CursorProps): React.ReactElement {
       animate={{
         ...position,
       }}
-      className="absolute z-0 h-4 bottom-0 rounded-full bg-white md:h-1"
+      className="absolute z-0 h-1 bottom-0 rounded-full bg-white "
     />
   );
 }

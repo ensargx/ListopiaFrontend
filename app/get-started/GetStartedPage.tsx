@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"  // Next.js yönlendirme hook'u
-import ImageAnimation from "./HomePageAnimation"
+import ImageAnimation from "./ImageAnimation"
 import Image from 'next/image';
 
 function FloatingPaths({ position }: { position: number }) {
@@ -53,7 +53,7 @@ function FloatingPaths({ position }: { position: number }) {
   )
 }
 
-export default function BackgroundPaths({
+export default function GetStartedPage({
   title = "Listopia",
   logo = <Image src="/listopia.svg" alt="Logo" width={150} height={50} className="mx-auto w-auto h-auto" />,
   description = "Track films you've watched. Save those you want to watch. Share with your friends what's good.",
@@ -76,11 +76,11 @@ export default function BackgroundPaths({
     exit={{ opacity: 0, y: -20 }}
     transition={{ duration: 0.5 }}
     >
-  
+
       <div className="fixed inset-0 blur-sm opacity-50">
         <ImageAnimation/>
         <ImageAnimation/>
-      
+
       </div>
       <div>
       <FloatingPaths position={0.5} />
@@ -144,7 +144,7 @@ export default function BackgroundPaths({
               onClick={handleClick}  // Butona tıklanınca yönlendirme işlemi gerçekleşecek
               className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 text-black dark:text-white transition-all duration-300 group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10 hover:shadow-md dark:hover:shadow-neutral-800/50"
             >
-              <span className="native font opacity-90 group-hover:opacity-80 transition-opacity">
+              <span className="native-font opacity-90 group-hover:opacity-80 transition-opacity">
                 Get Started
               </span>
               <span
@@ -158,6 +158,6 @@ export default function BackgroundPaths({
       </div>
     </motion.div>
     </AnimatePresence>
-  
+
   )
 }

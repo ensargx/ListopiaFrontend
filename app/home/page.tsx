@@ -1,7 +1,8 @@
-import Hero from "@/components/ui/Hero";
+import HeroBanner from "@/app/home/Hero";
 
 export default function Home() {
   return  <>
-        <Hero/>
+        <HeroBanner/>
+
   </>
 }

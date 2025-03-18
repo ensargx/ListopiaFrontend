@@ -55,7 +55,7 @@ export default function ResetPosterFlow() {
           height={750} // Add an appropriate height value
           className="px-2" // Use className instead of style for padding
           style={{ 
-            width: `${100 / (posters.length / 4)}%` // You can keep this for percentage-based width
+            width: `${60/ (posters.length / 4)}%` // You can keep this for percentage-based width
           }} 
         />
         ))}

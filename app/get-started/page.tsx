@@ -1,5 +1,5 @@
-import Banner from ".";
+import GetStarted from ".";
 
 export default function HomePage() {
-  return  <Banner/>
+  return  <GetStarted/>
 }
