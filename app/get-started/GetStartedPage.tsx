@@ -131,9 +131,9 @@ export default function GetStartedPage({
           </motion.h1>
 
           {/* Description */}
-          <p className="logo-font mb-8 text-lg text-white dark:text-black ">
+          <h6 className="logo-font mb-8 text-lg text-white dark:text-black ">
             {description}
-          </p>
+          </h6>
 
           {/* Button */}
           <div

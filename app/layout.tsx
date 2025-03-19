@@ -26,12 +26,11 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
-        <footer
-          style={{
-            padding: "1rem",
-          }}>
-            <p>Footer</p>
+           <main className="flex-grow">
+               {children}
+          </main>
+        <footer className="px-8 py-4 bg-gray-900 ">
+          <p className="text-center text-sm text-neutral-500">Listopia <br/> All rights reserved. </p>
         </footer>
       </body>
     </html>

@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import HeaderLayout from "@/components/header/HeaderLayout";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Listopia • Social Platform",
@@ -22,21 +12,29 @@ export default function  PageLayout ({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <div >
         <header>
-            <HeaderLayout/> 
+            <HeaderLayout/>
         </header>
-        {children}
-        <footer
-          style={{
-            padding: "1rem",
-          }}>
-            <p>Footer</p>
-        </footer>
-      </body>
-    </>
+        {/* Ana İçerik (Trending, Genre, vb.) */}
+        <main className="px-10 py-0">
+          {/* Trending Movies */}
+          <section className="mb-1">
+
+          </section>
+
+          {/* Trending Genres */}
+          <section className="mb-8">
+          </section>
+          {/* Top Rated Lists */}
+          <section className="mb-8">
+          </section>
+
+          {children}
+        </main>
+
+    </div>
   );
 }

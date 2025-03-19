@@ -14,8 +14,8 @@ export default function page(){
 // Nextjs dynamic metadata
 export function generateMetadata() {
     return {
-        title: `Page - Title here`,
-        description: `Page - Description here`,
+        title: `Admin - Dashboard`,
+        description: `Only Staff`,
         icons: {
             icon: `path to asset file`,
         },
