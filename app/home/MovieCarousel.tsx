@@ -65,8 +65,8 @@ export function MovieCarousel() {
                                 <CardAction className="flex items-center gap-5">
                                     <button className="flex items-center px-3 py-2 bg-gray-900 text-white rounded-full">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                                             strokeLinecap="round" strokeLinejoin="round"
                                              className="lucide lucide-eye">
                                             <path
                                                 d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
@@ -77,8 +77,8 @@ export function MovieCarousel() {
                                     </button>
                                     <button className=" flex items-center px-3 py-2 bg-gray-900 text-white rounded-full">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                                             strokeLinecap="round" strokeLinejoin="round"
                                              className="lucide lucide-circle-plus">
                                             <circle cx="12" cy="12" r="10"/>
                                             <path d="M8 12h8"/>
