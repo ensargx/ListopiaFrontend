@@ -45,6 +45,7 @@
 }
 
 :root {
+  --logo : oklch(1 0 89.876);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -80,7 +81,8 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
+  --logo : oklch(1 0 89.876);
+  --background: oklch(0.182 0 89.876);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
@@ -141,4 +143,8 @@ html, body {
   padding: 0;
   height: 100%;
   overflow: hidden; /* Kaydırma çubuklarını kaldırır ve kaydırmayı engeller */
+}
+/*LOGO*/
+h6{
+  color: var(--logo)
 }
