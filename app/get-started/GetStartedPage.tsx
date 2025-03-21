@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
-import { useRouter } from "next/navigation"  // Next.js yönlendirme hook'u
 import ImageAnimation from "./ImageAnimation"
 import Image from 'next/image';
+import Link from "next/link";
 
 function FloatingPaths({ position }: { position: number }) {
   const paths = Array.from({ length: 36 }, (_, i) => ({
@@ -23,7 +23,7 @@ function FloatingPaths({ position }: { position: number }) {
   return (
     <div className="absolute inset-0 pointer-events-none">
       <svg
-        className="w-full h-full text-white dark:text-slate-950"
+        className="w-full h-full text-gray-300 dark:text-slate-950"
         viewBox="0 0 669 316"
         fill="none"
       >
@@ -62,15 +62,11 @@ export default function GetStartedPage({
   description?: string
   logo?: React.ReactNode
 }) {
-  const router = useRouter() // useRouter hook'unu kullanıyoruz
   const words = title.split(" ")
 
   // Yönlendirmek istediğiniz URL'i belirleyin
-  const handleClick = () => {
-    router.push("/home")  // Örneğin: "/dashboard" ya da başka bir route
-  }
   return (
-    <AnimatePresence mode="wait" >
+    <AnimatePresence mode="wait"  >
 <motion.div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-gray-900 dark:bg-white"
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
@@ -139,20 +135,21 @@ export default function GetStartedPage({
           <div
             className="inline-block group relative bg-gradient-to-b from-black/10 to-white/60 dark:from-white/20 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
           >
-            <Button
-              variant="ghost"
-              onClick={handleClick}  // Butona tıklanınca yönlendirme işlemi gerçekleşecek
-              className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 text-black dark:text-white transition-all duration-300 group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10 hover:shadow-md dark:hover:shadow-neutral-800/50"
-            >
+            <Link href="/home">
+              <Button
+                  variant="ghost"
+                  className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 text-black dark:text-white transition-all duration-300 group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10 hover:shadow-md dark:hover:shadow-neutral-800/50"
+              >
               <span className="native-font opacity-90 group-hover:opacity-80 transition-opacity">
                 Get Started
               </span>
-              <span
-                className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300"
-              >
+                <span
+                    className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300"
+                >
                 →
               </span>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>

@@ -2,13 +2,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Container from '@/components/ui/Container';
 import Logo from '@/components/header/Logo';
-import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion} from 'framer-motion';
 import { Separator } from '@radix-ui/react-separator';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import Image from 'next/image';
 import SlideTabs from '../ui/SlideTabs';
+import {CircleUserRound} from "lucide-react";
+import Link from "next/link";
 
 const searchMessage = [
     "Search for anything...",
@@ -22,7 +22,6 @@ const searchMessage = [
   ];
   
 export default function NavBar() {
-  const router = useRouter();
   const searchInputRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
   const [showMenus, setShowMenus] = useState(false);
@@ -30,9 +29,7 @@ export default function NavBar() {
   // Rastgele placeholder mesajı seçme
   const randomIndex = Math.floor(Math.random() * searchMessage.length);
   const randomMessage = searchMessage[randomIndex];
-  const handleClick = () => {
-    router.push("/home");
-  };
+
   const handleSearchIconClick = () => {
       // Arama inputunun görünürlüğünü toggle et
       setShowSearch(prev => !prev);
@@ -67,14 +64,17 @@ export default function NavBar() {
   return (
     <Container className="bg-gray-900 h-20 backdrop-blur-md p-4 flex items-center">
     {/* Sol kısım: Logo */}
-    <motion.button
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 2 }}
-      onClick={handleClick}
-    >
-      <Logo />
-    </motion.button>
+      <Link href="/home">
+        <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2 }}
+        >
+          <Logo />
+        </motion.button>
+      </Link>
+
+
 
     {/* Sağ kısım: Arama, menü ve profil ikonları */}
     <div className="flex items-center ml-auto space-x-6 text-white">
@@ -163,14 +163,10 @@ export default function NavBar() {
       </button>
       
       {/* Profil İkonu */}
-      <Button className="w-8 h-8 p-0">
-        <Image
-          src="/user-circle.svg"
-          alt="Profile Icon"
-          width={32}
-          height={32}
-          onClick={() => alert('Profile Icon Clicked')}
-          className="w-8 h-8 object-contain align-middle"
+      <Button className="w-8 h-8 p-0 rounded-full ">
+        <CircleUserRound
+            onClick={() => alert('Profile Icon Clicked')}
+            className="w-8 h-8 object-contain align-middle "
         />
       </Button>
     </div>

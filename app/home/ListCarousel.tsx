@@ -1,7 +1,7 @@
 'use client';
 import * as React from "react";
 import Image from 'next/image';
-import { Card, CardContent } from "@/components/ui/card";
+import {Card, CardContent, CardDescription} from "@/components/ui/card";
 import {
     Carousel,
     CarouselContent,
@@ -9,9 +9,9 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
-import { posters } from '@/components/utils/image_urls';
+import { movies, Movie } from '@/components/utils/image_urls';
 
-const shuffleArray = (array: string[]) => {
+const shuffleArray = (array: string[]): string[] => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -20,19 +20,16 @@ const shuffleArray = (array: string[]) => {
     return shuffled;
 };
 
-const firstSet = shuffleArray(posters);
-
+const movieUrls = movies.map((movie: Movie) => movie.url);
+const firstSet = shuffleArray(movieUrls);
 
 export function ListCarousel() {
     const [shuffledImages] = React.useState<string[]>(firstSet);
-
     const displayedImages = shuffledImages.slice(0, 5);
 
     return (
         <Carousel
-            opts={{
-                align: "start",
-            }}
+            opts={{ align: "start" }}
             className="relative w-full h-full px-10 py-4"
         >
             <p className="font-bold text-xl mb-4">Trending Lists</p>
@@ -40,9 +37,9 @@ export function ListCarousel() {
                 {displayedImages.map((src, index) => (
                     <CarouselItem key={index} className="w-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                         <div className="p-2">
-                            Movie {index + 1}
+                            <div>List {index + 1}</div>
                             <Card>
-                                <CardContent className="flex flex-col items-center p-5">
+                                <CardContent className="flex flex-col items-center justify-center text-center p-5">
                                     <Image
                                         loading="lazy"
                                         src={src}
@@ -51,7 +48,7 @@ export function ListCarousel() {
                                         height={300}
                                         className="object-cover rounded-md shadow-lg border-gray-900"
                                     />
-                                    <h3 className="text-xl font-bold mt-2">Liste Başlığı {index + 1}</h3>
+                                    <CardDescription className="text-xl font-bold mt-2">Liste Başlığı {index + 1}</CardDescription>
                                     <p className="text-gray-600 text-center">
                                         Bu listeyi Orçun yaptı.
                                     </p>
@@ -65,8 +62,8 @@ export function ListCarousel() {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10"/>
-            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10"/>
+            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10" />
+            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10" />
         </Carousel>
     );
 }

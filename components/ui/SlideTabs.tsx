@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface TabPosition {
   left: number;
@@ -9,7 +9,6 @@ interface TabPosition {
 }
 
 export default function SlideTabs(): React.ReactElement {
-  const router = useRouter();
 
   // Aktif sekmenin index'ini takip ediyoruz.
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -22,16 +21,6 @@ export default function SlideTabs(): React.ReactElement {
   // Anlık konumu (hover sırasında güncellenebilir) activePosition'a göre başlatıyoruz.
   const [position, setPosition] = useState<TabPosition>(activePosition);
 
-  const handleClick1 = () => {
-    router.push("/home/new-releases");
-  };
-  const handleClick2 = () => {
-    router.push("/home/genre");
-  };
-  const handleClick3 = () => {
-    router.push("/home/movie");
-  };
-
   return (
     <ul
       // Fare sekmelerin dışına çıktığında aktif sekmenin konumunu geri yüklüyoruz.
@@ -40,36 +29,39 @@ export default function SlideTabs(): React.ReactElement {
       }}
       className="relative mx-auto flex flex-nowrap w-fit rounded-full border-2 border-gray-900 bg-gray-900 p-1 space-x-2"
     >
-      <Tab
-        index={0}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setPosition={setPosition}
-        setActivePosition={setActivePosition}
-        onClick={handleClick1}
-      >
-        New Releases
-      </Tab>
-      <Tab
-        index={1}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setPosition={setPosition}
-        setActivePosition={setActivePosition}
-        onClick={handleClick2}
-      >
-        Genre
-      </Tab>
-      <Tab
-        index={2}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setPosition={setPosition}
-        setActivePosition={setActivePosition}
-        onClick={handleClick3}
-      >
-        Movie
-      </Tab>
+      <Link href="/home/new-releases">
+        <Tab
+            index={0}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setPosition={setPosition}
+            setActivePosition={setActivePosition}
+        >
+          New Releases
+        </Tab>
+      </Link>
+      <Link href="/home/genre">
+        <Tab
+            index={1}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setPosition={setPosition}
+            setActivePosition={setActivePosition}
+        >
+          Genre
+        </Tab>
+      </Link>
+      <Link href="/home/movie">
+        <Tab
+            index={2}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setPosition={setPosition}
+            setActivePosition={setActivePosition}
+        >
+          Movşe
+        </Tab>
+      </Link>
 
       <Cursor position={position} />
     </ul>

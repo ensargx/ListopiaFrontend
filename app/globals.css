@@ -64,6 +64,7 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
+  --footer: oklch(0.556 0 89.876);
 
 }
 
@@ -136,13 +137,16 @@ html, body {
 }
 
 /* Başlık ve Metin Örnekleri */
-h1, h2, h3, h4, h5{
+h1, h2, h3, h4{
   color: var(--primary);
   margin: 0 0 8px 0;
 }
 /*LOGO*/
 h6{
   color: var(--logo)
+}
+h5{
+  color: var(--footer);
 }
 
 p {

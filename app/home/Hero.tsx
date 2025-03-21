@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { posters } from '@/components/utils/image_urls';
+import { movies, Movie } from '@/components/utils/image_urls';
 
-// (Opsiyonel) Resimleri karıştırmak isterseniz
-const shuffleArray = (array: string[]) => {
+// Generic shuffleArray fonksiyonu, her türden dizi ile çalışır.
+const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -15,10 +15,10 @@ const shuffleArray = (array: string[]) => {
 };
 
 export default function HeroBanner() {
-    const [displayedImage, setDisplayedImage] = useState(posters[0]);
+    const [displayedImage, setDisplayedImage] = useState<Movie>(movies[0]);
 
     useEffect(() => {
-        const shuffled = shuffleArray(posters);
+        const shuffled = shuffleArray<Movie>(movies);
         setDisplayedImage(shuffled[0]);
     }, []);
 
@@ -26,14 +26,14 @@ export default function HeroBanner() {
         <div className="relative w-full h-100 overflow-hidden">
             {/* Arka plan resmi */}
             <Image
-                src={displayedImage}
+                src={displayedImage.url}  // Movie nesnesinin url özelliğini kullanıyoruz.
                 alt="Hero Image"
                 fill
                 className="object-cover object-center"
                 priority
             />
 
-            {/* (İsteğe Bağlı) Karartma katmanı, resmi daha “sinema” havasına büründürür */}
+            {/* Karartma katmanı, resmi daha “sinema” havasına büründürür */}
             <div className="absolute inset-0 bg-opacity-40" />
         </div>
     );

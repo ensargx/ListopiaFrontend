@@ -21,7 +21,7 @@
                    {children}
               </main>
             <footer className="px-8 py-4 bg-gray-900 ">
-              <p className="text-center text-sm text-neutral-500">Listopia <br/> All rights reserved. </p>
+              <h5 className="text-center text-sm ">Listopia <br/> All rights reserved. </h5>
             </footer>
           </body>
         </html>

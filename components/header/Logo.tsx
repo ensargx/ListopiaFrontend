@@ -1,8 +1,8 @@
 'use client';
 
-import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import Image from 'next/image';
+import {Separator} from "@/components/ui/separator";
 
 
 export default function Logo(){
