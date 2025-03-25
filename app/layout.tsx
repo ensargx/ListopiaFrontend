@@ -1,5 +1,6 @@
     import type { Metadata } from "next";
     import "./globals.css";
+    import {Toaster} from "sonner";
 
 
 
@@ -20,7 +21,8 @@
                <main className="flex-grow">
                    {children}
               </main>
-            <footer className="px-8 py-4 bg-gray-900 ">
+               <Toaster />
+               <footer className="px-8 py-4 bg-gray-900 ">
               <h5 className="text-center text-sm ">Listopia <br/> All rights reserved. </h5>
             </footer>
           </body>

@@ -59,7 +59,7 @@ export default function SlideTabs(): React.ReactElement {
             setPosition={setPosition}
             setActivePosition={setActivePosition}
         >
-          Movşe
+          Movie
         </Tab>
       </Link>
 

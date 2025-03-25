@@ -5,6 +5,7 @@ import Image from "next/image";
 import {TruncatedTitle} from "@/components/utils/TruncatedTitle";
 import {CircleCheck, CirclePlus, Eye, EyeClosed} from "lucide-react";
 import * as React from "react";
+import {toast} from "sonner"
 
 export function HomeCard({ id, title, rating, description, url }: Movie) {
     const [watchLater, setWatchLater] = useState(false);
@@ -53,6 +54,7 @@ export function HomeCard({ id, title, rating, description, url }: Movie) {
                 >
                     {addList ? <CircleCheck /> : <CirclePlus />}
                     {addList ? "Added": "Add List"}
+
                 </button>
             </CardAction>
         </Card>

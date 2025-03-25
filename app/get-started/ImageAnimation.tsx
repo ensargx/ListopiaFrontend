@@ -39,7 +39,7 @@ export default function ResetPosterFlow() {
     const imageWidthPercentage = `${(60 * 4) / movies.length}%`;
 
     return (
-        <div style={{ overflow: 'hidden', width: '100%' }}>
+        <div  style={{ overflow: 'hidden', width: '100%' }}>
             <motion.div
                 style={{ display: 'flex' }}
                 initial={{ x: `-${startPosition}%` }}

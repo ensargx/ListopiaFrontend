@@ -39,6 +39,7 @@ export function MovieCarousel() {
                         <div className="p-2">
                             Movie {movie.id + 1}
                             <HomeCard{...movie} />
+
                         </div>
                     </CarouselItem>
                 ))}
