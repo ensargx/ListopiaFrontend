@@ -1,13 +1,13 @@
 import * as React from "react";
-import {Card, CardContent, CardDescription} from "../components/ui/card";
+import {Card, CardContent, CardDescription} from "../../components/ui/card.tsx";
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "../components/ui/carousel";
-import { movies, Movie } from '../components/utils/image_urls';
+} from "../../components/ui/carousel.tsx";
+import { movies, Movie } from '../../components/utils/image_urls.ts';
 
 const shuffleArray = (array: string[]): string[] => {
     const shuffled = [...array];

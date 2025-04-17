@@ -1,9 +1,9 @@
 import React, { Suspense, useState, useEffect } from 'react';
 
-const HeroBanner = React.lazy(() => import('../home/Hero'));
-const GenreCarousel = React.lazy(() => import('../home/GenreCarousel').then(mod => ({ default: mod.GenreCarousel })));
-const MovieCarousel = React.lazy(() => import('../home/MovieCarousel').then(mod => ({ default: mod.MovieCarousel })));
-const ListCarousel = React.lazy(() => import('../home/ListCarousel').then(mod => ({ default: mod.ListCarousel })));
+const HeroBanner = React.lazy(() => import('./Hero.tsx'));
+const GenreCarousel = React.lazy(() => import('./GenreCarousel.tsx').then(mod => ({ default: mod.GenreCarousel })));
+const MovieCarousel = React.lazy(() => import('./MovieCarousel.tsx').then(mod => ({ default: mod.MovieCarousel })));
+const ListCarousel = React.lazy(() => import('./ListCarousel.tsx').then(mod => ({ default: mod.ListCarousel })));
 
 interface SectionConfig {
     id: string;

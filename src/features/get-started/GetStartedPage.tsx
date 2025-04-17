@@ -1,6 +1,6 @@
-import { Button } from "../components/ui/button"
+import { Button } from "../../components/ui/button.tsx"
 import { AnimatePresence, motion } from "framer-motion"
-import ImageAnimation from "./ImageAnimation"
+import ImageAnimation from "./ImageAnimation.tsx"
 import { Link } from "react-router-dom"
 
 function FloatingPaths({ position }: { position: number }) {
