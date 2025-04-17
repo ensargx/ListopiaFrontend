@@ -1,0 +1,49 @@
+.home-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 3rem;
+}
+
+.hero-container {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.hero-loading {
+    height: 60vh;
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 1.2rem;
+}
+
+.hero-sidebar {
+    background-color: #1f1f1f;
+    padding: 1.5rem;
+    border-radius: 8px;
+    color: #ccc;
+}
+
+.hero-sidebar h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.hero-sidebar ul {
+    list-style: none;
+}
+
+.hero-sidebar li {
+    margin-bottom: 0.75rem;
+}

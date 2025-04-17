@@ -1,21 +1,16 @@
-import { Routes, Route } from 'react-router-dom';
-import MainLayout from '@/layouts/MainLayout';
-import HomePage from '@/features/home/HomePage';
-// import MovieDetailPage from '@/features/movie/MovieDetailPage';
-// import ReviewsPage from '@/features/reviews/ReviewsPage';
-// import ProfilePage from '@/features/profile/ProfilePage';
+// src/routes.tsx veya App.tsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import  Navbar  from '@/components/Navbar'
+import { HomePage } from '@/features/home/HomePage'
 
-const AppRoutes = () => {
+export default function App() {
     return (
-        <Routes>
-            <Route element={<MainLayout />}>
+        <BrowserRouter>
+            <Navbar />
+            <Routes>
                 <Route path="/" element={<HomePage />} />
-                {/*<Route path="/movie/:id" element={<MovieDetailPage />} />*/}
-                {/*<Route path="/reviews" element={<ReviewsPage />} />*/}
-                {/*<Route path="/profile" element={<ProfilePage />} />*/}
-            </Route>
-        </Routes>
-    );
-};
-
-export default AppRoutes;
+                {/* diğer rotalar */}
+            </Routes>
+        </BrowserRouter>
+    )
+}

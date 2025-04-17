@@ -1,0 +1,43 @@
+.hero-banner {
+    position: relative;
+    height: 60vh;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 2rem;
+}
+
+.hero-banner .overlay {
+    width: 100%;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.8) 100%);
+    padding: 2rem;
+}
+
+.hero-banner h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero-banner p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    max-width: 600px;
+}
+
+.btn-primary {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #e50914;
+    color: #fff;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color .2s;
+}
+
+.btn-primary:hover {
+    background-color: #f6121d;
+}

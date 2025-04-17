@@ -1,0 +1,17 @@
+export interface FrontMovie {
+    movieId: number;
+    title: string;
+    poster: string;
+    watchCount: number;
+    likeCount: number;
+    ratingAverage: number;
+}
+
+export interface PagedResponse<T> {
+    content: T[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    lastPage: boolean;
+}
