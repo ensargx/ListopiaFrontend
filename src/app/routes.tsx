@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import  Navbar  from '@/components/Navbar'
 import { HomePage } from '@/features/home/HomePage'
 
-export function App() {
+export default function App() {
     return (
         <BrowserRouter>
             <Navbar />
