@@ -15,6 +15,27 @@ export async function fetchMovieById(
     return res.json();
 }
 
+export async function fetchTopRatedMovies( // Hata vermemesi icin yapıldı sonra gerçek api ile degistir,  gerekirse sil
+    movieId: number,
+    language: string = 'en'
+): Promise<Movie> {
+    const res = await fetch(
+        `${BASE_URL}/movies/${movieId}?language=${language}`
+    );
+    if (!res.ok) throw new Error('Failed to fetch movie');
+    return res.json();
+}
+export async function fetchTrendingGenres( // Hata vermemesi icin yapıldı sonra gerçek api ile degistir, gerekirse sil
+    movieId: number,
+    language: string = 'en'
+): Promise<Movie> {
+    const res = await fetch(
+        `${BASE_URL}/movies/${movieId}?language=${language}`
+    );
+    if (!res.ok) throw new Error('Failed to fetch movie');
+    return res.json();
+}
+
 export async function fetchFrontMovies(
     options: {
         pageNumber?: number;
