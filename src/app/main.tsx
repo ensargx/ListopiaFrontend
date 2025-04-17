@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // main.tsx
-import { App } from './routes';
+import App from './routes';
 
 import '@/styles/index.css';
 
