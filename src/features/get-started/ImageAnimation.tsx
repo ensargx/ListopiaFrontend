@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { movies, Movie } from '../../components/utils/image_urls.ts';
+import { movies, Movie } from '@/components/utils/image_urls';
 
 // Generic Fisher–Yates shuffle algorithm
 const shuffleArray = <T,>(array: T[]): T[] => {

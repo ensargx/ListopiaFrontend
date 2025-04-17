@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { movies, Movie } from '../../components/utils/image_urls.ts';
+import { movies, Movie } from '@/components/utils/image_urls';
 
 /*
 // Generic shuffleArray fonksiyonu, her türden dizi ile çalışır.

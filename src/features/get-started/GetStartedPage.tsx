@@ -1,6 +1,6 @@
-import { Button } from "../../components/ui/button.tsx"
+import { Button } from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
-import ImageAnimation from "./ImageAnimation.tsx"
+// import ImageAnimation from "@/components//ImageAnimation.tsx"
 import { Link } from "react-router-dom"
 
 function FloatingPaths({ position }: { position: number }) {
@@ -71,8 +71,8 @@ export default function GetStartedPage({
     >
 
       <div className="fixed inset-0 blur-sm opacity-50">
-        <ImageAnimation/>
-        <ImageAnimation/>
+        {/*<ImageAnimation/>*/}
+        {/*<ImageAnimation/>*/}
 
       </div>
       <div>

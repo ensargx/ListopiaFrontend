@@ -6,7 +6,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "../../components/ui/carousel.tsx";
-import { movies, Movie } from '../../components/utils/image_urls.ts';
+import { movies, Movie } from '@/components/utils/image_urls';
 import {HomeCard} from "../../components/ui/HomeCard.tsx";
 
 // Utility function to shuffle the movies array
