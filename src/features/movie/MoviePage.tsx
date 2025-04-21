@@ -5,6 +5,8 @@ import {
     fetchMovieCasts,
     fetchMovieCrews,
 } from '@/app/api';
+import {CrewMember} from "@/types/crew";
+import {CastMember} from "@/types/crew";
 import { Movie } from '@/types/movie';
 import MovieHeader from './components/MovieHeader';
 import CastList from './components/CastList';
@@ -17,8 +19,8 @@ import './MoviePage.css';
 export const MoviePage: React.FC = () => {
     const { movieId } = useParams<{ movieId: string }>();
     const [movie, setMovie] = useState<Movie | null>(null);
-    const [casts, setCasts] = useState<any[]>([]);
-    const [crews, setCrews] = useState<any[]>([]);
+    const [casts, setCasts] = useState<CastMember[]>([]);
+    const [crews, setCrews] = useState<CrewMember[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
