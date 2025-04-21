@@ -1,27 +1,68 @@
-import { useState } from 'react';
+// src/app/components/Navbar.tsx  (veya senin dosya yapına göre konumlandır)
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import './Navbar.css'; // stil dosyasını unutma
+import './Navbar.css';
 
-const Navbar = () => {
+export const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleMenu = () => setIsOpen(open => !open);
 
     return (
-        <nav className="navbar">
-            <div className="navbar-logo">
-                <Link to="/">🎬 Listopia</Link>
+        <header className="navbar">
+            <div className="navbar-container">
+                <Link to="/" className="navbar-logo">
+                    🎬 Listopia
+                </Link>
+
+                <button
+                    className="navbar-toggle"
+                    onClick={toggleMenu}
+                    aria-label="Toggle navigation"
+                >
+                    ☰
+                </button>
+
+                <nav className={`navbar-menu ${isOpen ? 'open' : ''}`}>
+                    <NavLink
+                        to="/"
+                        end
+                        className={({ isActive }) =>
+                            isActive ? 'navbar-link active' : 'navbar-link'
+                        }
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Anasayfa
+                    </NavLink>
+                    <NavLink
+                        to="/genres"
+                        className={({ isActive }) =>
+                            isActive ? 'navbar-link active' : 'navbar-link'
+                        }
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Türler
+                    </NavLink>
+                    <NavLink
+                        to="/reviews"
+                        className={({ isActive }) =>
+                            isActive ? 'navbar-link active' : 'navbar-link'
+                        }
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Yorumlar
+                    </NavLink>
+                    <NavLink
+                        to="/profile"
+                        className={({ isActive }) =>
+                            isActive ? 'navbar-link active' : 'navbar-link'
+                        }
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Profil
+                    </NavLink>
+                </nav>
             </div>
-            <button className="navbar-toggle" onClick={toggleMenu}>
-                ☰
-            </button>
-            <ul className={`navbar-links ${isOpen ? 'open' : ''}`}>
-                <li><NavLink to="/" end> Anasayfa </NavLink></li>
-                <li><NavLink to="/genre"> Türler </NavLink></li>
-                <li><NavLink to="/reviews"> Yorumlar </NavLink></li>
-                <li><NavLink to="/profile"> Profil </NavLink></li>
-            </ul>
-        </nav>
+        </header>
     );
 };
 

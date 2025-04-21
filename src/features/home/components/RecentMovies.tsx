@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchFrontMovies } from '@/app/api';
 import { FrontMovie } from '@/types/front';
 import { CardSlider } from './CardSlider';
@@ -10,7 +11,7 @@ export const RecentMovies: React.FC = () => {
 
     useEffect(() => {
         fetchFrontMovies({
-            sortBy: 'popularity',
+            sortBy: 'ratingAverage',
             sortOrder: 'dsc',
             pageSize: 20
         })
@@ -27,10 +28,12 @@ export const RecentMovies: React.FC = () => {
             <CardSlider
                 items={movies}
                 renderItem={m => (
-                    <img
-                        src={`https://image.tmdb.org/t/p/w300${m.poster}`}
-                        alt={m.title}
-                    />
+                    <Link to={`/movies/${m.movieId}`}>
+                        <img
+                            src={`https://image.tmdb.org/t/p/w300${m.poster}`}
+                            alt={m.title}
+                        />
+                    </Link>
                 )}
             />
         </section>

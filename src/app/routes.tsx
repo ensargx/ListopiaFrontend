@@ -1,16 +1,16 @@
-// src/routes.tsx veya App.tsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import  Navbar  from '@/components/Navbar'
-import { HomePage } from '@/features/home/HomePage'
+// src/routes.tsx
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import Navbar from '@/components/Navbar';
+import ScrollToTop from '@/components/ScrollToTop';
+import AnimatedRoutes from '@/components/AnimatedRoutes';
 
 export default function App() {
     return (
         <BrowserRouter>
             <Navbar />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                {/* diğer rotalar */}
-            </Routes>
+            <ScrollToTop />
+            <AnimatedRoutes />
         </BrowserRouter>
-    )
+    );
 }

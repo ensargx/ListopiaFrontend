@@ -5,6 +5,7 @@ import { Movie } from '@/types/movie';
 import { HeroBanner } from './components/HeroBanner';
 import { PopularMovies } from './components/PopularMovies';
 import { RecentMovies } from './components/RecentMovies';
+import { SidebarSpecial } from './components/SidebarSpecial';
 import './HomePage.css';
 
 export const HomePage: React.FC = () => {
@@ -29,12 +30,7 @@ export const HomePage: React.FC = () => {
                     }
                 </div>
                 <aside className="hero-sidebar">
-                    <h3>What's New</h3>
-                    <ul>
-                        <li>🔥 New Releases</li>
-                        <li>⭐ Top Rated</li>
-                        <li>🎬 Upcoming</li>
-                    </ul>
+                    <SidebarSpecial />
                 </aside>
             </div>
 
@@ -44,3 +40,5 @@ export const HomePage: React.FC = () => {
         </main>
     );
 };
+
+export default HomePage;
