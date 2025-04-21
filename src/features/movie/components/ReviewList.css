@@ -1,0 +1,35 @@
+.review-list {
+    margin: 2rem 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.review-list h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.review-card {
+    background: #2a2a2a;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.review-card .author {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #e50914;
+}
+
+.review-card .content {
+    color: #ddd;
+}
+
+.see-all {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #e50914;
+    text-decoration: none;
+    font-weight: 500;
+}
