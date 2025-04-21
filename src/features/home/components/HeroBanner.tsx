@@ -1,6 +1,7 @@
 // src/features/home/components/HeroBanner.tsx
 import React from 'react';
 import { Movie } from '@/types/movie';
+import {Link} from 'react-router-dom';
 import './HeroBanner.css';
 
 type Props = { movie: Movie };
@@ -9,6 +10,7 @@ export const HeroBanner: React.FC<Props> = ({ movie }) => {
     const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop}`;
 
     return (
+        <Link to={`/movies/${movie.movieId}`}>
         <section
             className="hero-banner"
             style={{
@@ -21,9 +23,14 @@ export const HeroBanner: React.FC<Props> = ({ movie }) => {
                 <div className="content">
                     <h1>{movie.title}</h1>
                     <p>{movie.tagline || movie.overview}</p>
-                    <button className="btn-primary">Get Started – Sign Up</button>
+                    {/*<button className="btn-primary">Get Started – Sign Up</button>*/}
+
+                        <button className="btn-primary">
+                            View Details
+                        </button>
                 </div>
             </div>
         </section>
+        </Link>
     );
 };

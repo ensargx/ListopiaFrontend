@@ -38,3 +38,25 @@
 .read-the-docs {
   color: #888;
 }
+
+/* fade-enter: giriş animasyonu başlamadan önceki hali */
+.fade-enter {
+  opacity: 0;
+}
+
+/* fade-enter-active: giriş animasyonu sırasında */
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+/* fade-exit: çıkış animasyonu başlamadan önceki hali */
+.fade-exit {
+  opacity: 1;
+}
+
+/* fade-exit-active: çıkış animasyonu sırasında */
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-out;
+}

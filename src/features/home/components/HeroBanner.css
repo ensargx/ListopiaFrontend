@@ -1,3 +1,4 @@
+/* src/features/home/components/HeroBanner.css */
 .hero-banner {
     position: relative;
     height: 60vh;
@@ -19,12 +20,14 @@
 .hero-banner h1 {
     font-size: 3rem;
     margin-bottom: 0.5rem;
+    color: #fff;
 }
 
 .hero-banner p {
     font-size: 1.1rem;
     line-height: 1.5;
     max-width: 600px;
+    color: #eee;
 }
 
 .btn-primary {
@@ -40,4 +43,27 @@
 
 .btn-primary:hover {
     background-color: #f6121d;
+}
+
+/* ===== mobil ayarlar ===== */
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 40vh;            /* daha alçak banner */
+    }
+    .hero-banner .overlay {
+        padding: 1rem;           /* daha dar padding */
+    }
+    .hero-banner h1 {
+        font-size: 2rem;         /* daha küçük başlık */
+    }
+    .hero-banner p {
+        font-size: 0.9rem;       /* daha küçük metin */
+        max-width: 100%;         /* tam genişlikte */
+    }
+    .btn-primary {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 0;
+        font-size: 0.95rem;
+    }
 }
