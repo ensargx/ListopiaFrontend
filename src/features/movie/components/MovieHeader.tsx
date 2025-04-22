@@ -10,11 +10,11 @@ interface Props {
 const MovieHeader: React.FC<Props> = ({ movie }) => {
     const [liked, setLiked] = useState(false);
 
-    // // Beğenme butonu fonksiyonu
-    // const handleLike = () => {
-    //     setLiked(!liked);
-    //     // API bağlandığında burada isteği yapabilirsiniz
-    // };
+    // Beğenme butonu fonksiyonu
+    const handleLike = () => {
+        setLiked(!liked);
+        // API bağlandığında burada isteği yapabilirsiniz
+    };
 
     return (
         <header className="movie-header">
