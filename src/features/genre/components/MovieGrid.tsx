@@ -9,14 +9,24 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w300';
 
 interface Props { movies: FrontMovie[]; }
 
+function getPosterUrl(poster : string | null) {
+    if ( poster )
+    {
+        const posterUrl = poster.startsWith('http')
+            ? poster
+            : `${IMAGE_BASE_URL}${poster}`;
+
+        return posterUrl;
+    } else {
+        return "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500";
+    }
+}
+
 export const MovieGrid: React.FC<Props> = ({ movies }) => (
     <div className="movie-grid">
         {movies.map(movie => {
             // Eğer API full URL döndürdüyse olduğu gibi kullan, aksi halde base URL + relative path
-            const posterUrl = movie.poster.startsWith('http')
-                ? movie.poster
-                : `${IMAGE_BASE_URL}${movie.poster}`;
-
+            const posterUrl = getPosterUrl(movie.poster);
             // console.log('poster path:', movie.poster); // debug için
 
             return (

@@ -1,7 +1,7 @@
 export interface FrontMovie {
     movieId: number;
     title: string;
-    poster: string;
+    poster: string | null;
     watchCount: number;
     likeCount: number;
     ratingAverage: number;
