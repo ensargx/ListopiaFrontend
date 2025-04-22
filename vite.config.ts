@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.ensargok.com',
+        target: 'https://api.cinemium.net',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api')
       }

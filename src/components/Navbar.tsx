@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
                         }
                         onClick={() => setIsOpen(false)}
                     >
-                        Anasayfa
+                        Home
                     </NavLink>
                     <NavLink
                         to="/genres"
