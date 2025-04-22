@@ -4,7 +4,7 @@ import { FrontMovie, PagedResponse } from '@/types/front';
 import { CrewMember, CastMember } from '@/types/crew';
 
 // proxy kullanımı için başına “/” koyuyoruz
-const BASE_URL = 'https://api.ensargok.com/api';
+const BASE_URL = '/api';
 
 export async function fetchMovieById(
     movieId: number,

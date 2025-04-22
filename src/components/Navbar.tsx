@@ -40,16 +40,7 @@ export const Navbar: React.FC = () => {
                         }
                         onClick={() => setIsOpen(false)}
                     >
-                        Türler
-                    </NavLink>
-                    <NavLink
-                        to="/reviews"
-                        className={({ isActive }) =>
-                            isActive ? 'navbar-link active' : 'navbar-link'
-                        }
-                        onClick={() => setIsOpen(false)}
-                    >
-                        Yorumlar
+                        Films
                     </NavLink>
                     <NavLink
                         to="/profile"
@@ -58,7 +49,7 @@ export const Navbar: React.FC = () => {
                         }
                         onClick={() => setIsOpen(false)}
                     >
-                        Profil
+                        Profile
                     </NavLink>
                 </nav>
             </div>

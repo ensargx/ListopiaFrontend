@@ -18,7 +18,7 @@ const AnimatedRoutes: React.FC = () => {
                 key={location.pathname}
                 nodeRef={nodeRef}
                 classNames="fade"
-                timeout={{ exit: 100, enter: 500 }}
+                timeout={{ exit: 100, enter: 600 }}
             >
                 {/* attach the ref here */}
                 <div ref={nodeRef} className="fade-wrapper">
