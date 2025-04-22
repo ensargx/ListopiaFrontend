@@ -18,7 +18,7 @@ export const GenrePage: React.FC = () => {
 
     // Şimdilik sabit bir tür listesi; isterseniz API'den çekmek için ayrı bir fetchGenres() yazabilirsiniz.
     const genres = [
-        'Action', 'Adventure', 'Animation', 'Comedy',
+        'All','Action', 'Adventure', 'Animation', 'Comedy',
         'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Thriller'
     ];
 

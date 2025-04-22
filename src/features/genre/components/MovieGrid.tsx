@@ -21,13 +21,18 @@ function getPosterUrl(poster : string | null) {
         return "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500";
     }
 }
-
+function truncate(text: string, maxLen = 50) {
+    return text.length > maxLen
+        ? text.slice(0, maxLen) + '…'
+        : text;
+}
 export const MovieGrid: React.FC<Props> = ({ movies }) => (
     <div className="movie-grid">
         {movies.map(movie => {
             // Eğer API full URL döndürdüyse olduğu gibi kullan, aksi halde base URL + relative path
             const posterUrl = getPosterUrl(movie.poster);
             // console.log('poster path:', movie.poster); // debug için
+            const title = truncate(movie.title, 50);
 
             return (
                 <Link
@@ -40,7 +45,7 @@ export const MovieGrid: React.FC<Props> = ({ movies }) => (
                         alt={movie.title}
                         className="movie-poster"
                     />
-                <h3 className="movie-title">{movie.title}</h3>
+                    <h3 className="movie-title">{title}</h3>
                 </Link>
             );
         })}

@@ -11,7 +11,6 @@ import { Movie } from '@/types/movie';
 import MovieHeader from './components/MovieHeader';
 import CastList from './components/CastList';
 import CrewList from './components/CrewList';
-import PlaylistList from './components/PlaylistList';
 import ReviewList from './components/ReviewList';
 import SimilarMovies from './components/SimilarMovies';
 import './MoviePage.css';
@@ -54,7 +53,6 @@ export const MoviePage: React.FC = () => {
                     <CastList casts={casts} />
                     <CrewList crews={crews} />
                 </div>
-                <PlaylistList />
             </div>
 
             <ReviewList />

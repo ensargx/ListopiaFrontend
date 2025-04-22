@@ -26,7 +26,11 @@
     background: #444;
     color: #fff;
 }
-
+.pagination button.ellipsis {
+    background: none;
+    color: #ccc;
+    cursor: default;
+}
 /* ↓ Mobilde düğmeler daha sıkı ve satır kaymasına izin ver */
 @media (max-width: 768px) {
     .pagination {

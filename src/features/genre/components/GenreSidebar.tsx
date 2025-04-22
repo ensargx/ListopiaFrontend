@@ -12,16 +12,16 @@ export const GenreSidebar: React.FC<Props> = ({ genres, selected }) => (
     <aside className="genre-sidebar">
         <h3>Genres</h3>
         <ul>
-            {genres.map(g => (
-                <li key={g}>
-                    <Link
-                        to={`/genres/${g}`}
-                        className={g === selected ? 'active' : ''}
-                    >
-                        {g}
-                    </Link>
-                </li>
-            ))}
+            {genres.map(g => {
+                const to = g === 'All' ? '/genres/' : `/genres/${g}`;
+                return (
+                    <li key={g}>
+                        <Link to={to} className={g === selected ? 'active' : ''}>
+                            {g}
+                        </Link>
+                    </li>
+                );
+            })}
         </ul>
     </aside>
 );
