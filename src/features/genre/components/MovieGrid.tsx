@@ -3,24 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FrontMovie } from '@/types/front';
 import './MovieGrid.css';
-
-// TMDB için örnek base URL; ihtiyacına göre w200/w300/w500 vs. seçebilirsin
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w300';
+//
+// // TMDB için örnek base URL; ihtiyacına göre w200/w300/w500 vs. seçebilirsin
+// const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w300';
 
 interface Props { movies: FrontMovie[]; }
+import { getPosterUrl } from '@/app/utils';
 
-function getPosterUrl(poster : string | null) {
-    if ( poster )
-    {
-        const posterUrl = poster.startsWith('http')
-            ? poster
-            : `${IMAGE_BASE_URL}${poster}`;
-
-        return posterUrl;
-    } else {
-        return "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500";
-    }
-}
 function truncate(text: string, maxLen = 50) {
     return text.length > maxLen
         ? text.slice(0, maxLen) + '…'

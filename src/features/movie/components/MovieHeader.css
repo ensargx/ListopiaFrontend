@@ -64,3 +64,70 @@
     }
 }
 
+.movie-header .movie-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.movie-header .movie-actions button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    background-color: #e50914;
+    color: #fff;
+    font-weight: 500;
+}
+
+.movie-header .movie-actions .btn-like.liked {
+    background-color: #ff1a3c;
+}
+
+.movie-header .movie-actions .btn-like {
+    background-color: #e50914;
+    font-size: 1.5rem;
+}
+
+.movie-header .movie-actions .btn-comment {
+    background-color: #444;
+    color: #fff;
+    margin-top: 1rem;
+}
+
+.movie-header .comment-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.movie-header .comment-section textarea {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+    min-height: 100px;
+    background-color: #333;
+    color: #fff;
+}
+
+.movie-header .comment-section textarea::placeholder {
+    color: #bbb;
+}
+
+.movie-header .overview {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    color: #ccc;
+}
+
+@media (max-width: 768px) {
+    .movie-header .movie-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
