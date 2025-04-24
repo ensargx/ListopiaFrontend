@@ -28,8 +28,8 @@
 }
 .movie-poster {
     width: 100%;
-    aspect-ratio: 3 / 4;       /* en-boy oranını 2:3 olarak sabitliyoruz */
-    object-fit: cover;         /* kırpma ve ortalama ayarı */
+    /*aspect-ratio: 2 / 3;       !* en-boy oranını 2:3 olarak sabitliyoruz *!*/
+    /*object-fit: cover;         !* kırpma ve ortalama ayarı *!*/
     background-color: #222;    /* şeffaf kısımlar için koyu arka plan */
     border-radius: 6px;        /* köşeleri aynı olsun */
     display: block;
