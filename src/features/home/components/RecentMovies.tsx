@@ -12,7 +12,7 @@ export const RecentMovies: React.FC = () => {
 
     useEffect(() => {
         fetchFrontMovies({
-            sortBy: 'ratingAverage',
+            sortBy: 'releaseDate',
             sortOrder: 'dsc',
             pageSize: 20
         })

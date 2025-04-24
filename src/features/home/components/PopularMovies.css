@@ -1,51 +1,36 @@
-.loading {
-    color: #bbb;
-    font-size: 1rem;
-}
-/* 1) Kartın kendisi: flex item, sabit genişlik */
-.slider-card {
-    flex: 0 0 150px;      /* İstediğin genişlik */
-    margin-right: 1rem;   /* Aradaki boşluk */
-    text-decoration: none;
-}
+/*:root {*/
+/*    --card-width: 200px;*/
+/*    --card-height: 120px; !* 5:3 oran gibi daha yatay bir görünüm *!*/
+/*}*/
 
-/* 2) Poster wrapper: sabit en‑boy oranı, overflow gizle */
-.slider-poster {
-    width: 100%;
-    aspect-ratio: 3 / 4;      /* veya 2/3; tercihine göre */
-    overflow: hidden;
-    border-radius: 6px;
-    background-color: #222;   /* transparanlar için arka plan */
-}
+/*!* Kart: sabit genişlik *!*/
+/*.slider-card {*/
+/*    flex: 0 0 var(--card-width);*/
+/*    margin-right: 1rem;*/
+/*    text-decoration: none;*/
+/*}*/
 
-/* 3) Gerçek <img>: kapsayıcıya cover olacak */
-.slider-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-:root {
-    --card-width: 150px;   /* isteğe göre değiştirin */
-    --card-height: 200px;  /* --card-width * (4/3) */
-}
+/*!* Poster alanı: grid benzeri görünüm için sabit kutu *!*/
+/*.slider-poster {*/
+/*    width: var(--card-width);*/
+/*    height: var(--card-height);*/
+/*    overflow: hidden;*/
+/*    border-radius: 6px;*/
+/*    background-color: #222;*/
+/*    display: grid;*/
+/*    place-items: center; !* Görsel ortalansın *!*/
+/*}*/
 
-.slider-card {
-    flex: 0 0 var(--card-width);
-    margin-right: 1rem;
-}
-
-.slider-poster {
-    width: var(--card-width);
-    height: var(--card-height);
-    overflow: hidden;
-    border-radius: 6px;
-    background-color: #222;
-}
-
-.slider-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+/*!* Görsel: kutuya sığacak şekilde ayarlanır *!*/
+/*.slider-poster img {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    object-fit: cover;   !* Kırp ama orantıyı koru *!*/
+/*    display: block;*/
+/*}*/
+.section {
+    /*display: grid;*/
+    /*grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));*/
+    /*gap: 1.5rem; !* Increased gap to add more space between cards *!*/
+    /*margin-bottom: 1.5rem;*/
 }

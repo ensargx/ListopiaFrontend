@@ -19,6 +19,8 @@
     width: 180px;
     margin-right: 1rem;
     transition: transform .3s;
+    position: relative; /* Kartın konumunu izlemek için */
+    z-index: 1; /* Varsayılan z-index */
 }
 .card img {
     width: 100%;
@@ -27,33 +29,52 @@
 }
 .card:hover {
     transform: scale(1.05);
-    z-index: 2;
+    z-index: 3; /* Kart büyüdüğünde üstte olacak */
 }
 
+/* Navigation buttons styling */
 .nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    width: 32px;
-    height: 32px;
+    background: rgba(0, 0, 0, 0.8); /* Darker background for more contrast */
+    color: #ffffff;
+    width: 40px; /* Increased size for better visibility */
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.5rem; /* Larger font size for the arrows */
+    cursor: pointer; /* Make it clear that it's clickable */
+    opacity: 0.8; /* Slightly transparent by default */
+    transition: opacity 0.3s, background 0.3s;
+    z-index: 5; /* Navigation buttons always on top of cards */
 }
-.prev { left: -16px; }
-.next { right: -16px; }
 
-/* ===== mobil ayarlar ===== */
+/* Hover effect for better interactivity */
+.nav:hover {
+    opacity: 1; /* Fully opaque on hover */
+    background: rgba(61, 83, 55, 0.9); /* Darker on hover for more contrast */
+}
+
+/* Positioning the arrows */
+.prev {
+    left: 10px; /* Adjusted for better placement */
+}
+.next {
+    right: 10px; /* Adjusted for better placement */
+}
+
+/* ===== Mobil Ayarlar ===== */
 @media (max-width: 768px) {
     .card {
-        width: 140px;         /* daraltılmış kart genişliği */
+        width: 140px; /* Narrower card width for mobile */
         margin-right: 0.75rem;
     }
     .nav {
-        width: 28px;
-        height: 28px;
+        width: 36px; /* Slightly smaller nav button on mobile */
+        height: 36px;
+        font-size: 1.3rem; /* Slightly smaller arrows for mobile */
     }
 }

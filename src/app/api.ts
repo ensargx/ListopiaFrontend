@@ -37,7 +37,7 @@ export async function fetchFrontMovies(
     options: {
         pageNumber?: number;
         pageSize?: number;
-        sortBy?: 'popularity' | 'ratingAverage';
+        sortBy?: 'popularity' | 'ratingAverage' | "releaseDate";
         sortOrder?: 'dsc' | 'asc';
         genre?: string;
         language?: string;

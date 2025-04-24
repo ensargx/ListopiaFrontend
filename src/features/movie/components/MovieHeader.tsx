@@ -10,7 +10,7 @@ interface Props {
 const MovieHeader: React.FC<Props> = ({ movie }) => {
     const [liked, setLiked] = useState(false);
 
-    // Beğenme butonu fonksiyonu
+    // Beğenme butonu fonksiyonu suan ise yaramıyor
     const handleLike = () => {
         setLiked(!liked);
         // API bağlandığında burada isteği yapabilirsiniz
