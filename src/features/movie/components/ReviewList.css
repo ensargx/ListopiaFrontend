@@ -26,6 +26,40 @@
     color: #ddd;
 }
 
+/* Yorum yazma alanı */
+.comment-section {
+    margin-top: 1rem;
+}
+
+.comment-section textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #333;
+    color: #fff;
+}
+
+.comment-section button {
+    margin-top: 1rem;
+    background-color: #e50914;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* Beğenme butonu küçük */
+.review-card .like-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #e50914;
+}
+
+/* See all link */
 .see-all {
     display: inline-block;
     margin-top: 0.5rem;

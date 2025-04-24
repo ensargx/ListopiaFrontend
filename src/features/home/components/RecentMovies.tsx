@@ -4,6 +4,7 @@ import { fetchFrontMovies } from '@/app/api';
 import { FrontMovie } from '@/types/front';
 import { CardSlider } from './CardSlider';
 import './RecentMovies.css';
+import { getPosterUrl } from '@/app/utils';
 
 export const RecentMovies: React.FC = () => {
     const [movies, setMovies] = useState<FrontMovie[]>([]);
@@ -28,11 +29,12 @@ export const RecentMovies: React.FC = () => {
             <CardSlider
                 items={movies}
                 renderItem={m => (
-                    <Link to={`/movies/${m.movieId}`}>
+                    <Link to={`/movies/${m.movieId}`} className="slider-card">
+                        <div className="slider-poster">
                         <img
-                            src={`https://image.tmdb.org/t/p/w300${m.poster}`}
-                            alt={m.title}
+                         src={getPosterUrl(m.poster)} alt={m.title}
                         />
+                        </div>
                     </Link>
                 )}
             />
