@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/app/api_/userapi";
 import "./SignPage.css";
+import { useAuth } from "@/app/AuthContext";
 
 const SignPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +14,8 @@ const SignPage: React.FC = () => {
     const [username, setUsername] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const { login } = useAuth();  
+
     const navigate = useNavigate();
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -25,6 +28,7 @@ const SignPage: React.FC = () => {
             const response  = await signIn(email, password);
             if(response.success){
                 const me = await fetchUserMe();
+                login(me);
                 navigate(`/profile/${encodeURIComponent(me.username)}`);
             }else{
                 setError(response.message);

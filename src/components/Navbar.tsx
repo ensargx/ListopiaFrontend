@@ -1,51 +1,22 @@
 // src/app/components/Navbar.tsx  (veya senin dosya yapına göre konumlandır)
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { fetchUserMe } from '@/app/api_/userapi';
+import { useAuth } from '@/app/AuthContext';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [username, setUsername] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const { user , logout} = useAuth();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            setLoading(true);
-            const token = localStorage.getItem('authToken');
-            
-            if (token) {
-                try {
-                    const user = await fetchUserMe();
-                    setIsAuthenticated(true);
-                    setUsername(user.username);
-                } catch (error) {
-                    // Token is invalid or expired
-                    localStorage.removeItem('authToken');
-                    setIsAuthenticated(false);
-                    setUsername(null);
-                }
-            } else {
-                setIsAuthenticated(false);
-                setUsername(null);
-            }
-            
-            setLoading(false);
-        };
-        
-        checkAuth();
-    }, []);
-
     const toggleMenu = () => setIsOpen(open => !open);
 
     const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        setIsAuthenticated(false);
-        setUsername(null);
+        logout();
         navigate('/');
     };
+    console.log("Selam: ", user);
+
 
     return (
         <header className="navbar">
@@ -85,10 +56,10 @@ export const Navbar: React.FC = () => {
                     
                     {loading ? (
                         <span className="navbar-link loading">Yükleniyor...</span>
-                    ) : isAuthenticated && username ? (
+                    ) : user ? (
                         <>
                             <NavLink
-                                to={`/profile/${username}`}
+                                to={`/profile/${user.username}`}
                                 className={({ isActive }) =>
                                     isActive ? 'navbar-link active' : 'navbar-link'
                                 }

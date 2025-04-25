@@ -1,0 +1,5 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Link } from "react-router-dom";
+export default function MainLayout({ children }) {
+    return (_jsxs("div", { className: "min-h-screen bg-black text-white", children: [_jsxs("header", { className: "w-full px-4 md:px-10 py-4 flex items-center justify-between border-b border-gray-800 bg-zinc-900", children: [_jsxs(Link, { to: "/", className: "text-2xl font-bold text-white flex items-center gap-2", children: [_jsx("span", { role: "img", "aria-label": "icon", children: "\uD83D\uDCDA" }), " Listopia"] }), _jsxs("nav", { className: "flex gap-6 text-sm sm:text-base", children: [_jsx(Link, { to: "/", className: "hover:underline", children: "Anasayfa" }), _jsx(Link, { to: "/genre", className: "hover:underline", children: "T\u00FCrler" }), _jsx(Link, { to: "/comments", className: "hover:underline", children: "Yorumlar" }), _jsx(Link, { to: "/profile", className: "hover:underline", children: "Profil" })] })] }), _jsx("main", { className: "max-w-screen-xl mx-auto w-full", children: children })] }));
+}

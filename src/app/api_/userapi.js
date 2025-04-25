@@ -1,20 +1,6 @@
-// src/app/api_/userapi.ts
-import { User } from "@/types/user";
 const BASE = "https://api.ensargok.com/api/v1";
-
-export default interface APIResponse {
-    message: string,
-    success: boolean
-}
 // ─── AUTH APIs ────────────────────────────────────────────────────────────────
-
-export async function signUp(
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    username: string
-): Promise<APIResponse> {
+export async function signUp(email, password, firstName, lastName, username) {
     const res = await fetch(`${BASE}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,11 +13,7 @@ export async function signUp(
     }
     return res.json();
 }
-
-export async function signIn(
-    email: string,
-    password: string
-): Promise<APIResponse> {
+export async function signIn(email, password) {
     const res = await fetch(`${BASE}/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,8 +26,7 @@ export async function signIn(
     }
     return res.json();
 }
-
-export async function signOut(): Promise<APIResponse> {
+export async function signOut() {
     const res = await fetch(`${BASE}/auth/signout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,41 +38,34 @@ export async function signOut(): Promise<APIResponse> {
     }
     return res.json();
 }
-
 // ─── USER DATA APIs ───────────────────────────────────────────────────────────
-
-export async function fetchUserByUsername(
-    username: string
-): Promise<User> {
-    const res = await fetch(
-        `${BASE}/user/${encodeURIComponent(username)}`
-    );
+export async function fetchUserByUsername(username) {
+    const res = await fetch(`${BASE}/user/${encodeURIComponent(username)}`);
     if (!res.ok) {
         const errorText = await res.text();
         throw new Error(errorText || "Failed to fetch user");
     }
     return res.json();
 }
-
-export async function fetchFriendsByUUID(uuid: string): Promise<User[]> {
+export async function fetchFriendsByUUID(uuid) {
     const res = await fetch(`${BASE}/user/${encodeURIComponent(uuid)}/friends`);
-    if (!res.ok) throw new Error('Arkadaş listesi alınamadı');
-
+    if (!res.ok)
+        throw new Error('Arkadaş listesi alınamadı');
     const data = await res.json();
     console.log('[fetchFriendsByUUID] raw data:', data);
     // Backend "{ friends: User[] }" döndürüyorsa:
     if (Array.isArray(data)) {
         // doğrudan dizi dönüyor
         return data;
-    } else if (Array.isArray(data.friends)) {
+    }
+    else if (Array.isArray(data.friends)) {
         // { friends: [...] } formatını düzleştir
         return data.friends;
     }
     // beklenmeyen format
     throw new Error('Geçersiz arkadaş listesi formatı');
 }
-
-export async function fetchUserMe(): Promise<User>{
+export async function fetchUserMe() {
     const res = await fetch(`${BASE}/user/me`, {
         method: "GET",
         credentials: "include"
@@ -102,30 +76,18 @@ export async function fetchUserMe(): Promise<User>{
     }
     return res.json();
 }
-
-export async function addFriend(
-    userUuid: string,
-    friendUuid: string
-): Promise<void> {
-    const res = await fetch(
-        `${BASE}/user/${encodeURIComponent(userUuid)}/friends`,
-        {
-            method: "POST",
-            body: JSON.stringify({ friendUuid }),
-        }
-    );
-    if (!res.ok) throw new Error("Failed to add friend");
+export async function addFriend(userUuid, friendUuid) {
+    const res = await fetch(`${BASE}/user/${encodeURIComponent(userUuid)}/friends`, {
+        method: "POST",
+        body: JSON.stringify({ friendUuid }),
+    });
+    if (!res.ok)
+        throw new Error("Failed to add friend");
 }
-
-export async function removeFriend(
-    userUuid: string,
-    friendUuid: string
-): Promise<void> {
-    const res = await fetch(
-        `${BASE}/user/${encodeURIComponent(userUuid)}/friends/${encodeURIComponent(friendUuid)}`,
-        { 
-            method: "DELETE",
-        }
-    );
-    if (!res.ok) throw new Error("Failed to remove friend");
+export async function removeFriend(userUuid, friendUuid) {
+    const res = await fetch(`${BASE}/user/${encodeURIComponent(userUuid)}/friends/${encodeURIComponent(friendUuid)}`, {
+        method: "DELETE",
+    });
+    if (!res.ok)
+        throw new Error("Failed to remove friend");
 }
