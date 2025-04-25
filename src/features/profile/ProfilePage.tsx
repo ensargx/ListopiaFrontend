@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
                 console.log('Fetching friends for user:', profileUser.uuid);
                 const list = await fetchFriendsByUUID(profileUser.uuid);
                 console.log('Friends data:', list);
-                setFriends(list);
+                setFriends(list.content);
             } catch (err: any) {
                 console.error('Error in loadData:', err);
                 setError(err.message || 'Yüklenirken bir hata oluştu');

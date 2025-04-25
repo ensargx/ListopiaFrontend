@@ -1,5 +1,6 @@
 // src/app/api_/userapi.ts
 import { User } from "@/types/user";
+import {PaginatedResponse} from "@/types/friends"
 
 const BASE = "https://api.ensargok.com/api/v1";
 
@@ -74,23 +75,15 @@ export async function fetchUserByUsername(
     return res.json();
 }
 
-export async function fetchFriendsByUUID(uuid: string): Promise<User[]> {
+
+export async function fetchFriendsByUUID(
+    uuid: string
+): Promise<PaginatedResponse<User>> {
     const res = await fetch(`${BASE}/user/${encodeURIComponent(uuid)}/friends`);
     if (!res.ok) throw new Error('Arkadaş listesi alınamadı');
-
-    const data = await res.json();
-    console.log('[fetchFriendsByUUID] raw data:', data);
-    // Backend "{ friends: User[] }" döndürüyorsa:
-    if (Array.isArray(data)) {
-        // doğrudan dizi dönüyor
-        return data;
-    } else if (Array.isArray(data.friends)) {
-        // { friends: [...] } formatını düzleştir
-        return data.friends;
-    }
-    // beklenmeyen format
-    throw new Error('Geçersiz arkadaş listesi formatı');
+    return res.json();
 }
+
 
 export async function fetchUserMe(): Promise<User>{
     const res = await fetch(`${BASE}/user/me`, {
