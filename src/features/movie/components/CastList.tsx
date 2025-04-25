@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 // import placeholder from '@/assets/placeholder-profile.jpg';
 
 import { CastMember } from '@/types/crew';
-import { Link } from 'react-router-dom';
 import './CastList.css';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w185';
@@ -24,10 +23,8 @@ const CastList: React.FC<Props> = ({ casts }) => {
         <section className="cast-list">
             <h3>Cast</h3>
             <div className="cast-grid">
-                {filteredCasts.map((c, idx) => (
-                    <Link
-                        to={`/person/${c.personId}`}
-                        key={`${c.personId ?? 'noid'}-${idx}`}
+                {filteredCasts.map((c) => (
+                    <div
                         className="cast-card"
                     >
                         <img
@@ -37,7 +34,7 @@ const CastList: React.FC<Props> = ({ casts }) => {
                         />
                         <p className="name">{c.originalName}</p>
                         <p className="character">{c.character}</p>
-                    </Link>
+                    </div>
                 ))}
             </div>
 
