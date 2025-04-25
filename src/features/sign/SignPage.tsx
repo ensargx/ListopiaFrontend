@@ -22,14 +22,15 @@ const SignPage: React.FC = () => {
 
         try {
             // 1) Sign in, get token
-            const { token } = await signIn(email, password);
-            localStorage.setItem("authToken", token);
+            const response  = await signIn(email, password);
+            if(response.success){
+                const me = await fetchUserMe();
+                navigate(`/profile/${encodeURIComponent(me.username)}`);
+            }else{
+                setError(response.message);
+            }
 
-            // 2) Fetch "me" so we know the username
-            const me = await fetchUserMe();
 
-            // 3) Redirect to /profile/:username
-            navigate(`/profile/${encodeURIComponent(me.username)}`);
         } catch (err: any) {
             setError(err.message || "Giriş yapılırken bir hata oluştu");
         } finally {
@@ -44,11 +45,14 @@ const SignPage: React.FC = () => {
 
         try {
             // 1) Sign up, get token
-            const { token } = await signUp(email, password, firstName, lastName, username);
-            localStorage.setItem("authToken", token);
-
+            const response = await signUp(email, password, firstName, lastName, username);
+            if(response.success){
+                const me = await fetchUserMe();
+                navigate(`/profile/${encodeURIComponent(me.username)}`);
+            }else{
+                setError(response.message);
+            }
             // 2) Redirect to profile page
-            navigate(`/profile/${encodeURIComponent(username)}`);
         } catch (err: any) {
             setError(err.message || "Kayıt olurken bir hata oluştu");
         } finally {
