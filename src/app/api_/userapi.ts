@@ -1,5 +1,6 @@
 // src/app/api_/userapi.ts
 import { User } from "@/types/user";
+
 const BASE = "https://api.ensargok.com/api/v1";
 
 export default interface APIResponse {
