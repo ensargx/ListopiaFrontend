@@ -5,8 +5,8 @@
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    background-color: #f4f7fa;
 }
+
 
 .auth-card {
     width: 100%;
@@ -53,7 +53,7 @@
 }
 
 .auth-tab.active {
-    background-color: #0066ff;
+    background-color: #ff0000;
     color: white;
 }
 
@@ -97,7 +97,7 @@
 
 .auth-form input:focus {
     outline: none;
-    border-color: #0066ff;
+    border-color: #ff0000;
     box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
 }
 
@@ -120,7 +120,7 @@
     padding: 14px;
     border: none;
     border-radius: 8px;
-    background-color: #0066ff;
+    background-color: #ff0000;
     color: white;
     font-size: 16px;
     font-weight: 600;
@@ -130,7 +130,7 @@
 }
 
 .auth-button:hover {
-    background-color: #0055dd;
+    background-color: #ff0000;
 }
 
 .auth-button:disabled {

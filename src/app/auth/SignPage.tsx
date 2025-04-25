@@ -16,7 +16,7 @@ const SignPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { user, login, logout } = useAuth();
-
+    document.title = `Sign in - Listopia`;
     if ( user ) {
         redirect("/");
         return;
@@ -78,21 +78,20 @@ const SignPage: React.FC = () => {
         <div className="auth-container">
             <div className="auth-card">
                 <div className="auth-header">
-                    <h1>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h1>
                     <div className="auth-tabs">
                         <button 
                             className={`auth-tab ${isLogin ? 'active' : ''}`} 
                             onClick={() => setIsLogin(true)}
                             type="button"
                         >
-                            Giriş
+                            Sign in
                         </button>
                         <button 
                             className={`auth-tab ${!isLogin ? 'active' : ''}`} 
                             onClick={() => setIsLogin(false)}
                             type="button"
                         >
-                            Kayıt
+                            Sign Up
                         </button>
                     </div>
                 </div>
@@ -108,12 +107,12 @@ const SignPage: React.FC = () => {
                                 onChange={e => setEmail(e.target.value)}
                                 required
                                 disabled={loading}
-                                placeholder="Email adresiniz"
+                                placeholder="Email"
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="login-password">Şifre</label>
+                            <label htmlFor="login-password">Password</label>
                             <input
                                 id="login-password"
                                 type="password"
@@ -121,14 +120,14 @@ const SignPage: React.FC = () => {
                                 onChange={e => setPassword(e.target.value)}
                                 required
                                 disabled={loading}
-                                placeholder="Şifreniz"
+                                placeholder="Password"
                             />
                         </div>
 
                         {error && <p className="error-message">{error}</p>}
 
                         <button type="submit" className="auth-button" disabled={loading}>
-                            {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
+                            {loading ? "Signing in..." : "Sign In"}
                         </button>
                     </form>
                 ) : (
@@ -142,12 +141,12 @@ const SignPage: React.FC = () => {
                                 onChange={e => setEmail(e.target.value)}
                                 required
                                 disabled={loading}
-                                placeholder="Email adresiniz"
+                                placeholder="Email"
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="reg-username">Kullanıcı Adı</label>
+                            <label htmlFor="reg-username">Username</label>
                             <input
                                 id="reg-username"
                                 type="text"
@@ -155,13 +154,13 @@ const SignPage: React.FC = () => {
                                 onChange={e => setUsername(e.target.value)}
                                 required
                                 disabled={loading}
-                                placeholder="Kullanıcı adınız"
+                                placeholder="Username"
                             />
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label htmlFor="reg-firstname">Ad</label>
+                                <label htmlFor="reg-firstname">Name</label>
                                 <input
                                     id="reg-firstname"
                                     type="text"
@@ -169,12 +168,12 @@ const SignPage: React.FC = () => {
                                     onChange={e => setFirstName(e.target.value)}
                                     required
                                     disabled={loading}
-                                    placeholder="Adınız"
+                                    placeholder="Your name"
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="reg-lastname">Soyad</label>
+                                <label htmlFor="reg-lastname">Last Name</label>
                                 <input
                                     id="reg-lastname"
                                     type="text"
@@ -182,13 +181,13 @@ const SignPage: React.FC = () => {
                                     onChange={e => setLastName(e.target.value)}
                                     required
                                     disabled={loading}
-                                    placeholder="Soyadınız"
+                                    placeholder="Your last name"
                                 />
                             </div>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="reg-password">Şifre</label>
+                            <label htmlFor="reg-password">Password</label>
                             <input
                                 id="reg-password"
                                 type="password"
@@ -196,14 +195,14 @@ const SignPage: React.FC = () => {
                                 onChange={e => setPassword(e.target.value)}
                                 required
                                 disabled={loading}
-                                placeholder="Şifreniz"
+                                placeholder="Password"
                             />
                         </div>
 
                         {error && <p className="error-message">{error}</p>}
 
                         <button type="submit" className="auth-button" disabled={loading}>
-                            {loading ? "Kayıt olunuyor..." : "Kayıt Ol"}
+                            {loading ? "Signing up..." : "Sign Up"}
                         </button>
                     </form>
                 )}

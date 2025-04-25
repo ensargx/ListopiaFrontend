@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { redirect, useParams } from 'react-router-dom';
+import {Link, redirect, useParams } from 'react-router-dom';
 import './ProfilePage.css';
 import { User } from '@/types/user';
 import APIResponse, {
@@ -10,11 +10,14 @@ import APIResponse, {
     removeFriend,
 } from '@/api/userapi';
 import { useAuth } from '@/components/AuthContext';
+import { CardSlider } from '@/components/CardSlider';
 
 const ProfilePage: React.FC = () => {
     const { username } = useParams<{ username: string }>();
     const [friends, setFriends] = useState<User[]>([]);
     const [newFriendUsername, setNewFriendUsername] = useState('');
+    const [pageNumber, setPageNumber] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(30);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<User | null>(null);
@@ -36,7 +39,7 @@ const ProfilePage: React.FC = () => {
             setUser(value);
             setLoading(false);
         }).catch((err: Error) => {
-            console.error("hata gekdşÇ: ", err.message);
+            console.error("hata geldi: ", err.message);
             setError(JSON.parse(err.message).message);
             setLoading(false);
         })
@@ -44,20 +47,22 @@ const ProfilePage: React.FC = () => {
     }, [username]);
 
     const handleAddFriend = async () => {
-        console.log('Attempting to add friend:', newFriendUsername);
-        if (!user || !newFriendUsername.trim()) return;
+        if (!user || !userMe) return;
 
         try {
-            const friend = await fetchUserByUsername(newFriendUsername.trim());
-            console.log('Adding friend with UUID:', friend.uuid);
-            await addFriend(user.uuid, friend.uuid);
-            const updated = await fetchFriendsByUUID(user.uuid);
-            console.log('Updated friends list:', updated);
-            setFriends(friends => [...friends, ...updated.content]);
-            setNewFriendUsername('');
+            let res = await addFriend(user.uuid);
+            if(res.success){
+                const updated = await fetchFriendsByUUID(user.uuid, pageNumber, pageSize);
+                console.log('Updated friends list:', updated);
+                setFriends(friends => [...friends, ...updated.content]);
+                setNewFriendUsername('');
+            }else{
+                console.error('Failed to add friend:', res.message)
+                alert(res.message || 'Failed to add friend:');
+            }
         } catch (err: any) {
             console.error('Error in handleAddFriend:', err);
-            alert(err.message || 'Arkadaş eklenemedi');
+            alert(err.message || 'Failed to add friend:');
         }
     };
 
@@ -82,61 +87,73 @@ const ProfilePage: React.FC = () => {
     const isOwnProfile = userMe?.uuid === user.uuid;
 
     return (
-        <div className="profile-container">
-            <div className="profile-header">
-                <img
-                    src={'/placeholder-profile.jpg'}
-                    alt="Avatar"
-                    className="avatar"
-                />
-                <div className="profile-info">
-                    <h1>{user.firstName} {user.lastName}</h1>
-                    <p className="username">@{user.username}</p>
+        <main className="home-page">
+            {/* --- Hero + Sidebar Row --- */}
+            <div className="profile-container">
+                <div className="profile-header">
+                    <img
+                        src={'/placeholder-profile.jpg'}
+                        alt="Avatar"
+                        className="avatar"
+                    />
+                    <div className="profile-info">
+                        <h1>{user.firstName} {user.lastName}</h1>
+                        <p className="username">@{user.username}</p>
+                    </div>
                 </div>
+
+                {!isOwnProfile && (
+                    <div className="add-friend-form">
+                        <button className="button" onClick={handleAddFriend}>
+                            Arkadaş Ekle
+                        </button>
+                    </div>
+                )}
+
+                <h2>Arkadaşlar ({friends.length})</h2>
+                {friends.length === 0 ? (
+                    <p>Henüz arkadaşınız yok.</p>
+                ) : (
+                    <ul className="friends-list">
+                        {friends.map((f) => (
+                            <li key={f.uuid} className="friend-item">
+                                <section className="section">
+                                    <h2>Friends</h2>
+                                    <CardSlider
+                                        items={friends}
+                                        renderItem={m => (
+                                            <Link to={`/profile/${f.username}`} className="slider-card">
+                                                <div className="slider-poster">
+                                                    <img
+                                                        src={'/default-avatar.png'}
+                                                        alt="Avatar"
+                                                        className="avatar-small"
+                                                    />
+                                                </div>
+                                            </Link>
+                                        )}
+                                    />
+                                </section>
+
+                                {isOwnProfile && (
+                                    <button
+                                        className="button remove"
+                                        onClick={() => handleRemoveFriend(f.uuid)}
+                                    >
+                                        Kaldır
+                                    </button>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
 
-            {!isOwnProfile && (
-                <div className="add-friend-form">
-                    <input
-                        type="text"
-                        placeholder="Arkadaş eklemek için kullanıcı adı"
-                        value={newFriendUsername}
-                        onChange={(e) => setNewFriendUsername(e.target.value)}
-                    />
-                    <button className="button" onClick={handleAddFriend}>
-                        Arkadaş Ekle
-                    </button>
-                </div>
-            )}
+            {/* --- Aşağıdaki iki slider --- */}
 
-            <h2>Arkadaşlar ({friends.length})</h2>
-            {friends.length === 0 ? (
-                <p>Henüz arkadaşınız yok.</p>
-            ) : (
-                <ul className="friends-list">
-                    {friends.map((f) => (
-                        <li key={f.uuid} className="friend-item">
-                            <img
-                                src={'/default-avatar.png'}
-                                alt="Avatar"
-                                className="avatar-small"
-                            />
-                            <span>
-                {f.firstName} {f.lastName} (@{f.username})
-              </span>
-                            {isOwnProfile && (
-                                <button
-                                    className="button remove"
-                                    onClick={() => handleRemoveFriend(f.uuid)}
-                                >
-                                    Kaldır
-                                </button>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+        </main>
+
+
     );
 };
 
