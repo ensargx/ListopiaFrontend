@@ -54,6 +54,26 @@
     border-bottom: 2px solid #e50914; /* vurgulu alt çizgi */
 }
 
+/* Loading state */
+.navbar-link.loading {
+    color: #888;
+    cursor: default;
+}
+
+/* Logout button */
+.logout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    display: inline-block;
+}
+
+.logout-button:hover {
+    color: #e50914;
+}
+
 /* Mobil */
 @media (max-width: 768px) {
     .navbar-toggle {
@@ -73,6 +93,12 @@
         display: flex;
     }
     .navbar-link {
+        padding: 1rem;
+        border-top: 1px solid #222;
+    }
+    .logout-button {
+        text-align: left;
+        width: 100%;
         padding: 1rem;
         border-top: 1px solid #222;
     }

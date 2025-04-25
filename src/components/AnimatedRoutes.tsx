@@ -4,6 +4,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import HomePage from '@/features/home/HomePage';
 import GenrePage from '@/features/genre/GenrePage';
 import MoviePage from '@/features/movie/MoviePage';
+import ProfilePage from '@/features/profile/ProfilePage';
+import SignPage from '@/features/sign/SignPage';
+
+
 import './AnimatedRoutes.css';
 
 const AnimatedRoutes: React.FC = () => {
@@ -27,6 +31,10 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/genres" element={<GenrePage />} />
                         <Route path="/genres/:genre" element={<GenrePage />} />
                         <Route path="/movies/:movieId" element={<MoviePage />} />
+                        <Route path="/profile/:username" element={<ProfilePage/>}/>
+                        <Route path="/signin" element={<SignPage/>}/>
+                        <Route path="/login" element={<SignPage/>}/>
+                        <Route path="/register" element={<SignPage/>}/>
                         {/* …other routes… */}
                     </Routes>
                 </div>
