@@ -1,8 +1,9 @@
 // src/pages/SignInPage.tsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/app/api_/userapi";
 import "./SignPage.css";
+import { useAuth } from "@/app/AuthContext";
 
 const SignPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -14,6 +15,12 @@ const SignPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { user, login, logout } = useAuth();
+
+    if ( user ) {
+        redirect("/");
+        return;
+    }
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,8 +32,10 @@ const SignPage: React.FC = () => {
             const response  = await signIn(email, password);
             if(response.success){
                 const me = await fetchUserMe();
+                login(me);
                 navigate(`/profile/${encodeURIComponent(me.username)}`);
             }else{
+                logout();
                 setError(response.message);
             }
 
