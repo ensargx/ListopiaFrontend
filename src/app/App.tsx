@@ -1,17 +1,18 @@
+// src/routes.tsx
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/Header/Navbar';
 import ScrollToTop from '@/components/ScrollToTop';
-import AnimatedRoutes from '@/components/AnimatedRoutes';  // ← kesinlikle buradan alıyoruz
-import './index.css';  // genel stiller
-// NOT: AnimatedRoutes.css içeriğini aşağıda (2. adım) import edeceğiz
+import AnimatedRoutes from '@/app/routes/AnimatedRoutes';
+import Footer from '@/components/Footer';
 
-const App: React.FC = () => (
-    <BrowserRouter>
+export default function App() {
+    return (
+        <BrowserRouter>
             <Navbar />
             <ScrollToTop />
-            <AnimatedRoutes />    {/* ← buraya geçişli rotalar */}
+            <AnimatedRoutes />
+            <Footer />
         </BrowserRouter>
-);
-
-export default App;
+    );
+}
