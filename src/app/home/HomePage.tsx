@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieById } from '@/api/movieapi';
 import { Movie } from '@/types/movie';
-import { HeroBanner } from './components/HeroBanner';
-import { PopularMovies } from './components/PopularMovies';
-import { RecentMovies } from './components/RecentMovies';
-import { SidebarSpecial } from './components/SidebarSpecial';
+import { HeroBanner } from '../../components/HeroBanner';
+import { PopularMovies } from '../../components/PopularMovies';
+import { RecentMovies } from '../../components/RecentMovies';
+import { SidebarSpecial } from '../../components/SidebarSpecial';
 import './HomePage.css';
 
 export const HomePage: React.FC = () => {
