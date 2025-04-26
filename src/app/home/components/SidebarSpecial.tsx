@@ -3,6 +3,7 @@ import { fetchFrontMovies } from '@/api/movieapi';
 import { FrontMovie } from '@/types/front';
 import { Link } from 'react-router-dom';
 import '../style/SidebarSpecial.css';
+import { movieToSlug } from '../util/slug';
 
 export const SidebarSpecial: React.FC = () => {
     const [movies, setMovies] = useState<FrontMovie[]>([]);
@@ -28,7 +29,7 @@ export const SidebarSpecial: React.FC = () => {
                 <ul>
                     {movies.map(m => (
                         <li key={m.movieId}>
-                            <Link to={`/movies/${m.movieId}`} className="item">
+                            <Link to={movieToSlug(m)} className="item">
                                 <img
                                     src={`https://image.tmdb.org/t/p/w92${m.poster}`}
                                     alt={m.title}

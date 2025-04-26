@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { redirect, useParams } from 'react-router-dom';
 import {
     fetchMovieById,
     fetchMovieCasts,
@@ -14,17 +14,22 @@ import CrewList from './components/CrewList';
 import ReviewList from './components/ReviewList';
 import SimilarMovies from './components/SimilarMovies';
 import './style/MoviePage.css';
+import { movieIdFromSlug } from '../home/util/slug';
 
 export const MoviePage: React.FC = () => {
-    const { movieId } = useParams<{ movieId: string }>();
+    const { movieSlug } = useParams<{ movieSlug: string }>();
     const [movie, setMovie] = useState<Movie | null>(null);
     const [casts, setCasts] = useState<CastMember[]>([]);
     const [crews, setCrews] = useState<CrewMember[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!movieId) return;
-        const id = Number(movieId);
+        if ( !movieSlug) {
+            redirect("/");
+            return;
+        }
+        const id = movieIdFromSlug(movieSlug);
+        if (!id) return;
         Promise.all([
             fetchMovieById(id),
             fetchMovieCasts(id),
@@ -38,7 +43,7 @@ export const MoviePage: React.FC = () => {
             })
             .catch(console.error)
             .finally(() => setLoading(false));
-    }, [movieId]);
+    }, [movieSlug]);
 
     if (loading) return <p>Loading…</p>;
     if (!movie) return <p>Movie not found</p>;

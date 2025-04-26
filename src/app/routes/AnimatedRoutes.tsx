@@ -30,7 +30,7 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/genres" element={<GenrePage />} />
                         <Route path="/genres/:genre" element={<GenrePage />} />
-                        <Route path="/movies/:movieId" element={<MoviePage />} />
+                        <Route path="/movies/:movieSlug" element={<MoviePage />} />
                         <Route path="/profile/:username" element={<ProfilePage/>}/>
                         <Route path="/signin" element={<SignPage/>}/>
                         <Route path="/login" element={<SignPage/>}/>

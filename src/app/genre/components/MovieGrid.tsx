@@ -9,6 +9,7 @@ import '../style/MovieGrid.css';
 
 interface Props { movies: FrontMovie[]; }
 import { getPosterUrl } from '@/lib/utils';
+import { movieToSlug } from '@/app/home/util/slug';
 
 function truncate(text: string, maxLen = 50) {
     return text.length > maxLen
@@ -26,7 +27,7 @@ export const MovieGrid: React.FC<Props> = ({ movies }) => (
             return (
                 <Link
                     key={movie.movieId}
-                    to={`/movies/${movie.movieId}`}
+                    to={movieToSlug(movie)}
                     className="movie-card"
                 >
                     <img

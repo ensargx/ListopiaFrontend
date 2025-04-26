@@ -5,6 +5,7 @@ import { FrontMovie } from '@/types/front';
 import { CardSlider } from './CardSlider';
 import '../style/RecentMovies.css';
 import { getPosterUrl } from '@/lib/utils';
+import { movieToSlug } from '../util/slug';
 
 export const RecentMovies: React.FC = () => {
     const [movies, setMovies] = useState<FrontMovie[]>([]);
@@ -29,7 +30,7 @@ export const RecentMovies: React.FC = () => {
             <CardSlider
                 items={movies}
                 renderItem={m => (
-                    <Link to={`/movies/${m.movieId}`} className="slider-card">
+                    <Link to={movieToSlug(m)} className="slider-card">
                         <div className="slider-poster">
                         <img
                          src={getPosterUrl(m.poster)} alt={m.title}
