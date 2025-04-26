@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { fetchFrontMovies } from '@/api/movieapi';
 import { FrontMovie } from '@/types/front';
 import { CardSlider } from './CardSlider';
-import './RecentMovies.css';
+import '../style/RecentMovies.css';
 import { getPosterUrl } from '@/lib/utils';
 
 export const RecentMovies: React.FC = () => {

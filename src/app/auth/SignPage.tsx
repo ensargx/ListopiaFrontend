@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/api/userapi";
-import "./SignPage.css";
-import { useAuth } from "@/components/AuthContext";
+import "./style/SignPage.css";
+import { useAuth } from "@/app/auth/hooks/AuthContext";
 
 const SignPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);

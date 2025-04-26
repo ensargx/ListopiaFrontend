@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './ReviewList.css';
+import '../style/ReviewList.css';
 
 interface ReviewList {
     id: string;

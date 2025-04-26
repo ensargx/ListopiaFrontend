@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { fetchFrontMovies } from '@/api/movieapi';
 import { FrontMovie } from '@/types/front';
-import { CardSlider } from '@/components/CardSlider';
+import { CardSlider } from '@/app/home/components/CardSlider';
 import { Link } from 'react-router-dom';
-import './SimilarMovies.css';
+import '../style/SimilarMovies.css';
 
 interface Props {
     genre: string;

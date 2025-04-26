@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from '@/types/user';
-import { getUserFromStorage, saveUserToStorage, clearUserFromStorage } from "../lib/auth";
+import { getUserFromStorage, saveUserToStorage, clearUserFromStorage } from "../../../lib/auth";
 
 interface AuthContextType {
     user: User | null;

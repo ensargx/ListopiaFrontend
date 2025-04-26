@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { fetchFrontMovies } from '@/api/movieapi';
 import { FrontMovie } from '@/types/front';
 import { CardSlider } from './CardSlider';
-import './PopularMovies.css';
+import '../style/PopularMovies.css';
 import {getPosterUrl} from "@/lib/utils";
 
 export const PopularMovies: React.FC = () => {

@@ -1,6 +1,6 @@
 // src/features/genre/components/SearchBar.tsx
 import React from 'react';
-import './SearchBar.css';
+import '../style/SearchBar.css';
 
 interface Props {
     value: string;

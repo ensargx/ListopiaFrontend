@@ -8,12 +8,12 @@ import {
 import {CrewMember} from "@/types/crew";
 import {CastMember} from "@/types/crew";
 import { Movie } from '@/types/movie';
-import MovieHeader from '../../components/MovieHeader';
-import CastList from '../../components/CastList';
-import CrewList from '../../components/CrewList';
-import ReviewList from '../../components/ReviewList';
-import SimilarMovies from '../../components/SimilarMovies';
-import './MoviePage.css';
+import MovieHeader from './components/MovieHeader';
+import CastList from './components/CastList';
+import CrewList from './components/CrewList';
+import ReviewList from './components/ReviewList';
+import SimilarMovies from './components/SimilarMovies';
+import './style/MoviePage.css';
 
 export const MoviePage: React.FC = () => {
     const { movieId } = useParams<{ movieId: string }>();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchFrontMovies } from '@/api/movieapi';
 import { FrontMovie } from '@/types/front';
 import { Link } from 'react-router-dom';
-import './SidebarSpecial.css';
+import '../style/SidebarSpecial.css';
 
 export const SidebarSpecial: React.FC = () => {
     const [movies, setMovies] = useState<FrontMovie[]>([]);

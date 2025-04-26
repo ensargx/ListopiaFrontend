@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CrewMember } from '@/types/crew';
-import './CrewList.css';
+import '../style/CrewList.css';
 
 
 interface Props {

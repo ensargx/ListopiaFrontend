@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchFrontMovies, searchFrontMovies } from '@/api/movieapi';
 import { FrontMovie, PagedResponse } from '@/types/front';
-import { GenreSidebar } from '../../components/GenreSidebar';
-import { SearchBar } from '../../components/SearchBar';
-import { MovieGrid } from '../../components/MovieGrid';
-import { Pagination } from '../../components/Pagination';
-import './GenrePage.css';
+import { GenreSidebar } from './components/GenreSidebar';
+import { SearchBar } from './components/SearchBar';
+import { MovieGrid } from './components/MovieGrid';
+import { Pagination } from './components/Pagination';
+import './style/GenrePage.css';
 
 export const GenrePage: React.FC = () => {
     const { genre } = useParams<{ genre?: string }>();

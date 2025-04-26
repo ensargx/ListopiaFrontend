@@ -1,7 +1,7 @@
 // src/features/genre/components/GenreSidebar.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './GenreSidebar.css';
+import '../style/GenreSidebar.css';
 
 interface Props {
     genres: string[];
