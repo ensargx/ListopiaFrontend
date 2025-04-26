@@ -1,6 +1,6 @@
 // src/features/home/components/CardSlider.tsx
 import React, { useRef } from 'react';
-import './CardSlider.css';
+import '../style/CardSlider.css';
 
 type CardSliderProps<T> = {
     items: T[];

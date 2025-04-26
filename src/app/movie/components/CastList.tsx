@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // import placeholder from '@/assets/placeholder-profile.jpg';
 
 import { CastMember } from '@/types/crew';
-import './CastList.css';
+import '../style/CastList.css';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w185';
 

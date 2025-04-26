@@ -1,8 +1,8 @@
 // src/app/components/Navbar.tsx  (veya senin dosya yapına göre konumlandır)
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/AuthContext';
-import './Navbar.css';
+import { useAuth } from '@/app/auth/hooks/AuthContext';
+import './style.css';
 
 export const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);

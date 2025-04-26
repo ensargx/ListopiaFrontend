@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { redirect, useParams } from 'react-router-dom';
-import './ProfilePage.css';
+import './style/ProfilePage.css';
 import { User } from '@/types/user';
 import APIResponse, {
     fetchUserByUsername,
@@ -9,7 +9,7 @@ import APIResponse, {
     addFriend,
     removeFriend,
 } from '@/api/userapi';
-import { useAuth } from '@/components/AuthContext';
+import { useAuth } from '@/app/auth/hooks/AuthContext';
 
 const ProfilePage: React.FC = () => {
     const { username } = useParams<{ username: string }>();

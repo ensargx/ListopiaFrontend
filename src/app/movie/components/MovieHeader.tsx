@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Movie } from '@/types/movie';
-import './MovieHeader.css';
+import '../style/MovieHeader.css';
 import { getPosterUrl } from "@/lib/utils";
 
 interface Props {

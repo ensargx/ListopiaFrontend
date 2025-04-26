@@ -1,6 +1,6 @@
 // src/features/genre/components/Pagination.tsx
 import React from 'react';
-import './Pagination.css';
+import '../style/Pagination.css';
 
 interface Props {
     pageNumber: number;   // 0‑based

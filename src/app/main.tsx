@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { AuthProvider } from '../components/AuthContext';
+import { AuthProvider } from './auth/hooks/AuthContext';
 import App from './App';
 
-import '@/styles/index.css';
+import './style.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Movie } from '@/types/movie';
 import {Link} from 'react-router-dom';
-import './HeroBanner.css';
+import '../style/HeroBanner.css';
 
 type Props = { movie: Movie };
 
