@@ -81,10 +81,19 @@ export async function fetchUserByUsername(
 
 
 export async function fetchFriendsByUUID(
-    uuid: string
+    uuid: string,
+    pageNumber: number,
+    pageSize: number
 ): Promise<PaginatedResponse<User>> {
-    const res = await fetch(`${BASE}/user/${encodeURIComponent(uuid)}/friends`);
-    if (!res.ok) throw new Error('Arkadaş listesi alınamadı');
+    const res = await fetch(
+        `/api/v1/user/${encodeURIComponent(uuid)}/friends` +
+        `?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        {
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+        }
+    );
+    if (!res.ok) throw new Error('Failed to fetch friends list');
     return res.json();
 }
 
@@ -102,17 +111,34 @@ export async function fetchUserMe(): Promise<User>{
 }
 
 export async function addFriend(
-    userUuid: string,
     friendUuid: string
-): Promise<void> {
+): Promise<APIResponse> {
     const res = await fetch(
-        `${BASE}/user/${encodeURIComponent(userUuid)}/friends`,
+        `${BASE}/user/add_friend`,
         {
             method: "POST",
-            body: JSON.stringify({ friendUuid }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uuid: friendUuid }),
+            credentials: "include"
         }
     );
     if (!res.ok) throw new Error("Failed to add friend");
+    return res.json();
+}
+export async function fetchFriendRequests(
+    pageNumber: number,
+    pageSize: number
+): Promise<PaginatedResponse<User>> {
+    const res = await fetch(
+        `/api/v1/user/friend_requests` +
+        `?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        {
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+        }
+    );
+    if (!res.ok) throw new Error('Failed to fetch friend requests list');
+    return res.json();
 }
 
 export async function removeFriend(
@@ -121,7 +147,7 @@ export async function removeFriend(
 ): Promise<void> {
     const res = await fetch(
         `${BASE}/user/${encodeURIComponent(userUuid)}/friends/${encodeURIComponent(friendUuid)}`,
-        { 
+        {
             method: "DELETE",
         }
     );

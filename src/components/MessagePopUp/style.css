@@ -1,0 +1,117 @@
+.message-popup-container {
+    position: fixed;
+    bottom: 20px;    /* Sağ alt köşeden 20px yukarı */
+    right: 20px;     /* Sağdan 20px içeride */
+    display: inline-block;
+    z-index: 1000;   /* Diğer içeriklerin üzerinde */
+}
+
+.message-popup-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+/* space between icon and text */
+.message-popup-label {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.message-popup-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #FF4500;
+    color: #fff;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Popup’ı butonun hemen üstünde göster */
+.message-popup-popup {
+    position: absolute;  /* container içinde mutlak konum */
+    bottom: 100%;        /* butonun üst kenarına hizala */
+    right: 0;            /* sağa yasla */
+    margin-bottom: 8px;  /* buton ile popup arasında boşluk */
+    width: 320px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.message-popup-header {
+    padding: 8px 16px;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+}
+
+.message-popup-list {
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.message-popup-item {
+    display: flex;
+    padding: 8px 16px;
+    cursor: pointer;
+    align-items: flex-start;
+    transition: background 0.2s;
+}
+
+.message-popup-item:hover {
+    background: #f5f5f5;
+}
+
+.message-popup-avatar {
+    width: 40px;    /* Küçük avatar boyutu */
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+}
+
+.message-popup-content {
+    flex: 1;
+}
+
+.message-popup-sender {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.message-popup-text {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.message-popup-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.message-popup-footer {
+    padding: 8px 16px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.message-popup-view-all {
+    font-size: 14px;
+    color: #0063e5;
+    text-decoration: none;
+}
