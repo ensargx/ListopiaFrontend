@@ -1,7 +1,4 @@
-// src/features/movie/components/CastList.tsx
 import React, { useState } from 'react';
-// import placeholder from '@/assets/placeholder-profile.jpg';
-
 import { CastMember } from '@/types/crew';
 import '../style/CastList.css';
 
@@ -25,6 +22,7 @@ const CastList: React.FC<Props> = ({ casts }) => {
             <div className="cast-grid">
                 {filteredCasts.map((c) => (
                     <div
+                        key={c.personId || `${c.originalName}-${c.character}`}
                         className="cast-card"
                     >
                         <img
@@ -49,6 +47,5 @@ const CastList: React.FC<Props> = ({ casts }) => {
         </section>
     );
 };
-
 
 export default CastList;
