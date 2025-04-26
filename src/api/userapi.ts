@@ -1,6 +1,7 @@
 // src/app/api_/userapi.ts
 import { User } from "@/types/user";
 import {PaginatedResponse} from "@/types/friends"
+import { apiFetch as fetch } from './apiClient';
 
 const BASE = "https://api.ensargok.com/api/v1";
 

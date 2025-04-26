@@ -1,9 +1,16 @@
+// src/components/ReviewList.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchMovieComments, submitMovieComment } from '@/api/movieapi';
-import { useAuth } from "@/app/auth/hooks/AuthContext";
+import {
+    fetchMovieComments,
+    submitMovieComment,
+    updateMovieComment,
+    deleteMovieComment,
+    reportMovieComment,
+} from '@/api/movieapi';
+import { useAuth } from '@/app/auth/hooks/AuthContext';
 import '../style/ReviewList.css';
-import { Comment } from '@/types/movie'; // Correct import for Comment
+import { Comment } from '@/types/movie';
 import { movieIdFromSlug } from '@/app/home/util/slug';
 
 const COMMENTS_PER_PAGE = 5;
@@ -12,141 +19,292 @@ const ReviewList: React.FC = () => {
     const { movieSlug } = useParams<{ movieSlug: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
-
     const movieId = movieIdFromSlug(movieSlug || '') || 0;
-    const [comments, setComments] = useState<Comment[]>([]); // Correct type for comments
+
+    const [comments, setComments] = useState<Comment[]>([]);
     const [comment, setComment] = useState('');
-    const [isSpoiler, setIsSpoiler] = useState(false); // State for spoiler checkbox for new comment
-    const [currentPage, setCurrentPage] = useState(0); // Current page for pagination
-    const [totalPages, setTotalPages] = useState(0); // Total number of pages
+    const [isSpoiler, setIsSpoiler] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    const submitCommentHandler = async () => {
-        if (!user) {
-            navigate('/login/');
-            return;
-        }
+    // editing state
+    const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+    const [editingMessage, setEditingMessage] = useState('');
+    const [editingIsSpoiler, setEditingIsSpoiler] = useState(false);
 
-        try {
-            const newComment = await submitMovieComment(movieId, user.uuid, comment, isSpoiler);
-            // Prepend the new comment to the existing ones
-            setComments((prevComments) => [newComment, ...prevComments]);
-            setComment(''); // Clear the comment input
-            setIsSpoiler(false); // Reset the spoiler checkbox
-        } catch (error) {
-            console.error('Failed to submit comment', error);
-        }
-    };
-
+    // fetch comments
     const fetchComments = async (page: number) => {
         setLoading(true);
         try {
-            const response = await fetchMovieComments(movieId, page, COMMENTS_PER_PAGE);
-            setComments(response.content || []);  // Ensure response.content is an array
-            setTotalPages(response.totalPages || 0);  // Set the total number of pages
-        } catch (error) {
-            console.error('Failed to fetch comments', error);
+            const resp = await fetchMovieComments(movieId, page, COMMENTS_PER_PAGE);
+            setComments(resp.content);
+            setTotalPages(resp.totalPages);
+        } catch (err) {
+            console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (movieId) {
-            fetchComments(currentPage);
-        }
+        if (movieId) fetchComments(currentPage);
     }, [movieId, currentPage]);
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
+    // submit new
+    const submitCommentHandler = async () => {
+        if (!user) {
+            navigate('/login/');
+            return;
+        }
+        try {
+            const newComment = await submitMovieComment(
+                movieId,
+                user.uuid,
+                comment,
+                isSpoiler
+            );
+            setComments(prev => [newComment, ...prev]);
+            setComment('');
+            setIsSpoiler(false);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    // Function to toggle the spoiler visibility for a specific comment
-    const toggleSpoiler = (commentId: number) => {
-        const updatedComments = comments.map(comment =>
-            comment.commentId === commentId
-                ? { ...comment, isSpoiler: !comment.isSpoiler } // Toggle the spoiler flag for this specific comment
-                : comment
+    // pagination
+    const handlePageChange = (page: number) => {
+        if (page >= 0 && page < totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    // toggle spoiler reveal
+    const toggleSpoiler = (id: number) => {
+        setComments(prev =>
+            prev.map(c =>
+                c.commentId === id ? { ...c, isSpoiler: !c.isSpoiler } : c
+            )
         );
-        setComments(updatedComments);
+    };
+
+    // edit handlers
+    const handleEditClick = (c: Comment) => {
+        setEditingCommentId(c.commentId);
+        setEditingMessage(c.message);
+        setEditingIsSpoiler(c.isSpoiler);
+    };
+    const handleCancelEdit = () => {
+        setEditingCommentId(null);
+    };
+    const handleSaveEdit = async (id: number) => {
+        try {
+            const updated = await updateMovieComment(
+                id,
+                editingMessage,
+                editingIsSpoiler
+            );
+            setComments(prev =>
+                prev.map(c => (c.commentId === id ? updated : c))
+            );
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setEditingCommentId(null);
+        }
+    };
+
+    // delete handler
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Yorumu silmek istediğinize emin misiniz?')) return;
+        try {
+            await deleteMovieComment(id);
+            setComments(prev => prev.filter(c => c.commentId !== id));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    // report with confirmation
+    const handleReport = async (id: number) => {
+        if (!window.confirm('Are you sure you want to report this comment?')) {
+            return;
+        }
+        try {
+            await reportMovieComment(id);
+            alert('Thank you—this comment has been reported.');
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
         <section className="review-list">
             <h2>User Reviews</h2>
-
-            {loading && <p>Loading comments...</p>}
+            {loading && <p>Loading comments…</p>}
 
             {comments.length > 0 ? (
-                comments.map((commentObj) => (
-                    <div key={commentObj.commentId} className="review-card">
-                        <p className="author">
-                            {/* Accessing user properties: firstName, lastName, and username */}
-                            <span
-                                className="author-name"
-                                onClick={() => navigate(`/profile/${encodeURIComponent(commentObj.user.uuid)}`)}
-                            >
-                                {commentObj.user.username} {/* Display username */}
-                            </span>
-                        </p>
+                comments.map(c => {
+                    // format timestamp
+                    let dateStr = '';
+                    if (c.sentAt) {
+                        const ms = c.sentAt > 1e12 ? c.sentAt : c.sentAt * 1000;
+                        dateStr = new Date(ms).toLocaleString();
+                    }
 
-                        <p className="content">
-                            {/* Show "Show Spoiler" button if it's a spoiler */}
-                            {commentObj.isSpoiler ? (
-                                <button
-                                    className="spoiler-button"
-                                    onClick={() => toggleSpoiler(commentObj.commentId)}
-                                >
-                                    Show Spoiler
-                                </button>
+                    return (
+                        <div key={c.commentId} className="review-card">
+                            <p className="author">
+                <span
+                    className="author-name"
+                    onClick={() =>
+                        navigate(`/profile/${c.user.username}`)
+                    }
+                >
+                  {c.user.firstName} {c.user.lastName}
+                </span>
+                                <span className="username">
+                  @{c.user.username}
+                </span>
+                            </p>
+
+                            {editingCommentId === c.commentId ? (
+                                <div className="edit-section">
+                  <textarea
+                      value={editingMessage}
+                      onChange={e =>
+                          setEditingMessage(e.target.value)
+                      }
+                  />
+                                    <label className="spoiler-checkbox">
+                                        <input
+                                            type="checkbox"
+                                            checked={editingIsSpoiler}
+                                            onChange={() =>
+                                                setEditingIsSpoiler(prev => !prev)
+                                            }
+                                        />
+                                        Spoiler
+                                    </label>
+                                    <button
+                                        className="save-button"
+                                        onClick={() => handleSaveEdit(c.commentId)}
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        className="cancel-button"
+                                        onClick={handleCancelEdit}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
                             ) : (
-                                <>{commentObj.message}</> // Show the message if not a spoiler
-                            )}
-                        </p>
+                                <>
+                                    <div className="content-row">
+                                        {c.isSpoiler ? (
+                                            <button
+                                                className="spoiler-button"
+                                                onClick={() =>
+                                                    toggleSpoiler(c.commentId)
+                                                }
+                                            >
+                                                Show Spoiler
+                                            </button>
+                                        ) : (
+                                            <p className="content">{c.message}</p>
+                                        )}
+                                        <div className="comment-actions">
+                                            {user?.uuid === c.user.uuid && (
+                                                <>
+                                                    <button
+                                                        className="edit-button"
+                                                        onClick={() => handleEditClick(c)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="delete-button"
+                                                        onClick={() => handleDelete(c.commentId)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </>
+                                            )}
+                                            <button
+                                                className="report-button"
+                                                onClick={() =>
+                                                    handleReport(c.commentId)
+                                                }
+                                            >
+                                                Report
+                                            </button>
+                                        </div>
+                                    </div>
 
-                        {/* Only show the spoiler message if the comment is marked as a spoiler */}
-                        {commentObj.isSpoiler && commentObj.isUpdated && (
-                            <p className="spoiler-message">{commentObj.message}</p>
-                        )}
-                    </div>
-                ))
+                                    {dateStr && (
+                                        <p className="timestamp">{dateStr}</p>
+                                    )}
+
+                                    {c.isSpoiler && c.isUpdated && (
+                                        <p className="spoiler-message">
+                                            {c.message}
+                                        </p>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    );
+                })
             ) : (
                 <p>No comments available.</p>
             )}
 
+            {/* new comment form */}
             <div className="comment-section">
-                <textarea
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Write a comment..."
-                />
+        <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            placeholder="Write a comment..."
+        />
                 <div className="spoiler-checkbox">
                     <label>
                         <input
                             type="checkbox"
                             checked={isSpoiler}
-                            onChange={() => setIsSpoiler(!isSpoiler)} // Toggle the spoiler flag for new comment
+                            onChange={() =>
+                                setIsSpoiler(prev => !prev)
+                            }
                         />
                         This is a spoiler
                     </label>
                 </div>
-                <button onClick={submitCommentHandler} className="btn-comment">
+                <button
+                    onClick={submitCommentHandler}
+                    className="btn-comment"
+                >
                     Submit Comment
                 </button>
             </div>
 
-            {/* Pagination Controls */}
+            {/* pagination */}
             <div className="pagination">
                 <button
-                    onClick={() => handlePageChange(currentPage - 1)}
+                    onClick={() =>
+                        handlePageChange(currentPage - 1)
+                    }
                     disabled={currentPage <= 0}
                     className="pagination-button"
                 >
                     Previous
                 </button>
-                <span className="pagination-info">Page {currentPage + 1} of {totalPages}</span>
+                <span className="pagination-info">
+          Page {currentPage + 1} of {totalPages}
+        </span>
                 <button
-                    onClick={() => handlePageChange(currentPage + 1)}
+                    onClick={() =>
+                        handlePageChange(currentPage + 1)
+                    }
                     disabled={currentPage >= totalPages - 1}
                     className="pagination-button"
                 >

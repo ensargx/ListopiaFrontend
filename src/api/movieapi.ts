@@ -3,6 +3,7 @@ import { Movie } from '@/types/movie';
 import { FrontMovie, PagedResponse } from '@/types/front';
 import { CrewMember, CastMember } from '@/types/crew';
 import { Comment } from '@/types/movie';
+import { apiFetch as fetch } from './apiClient';
 
 // proxy kullanımı için başına “/” koyuyoruz
 const BASE_URL = 'https://api.ensargok.com/api';
@@ -220,6 +221,64 @@ export async function submitMovieComment(
     }
 
     return response.json();
+}
+
+/**
+ * Update an existing comment
+ */
+export async function updateMovieComment(
+    commentId: number,
+    message: string,
+    isSpoiler: boolean
+): Promise<Comment> {
+    const params = new URLSearchParams({
+        message,
+        isSpoiler: isSpoiler.toString(),
+    });
+    const res = await fetch(
+        `${BASE_URL}/movies/comment/${commentId}?${params.toString()}`,
+        {
+            method: 'PUT',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+        }
+    );
+    if (!res.ok) throw new Error('Failed to update comment');
+    return res.json();
+}
+
+/**
+ * Delete a comment
+ */
+export async function deleteMovieComment(
+    commentId: number
+): Promise<{ message: string; success: boolean }> {
+    const res = await fetch(
+        `${BASE_URL}/movies/comment/${commentId}`,
+        {
+            method: 'DELETE',
+            credentials: 'include',
+        }
+    );
+    if (!res.ok) throw new Error('Failed to delete comment');
+    return res.json();
+}
+
+/**
+ * Report a comment
+ */
+export async function reportMovieComment(
+    commentId: number
+): Promise<{ message: string; success: boolean }> {
+    const res = await fetch(
+        `${BASE_URL}/movies/comment/${commentId}/report`,
+        {
+            method: 'POST',
+            credentials: 'include',
+        }
+    );
+    if (!res.ok) throw new Error('Failed to report comment');
+    return res.json();
 }
 
 
