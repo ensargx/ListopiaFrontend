@@ -6,5 +6,6 @@ export interface User {
     biography: string | null,
     role: string | null,
     lastOnline: number,
-    createdAt: number
+    createdAt: number,
+    profilePicture: string
 }

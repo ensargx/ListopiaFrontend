@@ -41,7 +41,7 @@ const mockProfileUpdates = [
             overview:
                 "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden.",
         },
-        updatedAt: "2023-03-15T14:48:00Z",
+        updatedAt: 174574515714,
     },
     {
         id: 2,
@@ -55,7 +55,7 @@ const mockProfileUpdates = [
             overview:
                 "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator.",
         },
-        updatedAt: "2023-01-10T09:30:00Z",
+        updatedAt: 174574515714,
     },
     {
         id: 3,
@@ -69,7 +69,7 @@ const mockProfileUpdates = [
             overview:
                 "A man with a low IQ has accomplished great things in his life and been present during significant historic events—in each case, far exceeding what anyone imagined he could do. But despite all he has achieved, his one true love eludes him.",
         },
-        updatedAt: "2023-03-05T12:20:00Z",
+        updatedAt: 174574515714,
     },
     {
         id: 4,
@@ -83,7 +83,7 @@ const mockProfileUpdates = [
             overview:
                 "Interstellar chronicles the adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
         },
-        updatedAt: "2023-03-01T22:15:00Z",
+        updatedAt: 174574515714,
     },
     {
         id: 5,
@@ -97,7 +97,7 @@ const mockProfileUpdates = [
             overview:
                 "A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper. Their adventures unfurl in three stories that ingeniously trip back and forth in time.",
         },
-        updatedAt: "2023-02-20T18:30:00Z",
+        updatedAt: 174574515714,
     },
 ]
 
@@ -221,9 +221,9 @@ const ProfilePage: React.FC = () => {
                 <div className="profile-left-column">
                     {/* Avatar */}
                     <div className="profile-avatar-container">
-                        {/* TODO: Use user.avatarUrl if available */}
+                        {/* TODO: Use user.profilePicture if available */}
                         <img
-                            src={user.avatarUrl || "/placeholder.svg?height=200&width=200"}
+                            src={user.profilePicture || "/placeholder.svg?height=200&width=200"}
                             alt={`${user.username}'s Avatar`}
                             className="profile-avatar"
                         />
@@ -300,9 +300,9 @@ const ProfilePage: React.FC = () => {
                             {friends.length === 0 && <p>No friends yet.</p>}
                             {friends.map((friend) => (
                                 <div key={friend.uuid} className="friend-item">
-                                    {/* TODO: Use friend.avatarUrl if available */}
+                                    {/* TODO: Use friend.profilePicture if available */}
                                     <img
-                                        src={friend.avatarUrl || "/placeholder.svg?height=50&width=50"}
+                                        src={friend.profilePicture || "/placeholder.svg?height=50&width=50"}
                                         alt={friend.username}
                                         className="friend-avatar"
                                     />
@@ -399,12 +399,12 @@ const ProfilePage: React.FC = () => {
                                 ) : (
                                     <div className="movie-cards-container">
                                         {likedMovies.map((movie) => (
-                                            <div key={movie.id || movie.uuid} className="movie-card">
+                                            <div key={movie.movieId} className="movie-card">
                                                 <div className="movie-poster">
                                                     <img
                                                         src={
-                                                            movie.posterPath
-                                                                ? `https://image.tmdb.org/t/p/w200${movie.posterPath}`
+                                                            movie.poster
+                                                                ? `https://image.tmdb.org/t/p/w200${movie.poster}`
                                                                 : "/placeholder.svg?height=150&width=100"
                                                         }
                                                         alt={movie.title}
@@ -422,8 +422,8 @@ const ProfilePage: React.FC = () => {
                             <span className="movie-year">
                               {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
                             </span>
-                                                        {movie.voteAverage !== undefined && movie.voteAverage > 0 && (
-                                                            <span className="movie-rating">★ {movie.voteAverage.toFixed(1)}</span>
+                                                        {movie.ratingAverage !== undefined && movie.ratingAverage > 0 && (
+                                                            <span className="movie-rating">★ {movie.ratingAverage.toFixed(1)}</span>
                                                         )}
                                                     </div>
                                                 </div>
