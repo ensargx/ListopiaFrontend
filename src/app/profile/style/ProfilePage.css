@@ -1,95 +1,517 @@
-.profile-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    border: 1px solid #ffffff;
-    border-radius: 8px;
-    background: #2e2e2e;
+/* Main container */
+.profile-page {
+    background-color: #121212;
+    color: #e0e0e0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
 }
 
-.status {
-    text-align: center;
-    margin: 50px 0;
-    font-size: 1.2rem;
-}
-
-.status.error {
-    color: red;
-}
-
+/* Header */
 .profile-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #333;
 }
 
-.avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 20px;
-    border: 2px solid #ccc;
-}
-
-.profile-info h1 {
+.profile-header h1 {
+    font-size: 1.2rem;
+    font-weight: 500;
     margin: 0;
-    font-size: 1.8rem;
+    color: #e0e0e0;
 }
 
-.username {
-    color: #666;
-    margin-top: 4px;
-}
-
-.bio {
-    font-style: italic;
-    margin-bottom: 20px;
-}
-
-.stats {
+.profile-actions {
     display: flex;
-    gap: 40px;
+    gap: 1rem;
 }
 
-.stats div {
-    text-align: center;
-}
-
-.stats strong {
-    display: block;
-    font-size: 1.4rem;
-}
-
-
-.button {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 1rem;
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
     border: none;
-    border-radius: 4px;
+    color: #aaa;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.action-button:hover {
+    color: #fff;
+}
+
+/* Content layout */
+.profile-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* Left column */
+.profile-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profile-avatar-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Social stats - updated for friend actions */
+.social-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    color: #aaa;
+}
+
+.stat-item:hover {
+    color: #fff;
+}
+
+.friend-action-icon {
+    color: #3498db;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+}
+
+/* User info */
+.user-info,
+.user-lists {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.info-row,
+.list-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.info-label,
+.list-label {
+    color: #aaa;
+}
+
+.info-value,
+.list-value {
+    color: #e0e0e0;
+}
+
+/* Friends section */
+.friends-section {
+    margin-top: 1rem;
+}
+
+.friends-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.friends-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.friends-count {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.friends-tabs {
+    margin-left: auto;
+}
+
+.tab-button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.tab-button.active {
+    color: #fff;
+    font-weight: bold;
+}
+
+.friends-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.friend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.friend-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.friend-name {
+    font-size: 0.8rem;
     text-align: center;
-    margin-left: 8px;
 }
 
-.button:hover {
-    background-color: #0056b3;
+/* Right column */
+.profile-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+/* Statistics section */
+.statistics-section h2,
+.profile-updates h2,
+.liked-movies-section h2 {
+    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
 }
 
-/* Opsiyonel: Kaldır butonuna kırmızı tema */
-.button.remove {
-    background-color: #dc3545;
+.movie-stats {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 1rem;
 }
 
-.button.remove:hover {
-    background-color: #c82333;
+.movie-stats h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: #333;
+    border-radius: 4px;
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-segment {
+    height: 100%;
+}
+
+.progress-segment.watching {
+    background-color: #3498db;
+}
+
+.progress-segment.completed {
+    background-color: #2ecc71;
+}
+
+.progress-segment.on-hold {
+    background-color: #f39c12;
+}
+
+.progress-segment.dropped {
+    background-color: #e74c3c;
+}
+
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.stat-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.watching-dot {
+    background-color: #3498db;
+}
+
+.completed-dot {
+    background-color: #2ecc71;
+}
+
+.on-hold-dot {
+    background-color: #f39c12;
+}
+
+.dropped-dot {
+    background-color: #e74c3c;
+}
+
+.stat-name {
+    flex: 1;
+}
+
+.stat-count {
+    font-weight: bold;
+}
+
+.stat-row.total {
+    margin-top: 0.5rem;
+    border-top: 1px solid #333;
+    padding-top: 0.5rem;
+}
+
+/* Horizontal scrolling for liked movies */
+.horizontal-scroll-container {
+    overflow-x: auto;
+    padding-bottom: 1rem; /* Space for scrollbar */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.movie-cards-container {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+.movie-card {
+    flex: 0 0 auto;
+    width: 150px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+.movie-poster {
+    width: 100%;
+    height: 225px; /* 3:2 aspect ratio for the poster */
+    overflow: hidden;
+}
+
+.movie-poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-info {
+    padding: 0.75rem;
+}
+
+.movie-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.movie-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.movie-rating {
+    color: #f39c12;
+}
+
+/* Profile updates */
+.profile-updates {
+    margin-top: 1rem;
+}
+
+.updates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.update-item {
+    display: flex;
+    gap: 1rem;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.update-poster img {
+    width: 80px;
+    height: 120px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.update-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.update-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.update-header h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.update-year,
+.update-genre {
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.update-rating {
+    margin-left: auto;
+    color: #f39c12;
+    font-size: 0.9rem;
+}
+
+.update-description {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    color: #bbb;
+}
+
+.update-status {
+    margin-top: auto;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-badge.completed {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.status-badge.watching {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.status-badge.dropped {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.update-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #aaa;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .profile-content {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-left-column {
+        order: 2;
+    }
+
+    .profile-right-column {
+        order: 1;
+    }
+
+    .friends-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .friends-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .update-item {
+        flex-direction: column;
+    }
+
+    .update-poster img {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-content {
+        padding: 1rem;
+    }
+
+    .friends-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
