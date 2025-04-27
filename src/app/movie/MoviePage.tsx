@@ -22,7 +22,6 @@ export const MoviePage: React.FC = () => {
     const [casts, setCasts] = useState<CastMember[]>([]);
     const [crews, setCrews] = useState<CrewMember[]>([]);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         if ( !movieSlug) {
             redirect("/");
