@@ -1,4 +1,5 @@
 import { Genre } from './genre';
+import { User } from './user';
 
 export interface Movie {
     movieId: number;
@@ -28,12 +29,7 @@ export interface Movie {
 export interface Comment {
     commentId: number;   // ID of the comment
     movieId: number;     // ID of the movie the comment is related to
-    user: {              // User details
-        uuid: string;    // User's UUID
-        username: string; // User's username
-        firstName: string; // User's first name
-        lastName: string;  // User's last name
-    };
+    user: User;
     sentAt: number;      // Timestamp when the comment was sent (in milliseconds)
     message: string;     // The actual comment message
     isSpoiler: boolean;  // Flag to indicate if the comment contains spoilers

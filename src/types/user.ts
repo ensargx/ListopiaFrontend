@@ -3,4 +3,6 @@ export interface User {
     username:string;
     firstName:string;
     lastName:string;
+    biography: string | null,
+    role: string | null
 }
