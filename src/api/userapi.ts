@@ -132,7 +132,7 @@ export async function addFriendRequest(uuid: string) : Promise<APIResponse> {
             credentials: "include",
         }
     );
-    if (!res.ok) throw new Error('Could not change password');
+    if (!res.ok) throw new Error('Could not add friend');
     return res.json();
 }
 
@@ -143,7 +143,7 @@ export async function acceptFriendRequest(uuid: string) : Promise<APIResponse> {
             credentials: "include",
         }
     );
-    if (!res.ok) throw new Error('Could not change password');
+    if (!res.ok) throw new Error('Could not accept this request');
     return res.json();
 }
 
@@ -154,7 +154,7 @@ export async function rejectFriendRequest(uuid: string) : Promise<APIResponse> {
             credentials: "include",
         }
     );
-    if (!res.ok) throw new Error('Could not change password');
+    if (!res.ok) throw new Error('Could not reject this request');
     return res.json();
 }
 
@@ -170,11 +170,26 @@ export async function removeFriendRequest(uuid: string) : Promise<APIResponse> {
 }
 
 export async function fetchFriendsByUUID(
-    uuid: string
+    uuid: string,
+    pageNumber: number = 0,
+    pageSize: number = 30
 ): Promise<PaginatedResponse<User>> {
-    const res = await fetch(`${BASE}/user/uuid/${encodeURIComponent(uuid)}/friends`);
-    if (!res.ok) throw new Error('Arkadaş listesi alınamadı');
-    return res.json();
+    const url = new URL(`${BASE}/user/uuid/${encodeURIComponent(uuid)}/friends`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        // Daha spesifik hata yönetimi eklenebilir
+        throw new Error(errorText || `Failed to fetch friend lists   for user ${uuid}`);
+    }
+    // Dönen JSON yanıtının PaginatedResponse<Movie> formatında olduğunu varsayıyoruz
+    return res.json() as Promise<PaginatedResponse<User>>;
 }
 
 export async function fetchUserMe(): Promise<User>{
