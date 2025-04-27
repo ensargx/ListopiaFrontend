@@ -7,6 +7,7 @@ import { formatTimeAgo } from "@/lib/utils"
 import { CardSlider } from "@/app/home/components/CardSlider"
 import { userProfilePath } from "@/app/home/util/slug"
 import type { User } from "@/types/user"
+import {addFriendRequest} from "@/api/userapi";
 
 interface ProfileLeftColumnProps {
     user: User
@@ -32,6 +33,13 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                                                  setActiveTab,
                                                                  lists,
                                                              }) => {
+    const handleAddFriend = async () =>{
+        addFriendRequest(user.uuid).then(()=>{
+            alert(69);
+        }).catch(()=>{
+            alert(31);
+        })
+    }
     return (
         <div className="profile-left-column">
             {/* Avatar */}
@@ -47,10 +55,13 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
             {!isOwn ? (
                 <div className="social-stats">
                     {!isFriend ? (
-                        <div className="stat-item">
+                        <button
+                            className="stat-item"
+                            onClick={handleAddFriend}
+                        >
                             <UserPlus size={24} className="friend-action-icon" />
                             <span className="stat-label">Add Friend</span>
-                        </div>
+                        </button>
                     ) : (
                         <>
                             <div className="stat-item">

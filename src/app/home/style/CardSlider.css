@@ -55,7 +55,7 @@
 /* Hover effect for better interactivity */
 .nav:hover {
     opacity: 1; /* Fully opaque on hover */
-    background: rgba(61, 83, 55, 0.9); /* Darker on hover for more contrast */
+    background: rgb(214, 93, 93); /* Darker on hover for more contrast */
 }
 
 /* Positioning the arrows */
