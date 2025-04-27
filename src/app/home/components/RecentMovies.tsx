@@ -29,6 +29,7 @@ export const RecentMovies: React.FC = () => {
             <h2>Recent Movies</h2>
             <CardSlider
                 items={movies}
+                className=""
                 renderItem={m => (
                     <Link to={movieToSlug(m)} className="slider-card">
                         <div className="slider-poster">
