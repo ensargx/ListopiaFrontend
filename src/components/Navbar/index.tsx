@@ -1,5 +1,5 @@
 // src/app/components/Navbar.tsx  (veya senin dosya yapına göre konumlandır)
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/auth/hooks/AuthContext';
 import './style.css';
@@ -7,7 +7,7 @@ import './style.css';
 export const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
-    const { login, logout, user } = useAuth();
+    const {  logout, user } = useAuth();
 
     const toggleMenu = () => setIsOpen(open => !open);
 
@@ -19,8 +19,14 @@ export const Navbar: React.FC = () => {
     return (
         <header className="navbar">
             <div className="navbar-container">
-                <Link to="/" className="navbar-logo">
-                    🎬 Listopia
+                <Link to="/" className="navbar-logo-text">
+                    <span>
+                        <img
+                            alt = "logo"
+                            src="/listopia.svg"
+                            className=""
+                            />
+                    </span>Listopia
                 </Link>
 
                 <button
@@ -40,7 +46,7 @@ export const Navbar: React.FC = () => {
                         }
                         onClick={() => setIsOpen(false)}
                     >
-                        Ana Sayfa
+                        Home
                     </NavLink>
                     <NavLink
                         to="/genres"
@@ -49,7 +55,7 @@ export const Navbar: React.FC = () => {
                         }
                         onClick={() => setIsOpen(false)}
                     >
-                        Filmler
+                        Movies
                     </NavLink>
                     
                     {user ? (
@@ -61,7 +67,7 @@ export const Navbar: React.FC = () => {
                                 }
                                 onClick={() => setIsOpen(false)}
                             >
-                                Profilim
+                                Profile
                             </NavLink>
                             <button 
                                 className="navbar-link logout-button"
@@ -70,7 +76,7 @@ export const Navbar: React.FC = () => {
                                     handleLogout();
                                 }}
                             >
-                                Çıkış Yap
+                                Log Out
                             </button>
                         </>
                     ) : (
@@ -81,7 +87,7 @@ export const Navbar: React.FC = () => {
                             }
                             onClick={() => setIsOpen(false)}
                         >
-                            Giriş Yap
+                            Sign In
                         </NavLink>
                     )}
                 </nav>

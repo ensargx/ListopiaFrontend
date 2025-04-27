@@ -17,10 +17,22 @@
     justify-content: space-between;
 }
 
-.navbar-logo {
+.navbar-logo-text {
     color: #fff;
-    font-size: 1.25rem;
+    font-size: 2rem;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-family: "Iowan Old Style", serif;
+}
+.navbar-logo-text img {
+    width: 32px;    /* adjust to your desired width */
+    height: 32px;   /* adjust to your desired height */
+    bottom: -10px;
+    margin-right: 8px;
+    object-fit: contain;
+    /* if you want the svg to inherit text color: */
+    filter:  sepia(1) saturate(5) hue-rotate(180deg);
 }
 
 .navbar-toggle {

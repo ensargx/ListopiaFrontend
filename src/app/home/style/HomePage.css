@@ -51,6 +51,8 @@
         gap: 2rem;
     }
     .hero-sidebar {
+        max-height: 60vh;
+        overflow: hidden;
         padding: 0;          /* slider zaten kendi padding’ini yönetir */
         background: none;
     }
