@@ -24,6 +24,7 @@ export interface Movie {
     facebookId: string | null;
     instagramId: string | null;
     twitterId: string | null;
+    clickCount: number | null;
 }
 
 export interface Comment {

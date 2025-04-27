@@ -4,6 +4,7 @@ import { FrontMovie, PagedResponse } from '@/types/front';
 import { CrewMember, CastMember } from '@/types/crew';
 import { Comment } from '@/types/movie';
 import { apiFetch as fetch } from './apiClient';
+import {PaginatedResponse} from "@/types/friends";
 
 // proxy kullanımı için başına “/” koyuyoruz
 const BASE_URL = 'https://api.ensargok.com/api';
@@ -305,6 +306,172 @@ export async function likeMovie(
     }
 
     // Başarılı yanıtı JSON olarak işle
+    return res.json();
+}
+
+
+export async function fetchWatchedMoviesByUser(
+    uuid: string,
+    options: {
+        pageNumber?: number;
+        pageSize?: number;
+    } = {}
+): Promise<PaginatedResponse<Movie>> {
+    const {
+        pageNumber = 0,
+        pageSize = 30,
+    } = options;
+
+    if (!uuid) {
+        throw new Error('User UUID is required to fetch watched movies.');
+    }
+
+    const params = new URLSearchParams({
+        pageNumber: pageNumber.toString(),
+        pageSize: pageSize.toString(),
+    });
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/uuid/${uuid}/watched?${params.toString()}`,
+        {
+            credentials: 'include',
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to fetch watched movies:', res.status, errorText);
+        throw new Error(`Failed to fetch watched movies: ${res.status} ${errorText}`);
+    }
+    return res.json() as Promise<PaginatedResponse<Movie>>;
+}
+
+export async function fetchWatchlistMoviesByUser(
+    uuid: string,
+    options: {
+        pageNumber?: number;
+        pageSize?: number;
+    } = {}
+): Promise<PaginatedResponse<Movie>> {
+    const {
+        pageNumber = 0,
+        pageSize = 30,
+    } = options;
+
+
+    if (!uuid) {
+        throw new Error('User UUID is required to fetch watchlist movies.');
+    }
+
+    const params = new URLSearchParams({
+        pageNumber: pageNumber.toString(),
+        pageSize: pageSize.toString(),
+    });
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/uuid/${uuid}/watchlist?${params.toString()}`,
+        {
+            credentials: 'include',
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to fetch watchlist movies:', res.status, errorText);
+        throw new Error(`Failed to fetch watchlist movies: ${res.status} ${errorText}`);
+    }
+
+    return res.json() as Promise<PaginatedResponse<Movie>>;
+}
+export async function addMovieToWatchlist(
+    movieId: number
+): Promise<{ message: string; success: boolean }> {
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/movie/${movieId}/watchlist`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to add movie to watchlist:', res.status, errorText);
+        throw new Error(`Failed to add movie to watchlist: ${res.status} ${errorText || 'Unknown error'}`);
+    }
+
+    return res.json();
+}
+export async function markMovieAsWatched(
+    movieId: number
+): Promise<{ message: string; success: boolean }> {
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/movie/${movieId}/watched`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to mark movie as watched:', res.status, errorText);
+        throw new Error(`Failed to mark movie as watched: ${res.status} ${errorText || 'Unknown error'}`);
+    }
+    return res.json();
+}
+
+export async function removeMovieFromWatchlist(
+    movieId: number
+): Promise<{ message: string; success: boolean }> {
+
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/movie/${movieId}/watchlist`,
+        {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to remove movie from watchlist: ${res.status} ${errorText || 'Unknown error'}`);
+    }
+    return res.json();
+}
+export async function removeMovieFromWatched(
+    movieId: number
+): Promise<{ message: string; success: boolean }> {
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/movie/${movieId}/watched`,
+        {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to remove movie from watched list: ${res.status} ${errorText || 'Unknown error'}`);
+    }
+
     return res.json();
 }
 

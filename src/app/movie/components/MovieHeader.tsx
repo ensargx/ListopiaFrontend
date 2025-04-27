@@ -1,123 +1,252 @@
 import React, { useState, useEffect } from 'react';
 import { Movie } from '@/types/movie';
-import '../style/MovieHeader.css'; // Orijinal CSS dosyasının yolu
+import '../style/MovieHeader.css';
 import { getPosterUrl } from '@/lib/utils';
-import { likeMovie } from '@/api/movieapi';
+import {
+    likeMovie,
+    markMovieAsWatched,
+    addMovieToWatchlist,
+    removeMovieFromWatched,
+    removeMovieFromWatchlist,
+    fetchWatchedMoviesByUser,
+    fetchWatchlistMoviesByUser
+} from '@/api/movieapi';
 import { useAuth } from '@/app/auth/hooks/AuthContext';
-import { fetchLikedMovies } from '@/api/userapi';
+import {
+    fetchLikedMovies,
+} from '@/api/userapi';
 import { useNavigate } from "react-router-dom";
 
 interface Props {
     movie: Movie;
-    initialLikedStatus?: boolean;
 }
 
-const MovieHeader: React.FC<Props> = ({ movie, initialLikedStatus = false }) => {
+const MovieHeader: React.FC<Props> = ({ movie }) => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    // Like State
-    const [liked, setLiked] = useState<boolean>(initialLikedStatus);
+    // State'ler...
+    const [liked, setLiked] = useState<boolean>(false);
     const [isLiking, setIsLiking] = useState<boolean>(false);
     const [likeError, setLikeError] = useState<string | null>(null);
 
-    // Watched State (İzledim) - Başlangıç değeri ve API çağrısı eklenmeli
     const [watched, setWatched] = useState<boolean>(false);
     const [isUpdatingWatched, setIsUpdatingWatched] = useState<boolean>(false);
-    // const [watchedError, setWatchedError] = useState<string | null>(null); // Hata yönetimi istenirse eklenebilir
+    const [watchedError, setWatchedError] = useState<string | null>(null);
 
-    // Watchlist State (İzleyeceğim) - Başlangıç değeri ve API çağrısı eklenmeli
     const [watchlist, setWatchlist] = useState<boolean>(false);
     const [isUpdatingWatchlist, setIsUpdatingWatchlist] = useState<boolean>(false);
-    // const [watchlistError, setWatchlistError] = useState<string | null>(null); // Hata yönetimi istenirse eklenebilir
+    const [watchlistError, setWatchlistError] = useState<string | null>(null);
 
-    // Fetch Status State
     const [isFetchingStatus, setIsFetchingStatus] = useState<boolean>(true);
-    const [fetchError, setFetchError] = useState<string | null>(null); // Sadece like fetch hatası
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!user) {
             setIsFetchingStatus(false);
+            setLiked(false);
+            setWatched(false);
+            setWatchlist(false);
             return;
         }
-        setLiked(initialLikedStatus);
         setIsFetchingStatus(true);
         setFetchError(null);
-        fetchLikedMovies(user.uuid)
-            .then(data => {
-                const hasLiked = data.content.some(m => m.movieId === movie.movieId);
-                setLiked(hasLiked);
-                // TODO: İzledim ve İzleyeceğim durumlarını da API'den çek
-            })
-            .catch(err => {
-                console.error('Error fetching liked movies:', err);
-                setFetchError(err.message || 'Failed to fetch liked status.');
-            })
-            .finally(() => {
-                setIsFetchingStatus(false);
-            });
-    }, [user?.uuid, movie.movieId, initialLikedStatus]);
+        setLikeError(null);
+        setWatchedError(null);
+        setWatchlistError(null);
 
+
+        Promise.allSettled([
+            fetchLikedMovies(user.uuid),
+            fetchWatchedMoviesByUser(user.uuid),
+            fetchWatchlistMoviesByUser(user.uuid)
+        ]).then(results => {
+            // Like
+            if (results[0].status === 'fulfilled') {
+                setLiked(results[0].value.content.some((m: Movie) => m.movieId === movie.movieId));
+            } else {
+                console.error('Error fetching liked movies:', results[0].reason);
+                setFetchError('Failed to fetch liked status.');
+            }
+            // Watched
+            if (results[1].status === 'fulfilled') {
+                setWatched(results[1].value.content.some((m: Movie) => m.movieId === movie.movieId));
+            } else {
+                console.error('Error fetching watched movies:', results[1].reason);
+                setFetchError('Failed to fetch watched status.');
+            }
+            // Watchlist
+            if (results[2].status === 'fulfilled') {
+                setWatchlist(results[2].value.content.some((m: Movie) => m.movieId === movie.movieId));
+            } else {
+                console.error('Error fetching watchlist movies:', results[2].reason);
+                setFetchError('Failed to fetch watchlist status.');
+            }
+        }).catch(err => {
+            console.error('Error fetching initial movie statuses:', err);
+            setFetchError('Failed to fetch initial movie statuses.');
+        }).finally(() => {
+            setIsFetchingStatus(false);
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.uuid, movie.movieId]);
+
+    // handleLike fonksiyonu aynı...
     const handleLike = async () => {
         if (!user) { navigate('/login/'); return; }
         if (isLiking || isFetchingStatus || isUpdatingWatched || isUpdatingWatchlist) return;
         setIsLiking(true);
         setLikeError(null);
+        const previousLiked = liked;
+        setLiked(!previousLiked); // Optimistic UI
+
         try {
-            const response = await likeMovie(movie.movieId, !liked);
-            if (response.success) {
-                setLiked(!liked);
-            } else {
-                console.error('API reported failure:', response.message);
+            const response = await likeMovie(movie.movieId, !previousLiked);
+            if (!response.success) {
+                console.error('API reported failure (Like):', response.message);
                 setLikeError(response.message || 'Failed to update like status.');
+                setLiked(previousLiked); // Rollback
             }
         } catch (err) {
             console.error('Error calling likeMovie API:', err);
             setLikeError(err instanceof Error ? err.message : 'An unknown error occurred.');
+            setLiked(previousLiked); // Rollback
         } finally {
             setIsLiking(false);
         }
     };
 
-    // İzledim Butonu İşlevi (API bağlantısı gerekir)
+
     const handleWatched = async () => {
         if (!user) { navigate('/login/'); return; }
         if (isUpdatingWatched || isLiking || isFetchingStatus || isUpdatingWatchlist) return;
+
+        const currentWatchedStatus = watched;
+        const currentWatchlistStatus = watchlist; // İzleme listesi durumu da lazım
         setIsUpdatingWatched(true);
-        // setWatchedError(null);
-        console.log("İzledim butonuna tıklandı. API çağrısı yapılacak.");
-        // TODO: API çağrısı ekle
-        // Geçici: Sadece state'i değiştir (API olmadan)
-        setWatched(!watched);
-        if (!watched) setWatchlist(false); // İzlediyse izleme listesinden çıkar
-        setIsUpdatingWatched(false);
+        setWatchedError(null);
+        setWatchlistError(null);
+
+        try {
+            if (!currentWatchedStatus) {
+                if (currentWatchlistStatus) {
+                    console.log("İzledim'e eklemeden önce izleme listesinden çıkarılıyor...");
+                    try {
+                        const removeRes = await removeMovieFromWatchlist(movie.movieId);
+                        if (!removeRes.success) {
+
+                            console.error("API Error (Remove from Watchlist):", removeRes.message);
+                            setWatchlistError("Film izleme listesinden çıkarılamadı.");
+
+                        } else {
+                            console.log("İzleme listesinden başarıyla çıkarıldı.");
+                        }
+                    } catch (err) {
+                        console.error("Network Error (Remove from Watchlist):", err);
+                        setWatchlistError(err instanceof Error ? `İzleme listesinden çıkarma hatası: ${err.message}` : 'Bilinmeyen hata.');
+
+                    }
+                }
+
+                console.log("Film izlendi olarak işaretleniyor...");
+                const markRes = await markMovieAsWatched(movie.movieId);
+                if (markRes.success) {
+                    console.log("Film başarıyla izlendi olarak işaretlendi.");
+                    setWatched(true);
+                    setWatchlist(false);
+                } else {
+                    console.error("API Error (Mark as Watched):", markRes.message);
+                    setWatchedError(markRes.message || 'Film izlendi olarak işaretlenemedi.');
+
+                }
+
+            } else {
+                console.log("İzledim işareti kaldırılıyor...");
+                const removeRes = await removeMovieFromWatched(movie.movieId);
+                if (removeRes.success) {
+                    console.log("İzledim işareti başarıyla kaldırıldı.");
+                    setWatched(false);
+                } else {
+                    console.error("API Error (Remove from Watched):", removeRes.message);
+                    setWatchedError(removeRes.message || 'İzledim işareti kaldırılamadı.');
+                }
+            }
+        } catch (err) {
+            console.error("Network Error (Watched Handler):", err);
+            setWatchedError(err instanceof Error ? err.message : 'Bilinmeyen bir hata oluştu.');
+        } finally {
+            setIsUpdatingWatched(false);
+        }
     };
 
-    // İzleyeceğim Butonu İşlevi (API bağlantısı gerekir)
     const handleWatchlist = async () => {
         if (!user) { navigate('/login/'); return; }
         if (isUpdatingWatchlist || isLiking || isFetchingStatus || isUpdatingWatched) return;
+
+        const currentWatchlistStatus = watchlist;
+        const currentWatchedStatus = watched;
         setIsUpdatingWatchlist(true);
-        // setWatchlistError(null);
-        console.log("İzleyeceğim butonuna tıklandı. API çağrısı yapılacak.");
-        // TODO: API çağrısı ekle
-        // Geçici: Sadece state'i değiştir (API olmadan)
-        setWatchlist(!watchlist);
-        if (!watchlist) setWatched(false); // İzleme listesine eklediyse izlenmişten çıkar
-        setIsUpdatingWatchlist(false);
+        setWatchlistError(null);
+        setWatchedError(null);
+
+        try {
+            if (!currentWatchlistStatus) {
+                if (currentWatchedStatus) {
+                    console.log("İzleme listesine eklemeden önce izlenenlerden çıkarılıyor...");
+                    try {
+                        const removeRes = await removeMovieFromWatched(movie.movieId);
+                        if (!removeRes.success) {
+                            console.error("API Error (Remove from Watched):", removeRes.message);
+                            setWatchedError("Film izlenenlerden çıkarılamadı.");
+                        } else {
+                            console.log("İzlenenlerden başarıyla çıkarıldı.");
+                        }
+                    } catch (err) {
+                        console.error("Network Error (Remove from Watched):", err);
+                        setWatchedError(err instanceof Error ? `İzlenenlerden çıkarma hatası: ${err.message}` : 'Bilinmeyen hata.');
+                    }
+                }
+
+                console.log("Film izleme listesine ekleniyor...");
+                const addRes = await addMovieToWatchlist(movie.movieId);
+                if (addRes.success) {
+                    console.log("Film başarıyla izleme listesine eklendi.");
+                    setWatchlist(true);
+                    setWatched(false);
+                } else {
+                    console.error("API Error (Add to Watchlist):", addRes.message);
+                    setWatchlistError(addRes.message || 'Film izleme listesine eklenemedi.');
+                }
+
+            } else {
+                console.log("İzleme listesinden kaldırılıyor...");
+                const removeRes = await removeMovieFromWatchlist(movie.movieId);
+                if (removeRes.success) {
+                    console.log("İzleme listesinden başarıyla kaldırıldı.");
+                    setWatchlist(false);
+                } else {
+                    console.error("API Error (Remove from Watchlist):", removeRes.message);
+                    setWatchlistError(removeRes.message || 'Film izleme listesinden kaldırılamadı.');
+                }
+            }
+        } catch (err) {
+            console.error("Network Error (Watchlist Handler):", err);
+            setWatchlistError(err instanceof Error ? err.message : 'Bilinmeyen bir hata oluştu.');
+        } finally {
+            setIsUpdatingWatchlist(false);
+        }
     };
 
-    // Butonların herhangi biri meşgul mü?
+
     const isBusy = isLiking || isUpdatingWatched || isUpdatingWatchlist || isFetchingStatus;
 
+
     return (
-        // Orijinal header yapısı korunuyor
         <header className="movie-header">
             <div className="poster">
                 <img src={getPosterUrl(movie.poster || '')} alt={movie.title} />
             </div>
             <div className="info">
-                {/* Film bilgileri orijinal formatta */}
                 <h1>{movie.title}</h1>
                 {movie.tagline && <p className="tagline">“{movie.tagline}”</p>}
                 <p>
@@ -136,9 +265,8 @@ const MovieHeader: React.FC<Props> = ({ movie, initialLikedStatus = false }) => 
                     </p>
                 )}
 
-                {/* Butonların eklendiği actions div'i */}
                 <div className="actions">
-                    {/* Beğen Butonu (Unicode Kalp) */}
+                    {/* Butonlar */}
                     <button
                         title={liked ? "Unlike" : "Like"}
                         onClick={handleLike}
@@ -148,8 +276,6 @@ const MovieHeader: React.FC<Props> = ({ movie, initialLikedStatus = false }) => 
                     >
                         {liked ? '❤️' : '♡'}
                     </button>
-
-                    {/* İzledim Butonu */}
                     <button
                         title={watched ? "Mark as unwatched" : "Mark as watched"}
                         onClick={handleWatched}
@@ -158,8 +284,6 @@ const MovieHeader: React.FC<Props> = ({ movie, initialLikedStatus = false }) => 
                     >
                         İzledim
                     </button>
-
-                    {/* İzleyeceğim Butonu */}
                     <button
                         title={watchlist ? "Remove from watchlist" : "Add to watchlist"}
                         onClick={handleWatchlist}
@@ -168,11 +292,11 @@ const MovieHeader: React.FC<Props> = ({ movie, initialLikedStatus = false }) => 
                     >
                         İzleyeceğim
                     </button>
-
-                    {/* Hata Mesajları (Sadece like/fetch için) */}
-                    {(likeError || fetchError) && (
-                        <p className="error-message" style={{ marginTop: '10px', flexBasis: '100%' }}>
-                            {likeError || fetchError}
+                    {/* Hata Mesajları */}
+                    {(likeError || fetchError || watchedError || watchlistError) && (
+                        <p className="error-message" style={{ marginTop: '10px', color: 'red', flexBasis: '100%', fontSize: '0.9em' }}>
+                            {/* Hataları birleştirerek göster */}
+                            {[likeError, fetchError, watchedError, watchlistError].filter(Boolean).join(' ')}
                         </p>
                     )}
                 </div>

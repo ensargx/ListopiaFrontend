@@ -5,7 +5,8 @@ import { useEffect, useState } from "react"
 import "./style/ProfilePage.css"
 import { Settings, Brush } from "lucide-react"
 import { useParams } from "react-router-dom"
-import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
+import { fetchWatchedMoviesByUser, fetchWatchlistMoviesByUser} from "@/api/movieapi"
+import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies} from "@/api/userapi"
 import type { User } from "@/types/user"
 import type { Movie } from "@/types/movie"
 import { useAuth } from "@/app/auth/hooks/AuthContext"
@@ -171,7 +172,35 @@ const ProfilePage: React.FC = () => {
                     .finally(() => {
                         setLikedMoviesLoading(false)
                     })
+                fetchWatchedMoviesByUser(userData.uuid)
+                    .then((watchedResponse) => {
+                        console.log("--- Watched Movies Response START ---")
+                        console.log(watchedResponse)
+                        console.log("--- Watched Movies Response END ---")
+                        // İsterseniz state'e de kaydedebilirsiniz:
+                        // setWatchedMovies(watchedResponse.content);
+                    })
+                    .catch((err) => {
+                        console.error("Error fetching watched movies:", err.message)
+                        // Hata state'i de ayarlayabilirsiniz:
+                        // setWatchedMoviesError(err.message);
+                    })
 
+                // 4. İzleme Listesindeki Filmleri Getir ve Logla
+                fetchWatchlistMoviesByUser(userData.uuid)
+                    .then((watchlistResponse) => {
+
+                        console.log("--- Watchlist Movies Response START ---")
+                        console.log(watchlistResponse)
+                        console.log("--- Watchlist Movies Response END ---")
+                        // İsterseniz state'e de kaydedebilirsiniz:
+                        // setWatchlistMovies(watchlistResponse.content);
+                    })
+                    .catch((err) => {
+                        console.error("Error fetching watchlist movies:", err.message)
+                        // Hata state'i de ayarlayabilirsiniz:
+                        // setWatchlistMoviesError(err.message);
+                    })
                 setLoading(false)
             })
             .catch((err: Error) => {
