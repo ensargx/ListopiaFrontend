@@ -145,37 +145,40 @@ const ReviewList: React.FC = () => {
 
             {comments.length > 0 ? (
                 comments.map(c => {
-                    // format timestamp
-                    let dateStr = '';
+                    // format timestamp: ayrı date / time
+                    let dateOnly = '';
+                    let timeOnly = '';
                     if (c.sentAt) {
                         const ms = c.sentAt > 1e12 ? c.sentAt : c.sentAt * 1000;
-                        dateStr = new Date(ms).toLocaleString();
+                        const dt = new Date(ms);
+                        dateOnly = dt.toLocaleDateString();
+                        timeOnly = dt.toLocaleTimeString();
                     }
 
                     return (
                         <div key={c.commentId} className="review-card">
                             <p className="author">
-                <span
-                    className="author-name"
-                    onClick={() =>
-                        navigate(`/profile/${c.user.username}`)
-                    }
-                >
-                  {c.user.firstName} {c.user.lastName}
-                </span>
+                                <span
+                                    className="author-name"
+                                    onClick={() =>
+                                        navigate(`/profile/${c.user.username}`)
+                                    }
+                                >
+                                    {c.user.firstName} {c.user.lastName}
+                                </span>
                                 <span className="username">
-                  @{c.user.username}
-                </span>
+                                    @{c.user.username}
+                                </span>
                             </p>
 
                             {editingCommentId === c.commentId ? (
                                 <div className="edit-section">
-                  <textarea
-                      value={editingMessage}
-                      onChange={e =>
-                          setEditingMessage(e.target.value)
-                      }
-                  />
+                                    <textarea
+                                        value={editingMessage}
+                                        onChange={e =>
+                                            setEditingMessage(e.target.value)
+                                        }
+                                    />
                                     <label className="spoiler-checkbox">
                                         <input
                                             type="checkbox"
@@ -242,13 +245,13 @@ const ReviewList: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {dateStr && (
-                                        <p className="timestamp">{dateStr}</p>
-                                    )}
-
-                                    {c.isSpoiler && c.isUpdated && (
-                                        <p className="spoiler-message">
-                                            {c.message}
+                                    {/* Tarih ve saati aralarına dash koyarak göster */}
+                                    {(dateOnly || timeOnly) && (
+                                        <p className="timestamp">
+                                            {dateOnly} - {timeOnly}
+                                            {c.isUpdated && (
+                                                <span className="edited-label"> (edited)</span>
+                                            )}
                                         </p>
                                     )}
                                 </>
@@ -262,11 +265,11 @@ const ReviewList: React.FC = () => {
 
             {/* new comment form */}
             <div className="comment-section">
-        <textarea
-            value={comment}
-            onChange={e => setComment(e.target.value)}
-            placeholder="Write a comment..."
-        />
+                <textarea
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}
+                    placeholder="Write a comment..."
+                />
                 <div className="spoiler-checkbox">
                     <label>
                         <input
@@ -299,8 +302,8 @@ const ReviewList: React.FC = () => {
                     Previous
                 </button>
                 <span className="pagination-info">
-          Page {currentPage + 1} of {totalPages}
-        </span>
+                    Page {currentPage + 1} of {totalPages}
+                </span>
                 <button
                     onClick={() =>
                         handlePageChange(currentPage + 1)
