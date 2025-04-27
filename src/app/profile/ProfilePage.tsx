@@ -1,9 +1,13 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./style/ProfilePage.css"
 import { Settings, Brush, MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react"
+import { useParams } from "react-router-dom"
+import { fetchFriendsByUUID, fetchUserByUsername } from "@/api/userapi"
+import { User } from "@/types/user"
+import { formatTimeAgo } from "@/lib/utils"
 
 // Mock data for demonstration
 const mockUser = {
@@ -85,16 +89,63 @@ const mockLists = {
     recommendations: 5,
 }
 
+
+
 const ProfilePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<"all" | "friends">("all")
+    const { username } = useParams<{ username: string }>();
+    const [user, setUser] = useState<User | null>(null);
+    const [friends, setFriends] = useState<User[]>([]);
+    const [loading, setLoading] = useState(true);
     const [newFriendUsername, setNewFriendUsername] = useState("")
 
     // For demonstration purposes, using mock data
-    const user = mockUser
+    // const user = mockUser
     const stats = mockStats
     const activity = mockActivity
-    const friends = mockFriends
+    // const friends = mockFriends
     const lists = mockLists
+
+    useEffect(() => {
+        console.log('ProfilePage mounted with username:', username);
+
+        if (!username) {
+            console.log('No username provided, exiting early');
+            // navigator("/");
+            return;
+        }
+
+        fetchUserByUsername(username).then((value) => {
+            setUser(value);
+
+            // fetch friends
+            // TODO: paginate!
+            fetchFriendsByUUID(value.uuid).then((retFriends) => {
+                setFriends(retFriends.content);
+            }).catch((err)=> {
+                console.error("hata geldi: ", err.message);
+            })
+
+            setLoading(false);
+        }).catch((err: Error) => {
+            console.error("hata gekdşÇ: ", err.message);
+            // setError(JSON.parse(err.message).message);
+            setLoading(false);
+        })
+
+    }, [username]);
+
+    if ( loading  ) {
+        return (
+            <h1>loading...</h1>
+        )
+    }
+
+    if ( !user ) {
+        return (
+            <h1>user not found...</h1>
+        )
+    }
 
     return (
         <div className="profile-page">
@@ -139,11 +190,11 @@ const ProfilePage: React.FC = () => {
                     <div className="user-info">
                         <div className="info-row">
                             <span className="info-label">Last Online</span>
-                            <span className="info-value">{user.lastOnline}</span>
+                            <span className="info-value">{formatTimeAgo(user.lastOnline)}</span>
                         </div>
                         <div className="info-row">
                             <span className="info-label">Created</span>
-                            <span className="info-value">{user.joinDate}</span>
+                            <span className="info-value">{formatTimeAgo(user.createdAt)}</span>
                         </div>
                     </div>
 
@@ -184,9 +235,9 @@ const ProfilePage: React.FC = () => {
 
                         <div className="friends-grid">
                             {friends.map((friend) => (
-                                <div key={friend.id} className="friend-item">
-                                    <img src={friend.avatar || "/placeholder.svg"} alt={friend.name} className="friend-avatar" />
-                                    <span className="friend-name">{friend.name}</span>
+                                <div key={friend.uuid} className="friend-item">
+                                    <img src={ /* TODO: friend.avatar || */ "/placeholder.svg"} alt={friend.firstName} className="friend-avatar" />
+                                    <span className="friend-name">{friend.firstName} {friend.lastName}</span>
                                 </div>
                             ))}
                         </div>

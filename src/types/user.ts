@@ -4,5 +4,7 @@ export interface User {
     firstName:string;
     lastName:string;
     biography: string | null,
-    role: string | null
+    role: string | null,
+    lastOnline: number,
+    createdAt: number
 }
