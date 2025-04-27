@@ -1,6 +1,7 @@
 // src/app/api_/userapi.ts
 import { User } from "@/types/user";
 import {PaginatedResponse} from "@/types/friends"
+import { Movie } from '@/types/movie';
 import { apiFetch as fetch } from './apiClient';
 
 const BASE = "https://api.ensargok.com/api/v1";
@@ -184,6 +185,29 @@ export async function fetchUserMe(): Promise<User>{
         throw new Error(errorText || "Failed to fetch user");
     }
     return res.json();
+}
+export async function fetchLikedMovies(
+    uuid: string,
+    pageNumber: number = 0,
+    pageSize: number = 30
+): Promise<PaginatedResponse<Movie>> { // <--- Movie arayüzünü kullanıyoruz
+    // Construct the URL with query parameters
+    const url = new URL(`${BASE}/user/uuid/${encodeURIComponent(uuid)}/liked_movies`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        // credentials: "include" // API'niz gerektiriyorsa bu satırı açın
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        // Daha spesifik hata yönetimi eklenebilir
+        throw new Error(errorText || `Failed to fetch liked movies for user ${uuid}`);
+    }
+    // Dönen JSON yanıtının PaginatedResponse<Movie> formatında olduğunu varsayıyoruz
+    return res.json() as Promise<PaginatedResponse<Movie>>;
 }
 
 // aşağıdaki fonksiyonlar yanlış silin.

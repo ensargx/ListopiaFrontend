@@ -4,21 +4,14 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import "./style/ProfilePage.css"
 import { Settings, Brush, MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react"
-import { useParams } from "react-router-dom"
-import { fetchFriendsByUUID, fetchUserByUsername } from "@/api/userapi"
-import { User } from "@/types/user"
-import { formatTimeAgo } from "@/lib/utils"
+import { useParams } from "react-router-dom" // Assuming react-router-dom v6+
+// Adjust paths as needed for your project structure
+import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
+import type { User } from "@/types/user"
+import type { Movie } from "@/types/movie" // Import Movie and PaginatedResponse types
+import { formatTimeAgo } from "@/lib/utils" // Assuming this utility exists
 
-// Mock data for demonstration
-const mockUser = {
-    username: "Orçun",
-    firstName: "Orçun",
-    lastName: "",
-    uuid: "123",
-    joinDate: "March 4, 2025",
-    lastOnline: "Now",
-}
-
+// Mock data for parts not replaced yet
 const mockStats = {
     watching: 1,
     completed: 3,
@@ -27,61 +20,6 @@ const mockStats = {
     totalFilms: 5,
 }
 
-const mockActivity = [
-    {
-        id: 1,
-        title: "The Shawshank Redemption",
-        year: 1994,
-        genre: "Drama/Crime",
-        status: "Completed",
-        date: "March 5, 2025, 04:41",
-        poster: "/placeholder.svg?height=150&width=100",
-    },
-    {
-        id: 2,
-        title: "The Lord of the Rings",
-        year: 2001,
-        genre: "Fantasy/Adventure",
-        status: "Completed",
-        date: "March 3, 2025, 20:30",
-        poster: "/placeholder.svg?height=150&width=100",
-    },
-    {
-        id: 3,
-        title: "Forrest Gump",
-        year: 1994,
-        genre: "Drama/Comedy",
-        status: "Watching",
-        date: "March 2, 2025, 22:20",
-        poster: "/placeholder.svg?height=150&width=100",
-    },
-    {
-        id: 4,
-        title: "Interstellar",
-        year: 2014,
-        genre: "Sci-Fi/Adventure",
-        status: "Completed",
-        date: "March 1, 2025, 23:30",
-        poster: "/placeholder.svg?height=150&width=100",
-    },
-    {
-        id: 5,
-        title: "Pulp Fiction",
-        year: 1994,
-        genre: "Crime/Drama",
-        status: "Dropped",
-        date: "Feb 28, 2025, 20:40",
-        poster: "/placeholder.svg?height=150&width=100",
-    },
-]
-
-const mockFriends = [
-    { id: 1, name: "İabil", username: "iabil", avatar: "/placeholder.svg?height=50&width=50" },
-    { id: 2, name: "Ensar", username: "ensar", avatar: "/placeholder.svg?height=50&width=50" },
-    { id: 3, name: "Ayşe", username: "ayse", avatar: "/placeholder.svg?height=50&width=50" },
-    { id: 4, name: "Mert", username: "mert", avatar: "/placeholder.svg?height=50&width=50" },
-]
-
 const mockLists = {
     lists: 2,
     reviews: 3,
@@ -89,70 +27,187 @@ const mockLists = {
     recommendations: 5,
 }
 
-
+// Mock data for profile updates
+const mockProfileUpdates = [
+    {
+        id: 1,
+        type: "completed",
+        movie: {
+            id: 101,
+            title: "The Shawshank Redemption",
+            releaseDate: "1994-09-23",
+            posterPath: "/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+            voteAverage: 8.7,
+            overview:
+                "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden.",
+        },
+        updatedAt: "2023-03-15T14:48:00Z",
+    },
+    {
+        id: 2,
+        type: "completed",
+        movie: {
+            id: 102,
+            title: "The Lord of the Rings",
+            releaseDate: "2001-12-19",
+            posterPath: "/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+            voteAverage: 8.4,
+            overview:
+                "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator.",
+        },
+        updatedAt: "2023-01-10T09:30:00Z",
+    },
+    {
+        id: 3,
+        type: "watching",
+        movie: {
+            id: 103,
+            title: "Forrest Gump",
+            releaseDate: "1994-07-06",
+            posterPath: "/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
+            voteAverage: 8.5,
+            overview:
+                "A man with a low IQ has accomplished great things in his life and been present during significant historic events—in each case, far exceeding what anyone imagined he could do. But despite all he has achieved, his one true love eludes him.",
+        },
+        updatedAt: "2023-03-05T12:20:00Z",
+    },
+    {
+        id: 4,
+        type: "completed",
+        movie: {
+            id: 104,
+            title: "Interstellar",
+            releaseDate: "2014-11-05",
+            posterPath: "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+            voteAverage: 8.4,
+            overview:
+                "Interstellar chronicles the adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+        },
+        updatedAt: "2023-03-01T22:15:00Z",
+    },
+    {
+        id: 5,
+        type: "dropped",
+        movie: {
+            id: 105,
+            title: "Pulp Fiction",
+            releaseDate: "1994-10-14",
+            posterPath: "/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+            voteAverage: 8.5,
+            overview:
+                "A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper. Their adventures unfurl in three stories that ingeniously trip back and forth in time.",
+        },
+        updatedAt: "2023-02-20T18:30:00Z",
+    },
+]
 
 const ProfilePage: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<"all" | "friends">("all")
-    const { username } = useParams<{ username: string }>();
-    const [user, setUser] = useState<User | null>(null);
-    const [friends, setFriends] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [newFriendUsername, setNewFriendUsername] = useState("")
+    const [activeTab, setActiveTab] = useState<"all" | "friends">("all") // Kept 'friends' tab option if needed later
+    const { username } = useParams<{ username: string }>()
+    const [user, setUser] = useState<User | null>(null)
+    const [friends, setFriends] = useState<User[]>([])
+    const [likedMovies, setLikedMovies] = useState<Movie[]>([]) // State for liked movies
+    const [loading, setLoading] = useState(true)
+    const [likedMoviesLoading, setLikedMoviesLoading] = useState(true) // Separate loading state for movies
+    const [likedMoviesError, setLikedMoviesError] = useState<string | null>(null) // Separate error state for movies
+    // const [newFriendUsername, setNewFriendUsername] = useState("") // Keep if needed for add friend functionality
 
-    // For demonstration purposes, using mock data
-    // const user = mockUser
+    // Using mock data for stats and lists as they were not part of the request to change
     const stats = mockStats
-    const activity = mockActivity
-    // const friends = mockFriends
     const lists = mockLists
+    // Using mock data for profile updates
+    const profileUpdates = mockProfileUpdates
 
     useEffect(() => {
-        console.log('ProfilePage mounted with username:', username);
+        console.log("ProfilePage mounted with username:", username)
 
         if (!username) {
-            console.log('No username provided, exiting early');
-            // navigator("/");
-            return;
+            console.log("No username provided, exiting early")
+            setLoading(false) // Stop loading if no username
+            // Consider navigating away: navigator("/");
+            return
         }
 
-        fetchUserByUsername(username).then((value) => {
-            setUser(value);
+        // Reset states on username change
+        setLoading(true)
+        setLikedMoviesLoading(true)
+        setLikedMoviesError(null)
+        setUser(null)
+        setFriends([])
+        setLikedMovies([])
 
-            // fetch friends
-            // TODO: paginate!
-            fetchFriendsByUUID(value.uuid).then((retFriends) => {
-                setFriends(retFriends.content);
-            }).catch((err)=> {
-                console.error("hata geldi: ", err.message);
+        fetchUserByUsername(username)
+            .then((userData) => {
+                setUser(userData)
+
+                // Fetch friends
+                // TODO: Implement pagination for friends if necessary
+                fetchFriendsByUUID(userData.uuid)
+                    .then((retFriends) => {
+                        setFriends(retFriends.content)
+                    })
+                    .catch((err) => {
+                        console.error("Error fetching friends: ", err.message)
+                        // Optionally set a specific error state for friends display
+                    })
+
+                // Fetch liked movies
+                // Using default pageNumber=0, pageSize=30 from API function definition
+                // TODO: Implement pagination for liked movies if needed
+                fetchLikedMovies(userData.uuid)
+                    .then((likedMoviesData) => {
+                        // Assuming PaginatedResponse has a 'content' array of Movie objects
+                        setLikedMovies(likedMoviesData.content)
+                    })
+                    .catch((err: Error) => {
+                        console.error("Error fetching liked movies: ", err.message)
+                        setLikedMoviesError(err.message || "Failed to load liked movies.")
+                    })
+                    .finally(() => {
+                        setLikedMoviesLoading(false) // Mark liked movies as loaded (or failed)
+                    })
+
+                setLoading(false) // Mark main profile data as loaded *after* initiating other fetches
             })
+            .catch((err: Error) => {
+                console.error("Error fetching user profile: ", err.message)
+                // Optionally set a global error state to display: setError(JSON.parse(err.message).message);
+                setUser(null) // Ensure user is null on error
+                setLoading(false) // Stop main loading on error
+                setLikedMoviesLoading(false) // Also stop liked movies loading if user fetch fails
+            })
+    }, [username]) // Re-run effect if username changes
 
-            setLoading(false);
-        }).catch((err: Error) => {
-            console.error("hata gekdşÇ: ", err.message);
-            // setError(JSON.parse(err.message).message);
-            setLoading(false);
-        })
-
-    }, [username]);
-
-    if ( loading  ) {
+    // Display main loading indicator
+    if (loading) {
         return (
-            <h1>loading...</h1>
+            <div className="profile-page-loading">
+                {" "}
+                {/* Optional: Add specific styling */}
+                <h1>Loading profile...</h1>
+            </div>
         )
     }
 
-    if ( !user ) {
+    // Display user not found message
+    if (!user) {
         return (
-            <h1>user not found...</h1>
+            <div className="profile-page-error">
+                {" "}
+                {/* Optional: Add specific styling */}
+                <h1>User '{username}' not found.</h1>
+            </div>
         )
     }
 
+    // Render the profile page
     return (
         <div className="profile-page">
-            {/* Header with username and actions */}
+            {/* Header */}
             <div className="profile-header">
                 <h1>{user.username}'s Profile</h1>
                 <div className="profile-actions">
+                    {/* TODO: Implement functionality for these buttons */}
                     <button className="action-button">
                         <Brush size={16} /> Change Appearance
                     </button>
@@ -161,16 +216,21 @@ const ProfilePage: React.FC = () => {
                     </button>
                 </div>
             </div>
-
             <div className="profile-content">
                 {/* Left column */}
                 <div className="profile-left-column">
-                    {/* Profile avatar */}
+                    {/* Avatar */}
                     <div className="profile-avatar-container">
-                        <img src="/placeholder.svg?height=200&width=200" alt="Profile Avatar" className="profile-avatar" />
+                        {/* TODO: Use user.avatarUrl if available */}
+                        <img
+                            src={user.avatarUrl || "/placeholder.svg?height=200&width=200"}
+                            alt={`${user.username}'s Avatar`}
+                            className="profile-avatar"
+                        />
                     </div>
 
-                    {/* Social stats - replaced 8+ with friend actions and removed gift icon */}
+                    {/* Social Actions */}
+                    {/* TODO: Implement functionality for these actions */}
                     <div className="social-stats">
                         <div className="stat-item">
                             <UserPlus size={24} className="friend-action-icon" />
@@ -186,19 +246,20 @@ const ProfilePage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* User info */}
+                    {/* User Info */}
                     <div className="user-info">
                         <div className="info-row">
                             <span className="info-label">Last Online</span>
                             <span className="info-value">{formatTimeAgo(user.lastOnline)}</span>
                         </div>
                         <div className="info-row">
-                            <span className="info-label">Created</span>
+                            <span className="info-label">Joined</span>
                             <span className="info-value">{formatTimeAgo(user.createdAt)}</span>
                         </div>
                     </div>
 
-                    {/* User lists */}
+                    {/* User Lists (using mockLists) */}
+                    {/* TODO: Fetch this data from API if needed */}
                     <div className="user-lists">
                         <div className="list-row">
                             <span className="list-label">Lists</span>
@@ -218,11 +279,12 @@ const ProfilePage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Friends section */}
+                    {/* Friends Section */}
                     <div className="friends-section">
                         <div className="friends-header">
                             <h3>Friends</h3>
                             <span className="friends-count">{friends.length}</span>
+                            {/* Tabs - Currently only 'All' is functional */}
                             <div className="friends-tabs">
                                 <button
                                     className={`tab-button ${activeTab === "all" ? "active" : ""}`}
@@ -230,50 +292,66 @@ const ProfilePage: React.FC = () => {
                                 >
                                     All ({friends.length})
                                 </button>
+                                {/* Add other tabs like 'Online' if needed later */}
                             </div>
                         </div>
 
                         <div className="friends-grid">
+                            {friends.length === 0 && <p>No friends yet.</p>}
                             {friends.map((friend) => (
                                 <div key={friend.uuid} className="friend-item">
-                                    <img src={ /* TODO: friend.avatar || */ "/placeholder.svg"} alt={friend.firstName} className="friend-avatar" />
-                                    <span className="friend-name">{friend.firstName} {friend.lastName}</span>
+                                    {/* TODO: Use friend.avatarUrl if available */}
+                                    <img
+                                        src={friend.avatarUrl || "/placeholder.svg?height=50&width=50"}
+                                        alt={friend.username}
+                                        className="friend-avatar"
+                                    />
+                                    {/* Display username or full name based on availability */}
+                                    <span className="friend-name">
+                    {friend.firstName ? `${friend.firstName} ${friend.lastName}` : friend.username}
+                  </span>
                                 </div>
                             ))}
                         </div>
+                        {/* TODO: Add Friend Input/Button if needed */}
+                        {/* <div className="add-friend-section"> ... </div> */}
                     </div>
-                </div>
-
+                </div>{" "}
+                {/* End Left Column */}
                 {/* Right column */}
                 <div className="profile-right-column">
-                    {/* Statistics section */}
+                    {/* Statistics section (using mockStats) */}
+                    {/* TODO: Fetch this data from API if needed */}
                     <div className="statistics-section">
                         <h2>Statistics</h2>
-
                         <div className="movie-stats">
                             <h3>
                                 <span className="stats-icon">📊</span> Movie Stats
                             </h3>
-
+                            {/* Progress Bar */}
                             <div className="progress-bar">
                                 <div
                                     className="progress-segment watching"
                                     style={{ width: `${(stats.watching / stats.totalFilms) * 100}%` }}
+                                    title={`Watching: ${stats.watching}`}
                                 ></div>
                                 <div
                                     className="progress-segment completed"
                                     style={{ width: `${(stats.completed / stats.totalFilms) * 100}%` }}
+                                    title={`Completed: ${stats.completed}`}
                                 ></div>
                                 <div
                                     className="progress-segment on-hold"
                                     style={{ width: `${(stats.onHold / stats.totalFilms) * 100}%` }}
+                                    title={`On Hold: ${stats.onHold}`}
                                 ></div>
                                 <div
                                     className="progress-segment dropped"
                                     style={{ width: `${(stats.dropped / stats.totalFilms) * 100}%` }}
+                                    title={`Dropped: ${stats.dropped}`}
                                 ></div>
                             </div>
-
+                            {/* Stats List */}
                             <div className="stats-list">
                                 <div className="stat-row">
                                     <span className="stat-dot watching-dot"></span>
@@ -301,45 +379,119 @@ const ProfilePage: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>{" "}
+                    {/* End Statistics section */}
+                    {/* Liked Movies section - HORIZONTAL SCROLLING */}
+                    <div className="liked-movies-section">
+                        <h2>Liked Movies</h2>
 
-                    {/* Profile updates section */}
+                        {/* Loading State */}
+                        {likedMoviesLoading && <p>Loading liked movies...</p>}
+
+                        {/* Error State */}
+                        {likedMoviesError && <p style={{ color: "red" }}>Error: {likedMoviesError}</p>}
+
+                        {/* Content: Display only when not loading and no error */}
+                        {!likedMoviesLoading && !likedMoviesError && (
+                            <div className="horizontal-scroll-container">
+                                {likedMovies.length === 0 ? (
+                                    <p>No liked movies found.</p>
+                                ) : (
+                                    <div className="movie-cards-container">
+                                        {likedMovies.map((movie) => (
+                                            <div key={movie.id || movie.uuid} className="movie-card">
+                                                <div className="movie-poster">
+                                                    <img
+                                                        src={
+                                                            movie.posterPath
+                                                                ? `https://image.tmdb.org/t/p/w200${movie.posterPath}`
+                                                                : "/placeholder.svg?height=150&width=100"
+                                                        }
+                                                        alt={movie.title}
+                                                        className="movie-poster-img"
+                                                        onError={(e) => {
+                                                            // Fallback if image fails to load
+                                                            const target = e.target as HTMLImageElement
+                                                            target.src = "/placeholder.svg?height=150&width=100"
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="movie-info">
+                                                    <h4 className="movie-title">{movie.title}</h4>
+                                                    <div className="movie-meta">
+                            <span className="movie-year">
+                              {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
+                            </span>
+                                                        {movie.voteAverage !== undefined && movie.voteAverage > 0 && (
+                                                            <span className="movie-rating">★ {movie.voteAverage.toFixed(1)}</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>{" "}
+                    {/* End Liked Movies section */}
+                    {/* Profile Updates section */}
                     <div className="profile-updates">
                         <h2>Profile Updates</h2>
-
                         <div className="updates-list">
-                            {activity.map((movie) => (
-                                <div key={movie.id} className="update-item">
+                            {profileUpdates.map((update) => (
+                                <div key={update.id} className="update-item">
                                     <div className="update-poster">
-                                        <img src={movie.poster || "/placeholder.svg"} alt={movie.title} />
+                                        <img
+                                            src={
+                                                update.movie.posterPath
+                                                    ? `https://image.tmdb.org/t/p/w200${update.movie.posterPath}`
+                                                    : "/placeholder.svg?height=150&width=100"
+                                            }
+                                            alt={update.movie.title}
+                                            onError={(e) => {
+                                                // Fallback if image fails to load
+                                                const target = e.target as HTMLImageElement
+                                                target.src = "/placeholder.svg?height=150&width=100"
+                                            }}
+                                        />
                                     </div>
                                     <div className="update-details">
                                         <div className="update-header">
-                                            <h4>{movie.title}</h4>
-                                            <span className="update-year">{movie.year}</span>
-                                            <span className="update-genre">{movie.genre}</span>
-                                            <span className="update-rating">★★★★☆</span>
+                                            <h4>{update.movie.title}</h4>
+                                            <span className="update-year">
+                        {update.movie.releaseDate ? new Date(update.movie.releaseDate).getFullYear() : "N/A"}
+                      </span>
+                                            {update.movie.voteAverage !== undefined && update.movie.voteAverage > 0 && (
+                                                <span className="update-rating">★ {update.movie.voteAverage.toFixed(1)} / 10</span>
+                                            )}
                                         </div>
-                                        <p className="update-description">
-                                            {movie.status === "Completed" && "Finished watching this film and added it to completed list."}
-                                            {movie.status === "Watching" && "Started watching this film."}
-                                            {movie.status === "Dropped" && "Stopped watching this film and marked as dropped."}
-                                        </p>
+                                        {update.movie.overview && (
+                                            <p className="update-description">
+                                                {update.movie.overview.substring(0, 150)}
+                                                {update.movie.overview.length > 150 ? "..." : ""}
+                                            </p>
+                                        )}
                                         <div className="update-status">
-                                            <span className={`status-badge ${movie.status.toLowerCase()}`}>{movie.status}</span>
-                                        </div>
-                                        <div className="update-time">
-                                            <Clock size={12} />
-                                            <span>{movie.date}</span>
+                      <span className={`status-badge ${update.type}`}>
+                        {update.type.charAt(0).toUpperCase() + update.type.slice(1)}
+                      </span>
+                                            <div className="update-time">
+                                                <Clock size={14} />
+                                                <span>{formatTimeAgo(update.updatedAt)}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </div>{" "}
+                    {/* End Profile Updates section */}
+                </div>{" "}
+                {/* End Right Column */}
+            </div>{" "}
+            {/* End Profile Content */}
+        </div> /* End Profile Page */
     )
 }
 

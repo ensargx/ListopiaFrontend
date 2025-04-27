@@ -280,5 +280,31 @@ export async function reportMovieComment(
     if (!res.ok) throw new Error('Failed to report comment');
     return res.json();
 }
+export async function likeMovie(
+    movieId: number,
+    liked: boolean
+): Promise<{ message: string; success: boolean }> {
 
+    const params = new URLSearchParams({
+        liked: liked.toString(),
+    });
+
+    const res = await fetch(
+        `${BASE_URL}/v1/user/movie/${movieId}/like?${params.toString()}`,
+        {
+            method: 'PUT',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+        }
+    );
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to like/unlike movie:', res.status, errorText);
+        throw new Error(`Failed to like/unlike movie: ${res.status} ${errorText}`);
+    }
+
+    // Başarılı yanıtı JSON olarak işle
+    return res.json();
+}
 

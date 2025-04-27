@@ -130,4 +130,43 @@
         gap: 0.5rem;
     }
 }
+/* MovieHeader.css */
 
+.actions {
+    margin-top: 15px; /* Buton ile diğer içerik arasına boşluk */
+}
+
+.like-button {
+    padding: 8px 15px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.like-button:hover:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.like-button.liked {
+    background-color: #ff6b6b;
+    color: white;
+    border-color: #ff6b6b;
+}
+
+.like-button.liked:hover:not(:disabled) {
+    background-color: #e05252;
+}
+
+
+.like-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
