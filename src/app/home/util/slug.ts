@@ -1,4 +1,5 @@
 import { FrontMovie } from "@/types/front";
+import { User } from "@/types/user";
 
 export function createSlug(movie: FrontMovie): string {
   const slugifiedTitle = movie.title
@@ -8,6 +9,13 @@ export function createSlug(movie: FrontMovie): string {
     .replace(/^-+|-+$/g, '');
 
   return `${slugifiedTitle}-${movie.movieId}`;
+}
+export function usernameToSlug(username: string): string {
+    return username
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
 }
   
 export function movieIdFromSlug(slug: string): number | null {
@@ -22,4 +30,9 @@ export function movieIdFromSlug(slug: string): number | null {
 export function movieToSlug(movie: FrontMovie): string {
     let slug = createSlug(movie);
     return `/movies/${slug}`
+}
+
+
+export function userProfilePath(user: User): string {
+    return `/profile/${usernameToSlug(user.username)}`;
 }

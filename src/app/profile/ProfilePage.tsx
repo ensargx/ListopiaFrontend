@@ -4,13 +4,15 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import "./style/ProfilePage.css"
 import { Settings, Brush, MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react"
-import { useParams } from "react-router-dom" // Assuming react-router-dom v6+
+import {Link, useParams} from "react-router-dom" // Assuming react-router-dom v6+
 // Adjust paths as needed for your project structure
 import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
 import type { User } from "@/types/user"
 import type { Movie } from "@/types/movie" // Import Movie and PaginatedResponse types
-import { formatTimeAgo } from "@/lib/utils"
-import {useAuth} from "@/app/auth/hooks/AuthContext"; // Assuming this utility exists
+import {formatTimeAgo, getPosterUrl} from "@/lib/utils"
+import {useAuth} from "@/app/auth/hooks/AuthContext";
+import {movieToSlug, userProfilePath} from "@/app/home/util/slug";
+import {CardSlider} from "@/app/home/components/CardSlider"; // Assuming this utility exists
 
 // Mock data for parts not replaced yet
 const mockStats = {
@@ -315,18 +317,26 @@ const ProfilePage: React.FC = () => {
                         <div className="friends-grid">
                             {friends.length === 0 && <p>No friends yet.</p>}
                             {friends.map((friend) => (
-                                <div key={friend.uuid} className="friend-item">
-                                    {/* TODO: Use friend.profilePicture if available */}
-                                    <img
-                                        src={friend.profilePicture || "/placeholder.svg?height=50&width=50"}
-                                        alt={friend.username}
-                                        className="friend-avatar"
-                                    />
-                                    {/* Display username or full name based on availability */}
-                                    <span className="friend-name">
+                                <CardSlider
+                                    items={friends}
+                                    renderItem={m => (
+                                        <Link to={userProfilePath(m)} className="">
+                                            <div key={friend.uuid} className="friend-item">
+                                                {/* TODO: Use friend.profilePicture if available */}
+                                                <img
+                                                    src={friend.profilePicture || "/placeholder.svg?height=50&width=50"}
+                                                    alt={friend.username}
+                                                    className="friend-avatar"
+                                                />
+                                                {/* Display username or full name based on availability */}
+                                                <span className="friend-name">
                     {friend.firstName ? `${friend.firstName} ${friend.lastName}` : friend.username}
                   </span>
-                                </div>
+                                            </div>
+                                        </Link>
+                                    )}
+                                />
+
                             ))}
                         </div>
                         {/* TODO: Add Friend Input/Button if needed */}
