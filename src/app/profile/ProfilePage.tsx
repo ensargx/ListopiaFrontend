@@ -9,7 +9,8 @@ import { useParams } from "react-router-dom" // Assuming react-router-dom v6+
 import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
 import type { User } from "@/types/user"
 import type { Movie } from "@/types/movie" // Import Movie and PaginatedResponse types
-import { formatTimeAgo } from "@/lib/utils" // Assuming this utility exists
+import { formatTimeAgo } from "@/lib/utils"
+import {useAuth} from "@/app/auth/hooks/AuthContext"; // Assuming this utility exists
 
 // Mock data for parts not replaced yet
 const mockStats = {
@@ -101,6 +102,7 @@ const mockProfileUpdates = [
     },
 ]
 
+
 const ProfilePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<"all" | "friends">("all") // Kept 'friends' tab option if needed later
     const { username } = useParams<{ username: string }>()
@@ -110,6 +112,11 @@ const ProfilePage: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const [likedMoviesLoading, setLikedMoviesLoading] = useState(true) // Separate loading state for movies
     const [likedMoviesError, setLikedMoviesError] = useState<string | null>(null) // Separate error state for movies
+    const auth = useAuth();
+    const userMe = auth.user;
+    const isOwn = userMe?.username === username;
+    const [isFriend, setIsFriend] = useState(false)
+    document.title = `${username} - Listopia`
     // const [newFriendUsername, setNewFriendUsername] = useState("") // Keep if needed for add friend functionality
 
     // Using mock data for stats and lists as they were not part of the request to change
@@ -128,6 +135,7 @@ const ProfilePage: React.FC = () => {
             return
         }
 
+
         // Reset states on username change
         setLoading(true)
         setLikedMoviesLoading(true)
@@ -145,6 +153,9 @@ const ProfilePage: React.FC = () => {
                 fetchFriendsByUUID(userData.uuid)
                     .then((retFriends) => {
                         setFriends(retFriends.content)
+                        // userMe’in UUID’si arkadaşlar arasında var mı?
+                        const amIInFriends = retFriends.content.some(f => f.uuid === userMe?.uuid)
+                        setIsFriend(amIInFriends)
                     })
                     .catch((err) => {
                         console.error("Error fetching friends: ", err.message)
@@ -176,7 +187,7 @@ const ProfilePage: React.FC = () => {
                 setLoading(false) // Stop main loading on error
                 setLikedMoviesLoading(false) // Also stop liked movies loading if user fetch fails
             })
-    }, [username]) // Re-run effect if username changes
+    }, [username, userMe]) // Re-run effect if username changes
 
     // Display main loading indicator
     if (loading) {
@@ -230,21 +241,26 @@ const ProfilePage: React.FC = () => {
                     </div>
 
                     {/* Social Actions */}
+                    {!isOwn?<div className="social-stats">
+                            {!isFriend?
+                                <div className="stat-item">
+                                    <UserPlus size={24} className="friend-action-icon" />
+                                    <span className="stat-label">Add Friend</span>
+                                </div>:<>
+                                    <div className="stat-item">
+                                        <UserMinus size={24} className="friend-action-icon" />
+                                        <span className="stat-label">Remove Friend</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <MessageCircle size={24} />
+                                        <span className="stat-label">Message</span>
+                                    </div>
+                                </>
+                            }
+
+
+                    </div>:null}
                     {/* TODO: Implement functionality for these actions */}
-                    <div className="social-stats">
-                        <div className="stat-item">
-                            <UserPlus size={24} className="friend-action-icon" />
-                            <span className="stat-label">Add Friend</span>
-                        </div>
-                        <div className="stat-item">
-                            <UserMinus size={24} className="friend-action-icon" />
-                            <span className="stat-label">Remove Friend</span>
-                        </div>
-                        <div className="stat-item">
-                            <MessageCircle size={24} />
-                            <span className="stat-label">Message</span>
-                        </div>
-                    </div>
 
                     {/* User Info */}
                     <div className="user-info">

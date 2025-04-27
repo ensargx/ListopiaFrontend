@@ -72,8 +72,10 @@ export async function fetchUserByUsername(
     username: string
 ): Promise<User> {
     const res = await fetch(
-        `${BASE}/user/username/${encodeURIComponent(username)}`
-    );
+        `${BASE}/user/username/${encodeURIComponent(username)}`,{
+            credentials: "include",
+            method: "GET"
+        });
     if (!res.ok) {
         const errorText = await res.text();
         throw new Error(errorText || "Failed to fetch user");
@@ -198,7 +200,7 @@ export async function fetchLikedMovies(
 
     const res = await fetch(url.toString(), {
         method: "GET",
-        // credentials: "include" // API'niz gerektiriyorsa bu satırı açın
+        credentials: "include"
     });
 
     if (!res.ok) {
@@ -210,31 +212,3 @@ export async function fetchLikedMovies(
     return res.json() as Promise<PaginatedResponse<Movie>>;
 }
 
-// aşağıdaki fonksiyonlar yanlış silin.
-
-export async function addFriend(
-    userUuid: string,
-    friendUuid: string
-): Promise<void> {
-    const res = await fetch(
-        `${BASE}/user/${encodeURIComponent(userUuid)}/friends`,
-        {
-            method: "POST",
-            body: JSON.stringify({ friendUuid }),
-        }
-    );
-    if (!res.ok) throw new Error("Failed to add friend");
-}
-
-export async function removeFriend(
-    userUuid: string,
-    friendUuid: string
-): Promise<void> {
-    const res = await fetch(
-        `${BASE}/user/${encodeURIComponent(userUuid)}/friends/${encodeURIComponent(friendUuid)}`,
-        { 
-            method: "DELETE",
-        }
-    );
-    if (!res.ok) throw new Error("Failed to remove friend");
-}
