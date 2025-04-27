@@ -9,10 +9,10 @@ import {Link, useParams} from "react-router-dom" // Assuming react-router-dom v6
 import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
 import type { User } from "@/types/user"
 import type { Movie } from "@/types/movie" // Import Movie and PaginatedResponse types
-import {formatTimeAgo, getPosterUrl} from "@/lib/utils"
+import {formatTimeAgo} from "@/lib/utils"
 import {useAuth} from "@/app/auth/hooks/AuthContext";
-import {movieToSlug, userProfilePath} from "@/app/home/util/slug";
-import {CardSlider} from "@/app/home/components/CardSlider"; // Assuming this utility exists
+import {userProfilePath} from "@/app/home/util/slug";
+import {CardSlider} from "@/app/home/components/CardSlider";
 
 // Mock data for parts not replaced yet
 const mockStats = {
@@ -301,7 +301,7 @@ const ProfilePage: React.FC = () => {
                     <div className="friends-section">
                         <div className="friends-header">
                             <h3>Friends</h3>
-                            <span className="friends-count">{friends.length}</span>
+
                             {/* Tabs - Currently only 'All' is functional */}
                             <div className="friends-tabs">
                                 <button
@@ -319,16 +319,15 @@ const ProfilePage: React.FC = () => {
                             {friends.map((friend) => (
                                 <CardSlider
                                     items={friends}
+                                    className=""
                                     renderItem={m => (
                                         <Link to={userProfilePath(m)} className="">
                                             <div key={friend.uuid} className="friend-item">
-                                                {/* TODO: Use friend.profilePicture if available */}
                                                 <img
                                                     src={friend.profilePicture || "/placeholder.svg?height=50&width=50"}
                                                     alt={friend.username}
-                                                    className="friend-avatar"
+                                                    className=""
                                                 />
-                                                {/* Display username or full name based on availability */}
                                                 <span className="friend-name">
                     {friend.firstName ? `${friend.firstName} ${friend.lastName}` : friend.username}
                   </span>
