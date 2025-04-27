@@ -472,11 +472,11 @@
     }
 
     .profile-left-column {
-        order: 2;
+        order: 1;
     }
 
     .profile-right-column {
-        order: 1;
+        order: 2;
     }
 
     .friends-grid {
