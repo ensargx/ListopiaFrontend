@@ -170,3 +170,94 @@
     font-size: 0.9em;
     margin-top: 5px;
 }
+
+/* -------- YENİ BUTON STİLLERİ (Dosyanın sonuna ekleyin) -------- */
+
+/* Butonları içeren alan */
+.movie-header .info .actions {
+    margin-top: 1rem; /* Üstteki içerikle arasına boşluk */
+    display: flex; /* Butonları yan yana dizer */
+    flex-wrap: wrap; /* Ekran küçülünce alt satıra atar */
+    gap: 10px; /* Butonlar arasına boşluk koyar */
+    align-items: center; /* Butonları dikeyde ortalar */
+}
+
+/* Tüm yeni butonlar için temel stil */
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px; /* İç boşluk */
+    font-size: 0.9rem; /* Yazı boyutu */
+    border: 1px solid #555; /* Kenarlık */
+    border-radius: 15px; /* Köşe yuvarlaklığı */
+    background-color: #333; /* Arka plan rengi */
+    color: #eee; /* Yazı rengi */
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    line-height: 1.2;
+}
+
+.action-button:hover:not(:disabled) {
+    background-color: #444;
+    border-color: #777;
+    color: #fff;
+}
+
+.action-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Kalp Butonu Özel Stili */
+.like-button {
+    font-size: 1.4rem; /* Kalp boyutu */
+    padding: 4px 8px; /* Kalbe uygun daha az boşluk */
+    min-width: 40px;
+}
+
+/* Beğenilmiş Kalp Rengi */
+.like-button.liked {
+    color: #ff6b6b; /* Kırmızı */
+    border-color: #ff8f8f; /* Biraz daha açık kenarlık */
+}
+.like-button.liked:hover:not(:disabled) {
+    background-color: rgba(255, 107, 107, 0.1); /* Hafif kırmızı hover */
+}
+
+/* İzledim Butonu Aktif Stili */
+.watched-button.active {
+    background-color: #28a745; /* Yeşil */
+    border-color: #3bc75a;
+    color: white;
+}
+.watched-button.active:hover:not(:disabled) {
+    background-color: #218838; /* Koyu yeşil hover */
+    border-color: #1e7e34;
+}
+
+/* İzleyeceğim Butonu Aktif Stili */
+.watchlist-button.active {
+    background-color: #007bff; /* Mavi */
+    border-color: #3395ff;
+    color: white;
+}
+.watchlist-button.active:hover:not(:disabled) {
+    background-color: #0069d9; /* Koyu mavi hover */
+    border-color: #0062cc;
+}
+
+/* İşlem devam ediyor stili (isteğe bağlı) */
+.action-button.processing {
+    opacity: 0.7;
+}
+
+/* Hata mesajı için (zaten vardı ama flex layout için ekleme) */
+.actions .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+    flex-basis: 100%; /* Hata mesajının alt satıra geçmesini sağlar */
+}
+
+/* -------- YENİ BUTON STİLLERİ SONU -------- */
