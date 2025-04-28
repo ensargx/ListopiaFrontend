@@ -3,18 +3,18 @@ import { fetchFrontMovies } from '@/api/movieapi';
 import { FrontMovie } from '@/types/front';
 import { CardSlider } from '@/app/home/components/CardSlider';
 import { Link } from 'react-router-dom';
-import '../style/SimilarMovies.css';
+import '../style/OtherFilms.css';
 
 interface Props {
     genre: string;
 }
 
-const SimilarMovies: React.FC<Props> = ({ genre }) => {
+const OtherFilms: React.FC<Props> = ({ genre }) => {
     const [movies, setMovies] = useState<FrontMovie[]>([]);
 
     useEffect(() => {
         if (!genre) return;
-        fetchFrontMovies({ genre, pageSize: 15 })
+        fetchFrontMovies({ genre, pageSize: 15, sortOrder:'dsc', sortBy:"watchCount" })
             .then(res => setMovies(res.content))
             .catch(console.error);
     }, [genre]);
@@ -22,8 +22,8 @@ const SimilarMovies: React.FC<Props> = ({ genre }) => {
     if (!movies.length) return null;
 
     return (
-        <section className="similar-movies">
-            <h2>Similar Films</h2>
+        <section className="other-movies">
+            <h2>Others Also Watched</h2>
             <CardSlider
                 items={movies}
                 renderItem={m => (
@@ -39,4 +39,4 @@ const SimilarMovies: React.FC<Props> = ({ genre }) => {
     );
 };
 
-export default SimilarMovies;
+export default OtherFilms;
