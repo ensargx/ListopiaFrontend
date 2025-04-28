@@ -15,6 +15,8 @@ const CastList: React.FC<Props> = ({ casts }) => {
 
     // Filter out cast members with no profile image
     const filteredCasts = toShow.filter((c) => c.profilePath);
+    const truncate = (text: string, max: number) =>
+        text.length > max ? text.slice(0, max) + '…' : text
 
     return (
         <section className="cast-list">
@@ -31,7 +33,7 @@ const CastList: React.FC<Props> = ({ casts }) => {
                             loading="lazy"
                         />
                         <p className="name">{c.originalName}</p>
-                        <p className="character">{c.character}</p>
+                        <p className="character">{truncate(c.character, 50)}</p>
                     </div>
                 ))}
             </div>
