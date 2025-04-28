@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { fetchFrontMovies } from '@/api/movieapi';
 import { HeroBanner } from './components/HeroBanner';
 import { PopularMovies } from './components/PopularMovies';
+import { MostVisitedMovies } from './components/MostVisitedMovies';
+import { MostLikedMovies } from './components/MostLikedMovies';
+import { MostWatchedMovies } from './components/MostWatchedMovies';
 import { RecentMovies } from './components/RecentMovies';
 import { SidebarSpecial } from './components/SidebarSpecial';
 import './style/HomePage.css';
@@ -47,9 +50,12 @@ export const HomePage: React.FC = () => {
                 </aside>
             </div>
 
-            {/* --- Aşağıdaki iki slider --- */}
+            {/* --- Aşağıdaki 5 slider --- */}
             <PopularMovies />
             <RecentMovies />
+            <MostVisitedMovies />
+            <MostLikedMovies />
+            <MostWatchedMovies />
         </main>
     );
 };
