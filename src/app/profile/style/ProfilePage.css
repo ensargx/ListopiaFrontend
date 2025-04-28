@@ -543,3 +543,92 @@
         grid-template-columns: repeat(3, 1fr);
     }
 }
+/* ProfileLeftColumn.css */
+
+/* Container’lara biraz iç boşluk ve arka plan ekleyelim */
+.profile-left-column .sent-requests,
+.profile-left-column .received-requests {
+    background-color: #737373;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Başlık ile liste arasına boşluk */
+.profile-left-column .sent-requests h3,
+.profile-left-column .received-requests h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Listeyi max-height ile sınırla ve overflow ver */
+.profile-left-column .sent-requests ul,
+.profile-left-column .received-requests ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;       /* ihtiyaca göre ayarla */
+    overflow-y: auto;
+}
+
+/* Liste öğelerini kompakt flex düzenine al */
+.profile-left-column .sent-requests li,
+.profile-left-column .received-requests li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Son elemanda alt sınırı kaldır */
+.profile-left-column .sent-requests li:last-child,
+.profile-left-column .received-requests li:last-child {
+    border-bottom: none;
+}
+
+/* Profil görselini küçült ve yuvarlak yap */
+.profile-left-column .sent-requests img,
+.profile-left-column .received-requests img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+}
+
+/* Kullanıcı adına biraz esneklik ver */
+.profile-left-column .sent-requests li a,
+.profile-left-column .received-requests li a {
+    flex: 1;
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Butonları sıkıştır ve tutarlı boyutta yap */
+.profile-left-column .sent-requests li button,
+.profile-left-column .received-requests li button {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+    border: none;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* “Accept” butonu için ayrı renk (isteğe bağlı) */
+.profile-left-column .received-requests li button:first-of-type {
+    background-color: #27ae60;
+}
+
+/* Mobilde tam genişlik */
+@media (max-width: 640px) {
+    .profile-left-column .sent-requests ul,
+    .profile-left-column .received-requests ul {
+        max-height: 150px;
+    }
+}

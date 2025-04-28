@@ -1,18 +1,24 @@
 // AuthContext.tsx
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { User } from '@/types/user';
+import { User } from "@/types/user";
 import { getUserFromStorage, saveUserToStorage, clearUserFromStorage } from "../../../lib/auth";
-import {fetchFriendsByUUID} from "@/api/userapi";
-import {PaginatedResponse} from "@/types/friends";
+import { fetchFriendsByUUID, fetchSentFriendRequests, fetchReceivedFriendRequests } from "@/api/userapi";
+import { PaginatedResponse } from "@/types/friends";
 
 interface AuthContextType {
     user: User | null;
+    friends: User[];
+    sendingRequests: User[];
+    receivedRequests: User[];
     login: (user: User) => void;
     logout: () => void;
+    // isteğe bağlı olarak aşağıdakileri de açabilirsin:
+    // refreshFriends: () => void;
+    // refreshSentRequests: () => void;
+    // refreshReceivedRequests: () => void;
 }
 
-// Burada children’ı tanımlıyoruz:
 interface AuthProviderProps {
     children: ReactNode;
 }
@@ -22,107 +28,95 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [uuid, setUuid] = useState<string | null>(null);
+
     const [friends, setFriends] = useState<User[]>([]);
-    const [sendingRequests, setSentRequests] = useState<User[]>([]);
+    const [sendingRequests, setSendingRequests] = useState<User[]>([]);
     const [receivedRequests, setReceivedRequests] = useState<User[]>([]);
 
+    // --- Yardımcı fetch fonksiyonları ---
+    const fetchAllPages = async <T,>(
+        fetcher: (...args: any[]) => Promise<PaginatedResponse<T>>,
+        ...fetcherArgs: any[]
+    ): Promise<T[]> => {
+        let page = 0;
+        const result: T[] = [];
+        let hasMore = true;
+
+        while (hasMore) {
+            // eğer fetcher ek parametre isterse spread ile iletebilirsin
+            const paged: PaginatedResponse<T> = await fetcher(...fetcherArgs, page);
+            result.push(...paged.content);
+            hasMore = !paged.last;
+            page++;
+        }
+
+        return result;
+    };
+
+    // --- useEffects ---
+    // 1) Oturumu local storage’dan yükle
     useEffect(() => {
         const stored = getUserFromStorage();
-        if (stored) setUser(stored);
+        if (stored) {
+            setUser(stored);
+        }
     }, []);
 
+    // 2) user değiştiğinde uuid’yi ayarla
+    useEffect(() => {
+        if (user) setUuid(user.uuid);
+        else setUuid(null);
+    }, [user]);
+
+    // 3) uuid hazır olduğunda hem friends, hem sent hem de received istekleri çek
+    useEffect(() => {
+        if (!uuid) {
+            setFriends([]);
+            setSendingRequests([]);
+            setReceivedRequests([]);
+            return;
+        }
+
+        // arkadaşları çek
+        fetchAllPages<User>(fetchFriendsByUUID, uuid)
+            .then(setFriends)
+            .catch(console.error);
+
+        // gönderilmiş istekleri çek
+        fetchAllPages<User>(fetchSentFriendRequests)
+            .then(setSendingRequests)
+            .catch(console.error);
+
+        // gelen istekleri çek (api’de böyle bir fonksiyon olmalı)
+        fetchAllPages<User>(fetchReceivedFriendRequests)
+            .then(setReceivedRequests)
+            .catch(console.error);
+    }, [uuid]);
+
+    // --- login / logout ---
     const login = (u: User) => {
         setUser(u);
         saveUserToStorage(u);
     };
-
     const logout = () => {
         setUser(null);
         clearUserFromStorage();
     };
 
-    const handleFriendAdded = (f: User) => {
-        setFriends(prevFriends => [f, ...prevFriends]);
-    };
-
-    const handleRequestsReceived = (f: User) => {
-        setReceivedRequests(prevReceivedRequests => [f, ...prevReceivedRequests]);
-    };
-
-    const handleRequestsSend = (f: User) => {
-        setSentRequests(prevSentRequests => [f, ...prevSentRequests]);
-    };
-
-    useEffect(() => {
-        if(user){
-            setUuid(user?.uuid)
-        }else{
-            setUuid(null);
-        }
-    }, [user]);
-
-    const fetchAllFriends = async (uuid: string, fetcher: typeof fetchFriendsByUUID) => {
-        let page = 0;
-        let allFriends: User[] = [];
-        let hasMorePages = true;
-
-        while (hasMorePages) {
-            const pagedResult = await fetcher(uuid, page);
-
-            // Burada her sayfadaki friends için işlem yapabilirsin
-            pagedResult.content.forEach(friend => {
-                console.log('Friend:', friend);
-                // Burada friend için istediğin işlemi yapabilirsin
-            });
-
-            allFriends = [...allFriends, ...pagedResult.content];
-
-            // Eğer son sayfaysa dur
-            hasMorePages = !pagedResult.last;
-            page += 1; // Sonraki sayfaya geç
-        }
-
-        return allFriends;
-    };
-
-    const fetchAllReceivedFriendRequests = async (uuid: string, fetcher: typeof fetchFriendsByUUID) => {
-        let page = 0;
-        let allFriends: User[] = [];
-        let hasMorePages = true;
-
-        while (hasMorePages) {
-            const pagedResult = await fetcher(uuid, page);
-
-            // Burada her sayfadaki friends için işlem yapabilirsin
-            pagedResult.content.forEach(friend => {
-                console.log('Friend:', friend);
-                // Burada friend için istediğin işlemi yapabilirsin
-            });
-
-            allFriends = [...allFriends, ...pagedResult.content];
-
-            // Eğer son sayfaysa dur
-            hasMorePages = !pagedResult.last;
-            page += 1; // Sonraki sayfaya geç
-        }
-
-        return allFriends;
-    };
-
-
-
-    useEffect(() => {
-        if(!uuid){
-            setFriends([]);
-            setReceivedRequests([]);
-            setSentRequests([]);
-            return;
-        }
-        fetchAllFriends(uuid, fetchFriendsByUUID).then(setFriends);
-    }, [uuid]);
-
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                friends,
+                sendingRequests,
+                receivedRequests,
+                login,
+                logout,
+                // refreshFriends: () => uuid && fetchAllPages(fetchFriendsByUUID, uuid).then(setFriends),
+                // refreshSentRequests: () => fetchAllPages(fetchSentFriendRequests).then(setSendingRequests),
+                // refreshReceivedRequests: () => fetchAllPages(fetchReceivedFriendRequests).then(setReceivedRequests),
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
@@ -132,4 +126,4 @@ export const useAuth = (): AuthContextType => {
     const ctx = useContext(AuthContext);
     if (!ctx) throw new Error("useAuth must be used within AuthProvider");
     return ctx;
-}
+};
