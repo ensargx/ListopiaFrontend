@@ -129,6 +129,27 @@
     color: #e0e0e0;
 }
 
+/* About’ı ayrı bir kutu haline getirdik */
+.about-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #1f1f1f;     /* Listopia temasına uygun koyu ton */
+    border-radius: 8px;
+}
+.about-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #fff;
+}
+.about-content {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: #ddd;
+    /* Eğer kullanıcı biyografisinde\n karakterleri varsa düzgün satır atlamak için: */
+    white-space: pre-wrap;
+}
 /* Friends section */
 .friends-section {
     margin-top: 1rem;

@@ -158,7 +158,7 @@ export async function rejectFriendRequest(uuid: string) : Promise<APIResponse> {
     return res.json();
 }
 
-export async function removeFriendRequest(uuid: string) : Promise<APIResponse> {
+export async function removeFriend(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
         `${BASE}/user/friend/remove/${uuid}`, {
             method: "DELETE",

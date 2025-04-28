@@ -53,7 +53,7 @@
 }
 
 .auth-tab.active {
-    background-color: #0066ff;
+    background-color: #ff2400;
     color: white;
 }
 
@@ -97,8 +97,8 @@
 
 .auth-form input:focus {
     outline: none;
-    border-color: #0066ff;
-    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
+    border-color: #cc1a1a;
+    box-shadow: 0 0 0 2px rgb(135, 17, 17);
 }
 
 .auth-form input::placeholder {
@@ -120,7 +120,7 @@
     padding: 14px;
     border: none;
     border-radius: 8px;
-    background-color: #0066ff;
+    background-color: #ff2400;
     color: white;
     font-size: 16px;
     font-weight: 600;
@@ -130,11 +130,11 @@
 }
 
 .auth-button:hover {
-    background-color: #0055dd;
+    background-color: #d60303;
 }
 
 .auth-button:disabled {
-    background-color: #99bbee;
+    background-color: #d68e8e;
     cursor: not-allowed;
 }
 
