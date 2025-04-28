@@ -7,7 +7,7 @@ import { apiFetch as fetch } from './apiClient';
 import {PaginatedResponse} from "@/types/friends";
 
 // proxy kullanımı için başına “/” koyuyoruz
-const BASE_URL = 'https://api.ensargok.com/api';
+import {BASE_URL} from "./apiClient";
 
 export async function fetchMovieById(
     movieId: number,
