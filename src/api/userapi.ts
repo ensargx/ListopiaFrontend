@@ -169,6 +169,46 @@ export async function removeFriend(uuid: string) : Promise<APIResponse> {
     return res.json();
 }
 
+export async function fetchSentFriendRequests(
+    pageNumber: number = 0,
+    pageSize: number = 30
+): Promise<PaginatedResponse<User>> {
+    const url = new URL(`${BASE_URL}api/v1/user/friend/requests/sent`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `Failed to fetch sent friend requests`);
+    }
+    return res.json() as Promise<PaginatedResponse<User>>;
+}
+
+export async function fetchReceivedFriendRequests(
+    pageNumber: number = 0,
+    pageSize: number = 30
+): Promise<PaginatedResponse<User>> {
+    const url = new URL(`${BASE_URL}api/v1/user/friend/requests/received`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `Failed to fetch received friend requests`);
+    }
+    return res.json() as Promise<PaginatedResponse<User>>;
+}
+
 export async function fetchFriendsByUUID(
     uuid: string,
     pageNumber: number = 0,
