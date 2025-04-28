@@ -1,0 +1,74 @@
+/* src/features/profile/style/ProfileCardSlider.css */
+
+/* Wrapper: full width, hide overflow so the slider can’t push the page wider */
+.profile-card-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Slider container: horizontally scrollable, but scrollbar hidden */
+.profile-card-slider .profile-slider-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0.5rem 0;      /* vertical padding, no bottom padding pushing page */
+    margin: 0 -1rem;       /* optional: align first/last cards under arrows */
+    scrollbar-width: none; /* Firefox */
+}
+.profile-card-slider .profile-slider-container::-webkit-scrollbar {
+    display: none;         /* Chrome, Safari */
+}
+
+/* Individual cards */
+.profile-card-slider .profile-card {
+    flex: 0 0 auto;
+    width: 180px;
+    margin: 0 0.5rem;      /* horizontal gap between cards */
+    transition: transform 0.3s;
+    position: relative;
+    z-index: 1;
+}
+.profile-card-slider .profile-card:hover {
+    transform: scale(1.05);
+    z-index: 3;
+}
+
+/* Nav buttons: always visible on top, don’t affect layout */
+.profile-card-slider .profile-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s, background 0.3s;
+    z-index: 5;
+}
+.profile-card-slider .profile-nav:hover {
+    opacity: 1;
+    background: rgb(214, 93, 93);
+}
+.profile-card-slider .profile-prev { left: 0.5rem; }
+.profile-card-slider .profile-next { right: 0.5rem; }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .profile-card-slider .profile-card {
+        width: 140px;
+        margin: 0 0.4rem;
+    }
+    .profile-card-slider .profile-nav {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
+    }
+}

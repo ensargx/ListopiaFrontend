@@ -14,7 +14,7 @@ import { useAuth } from "@/app/auth/hooks/AuthContext"
 // Import components
 import ProfileLeftColumn from "./components/ProfileLeftColumn"
 import ProfileStatistics from "./components/ProfileStatistics"
-import LikedMovies from "./components/LikedMovies"
+import LikedMovies from "./components/ProfileLikedMovies"
 import ProfileUpdates from "./components/ProfileUpdates"
 
 // Mock data for parts not replaced yet
