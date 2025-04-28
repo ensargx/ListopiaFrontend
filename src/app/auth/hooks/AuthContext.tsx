@@ -85,6 +85,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return allFriends;
     };
 
+    const fetchAllReceivedFriendRequests = async (uuid: string, fetcher: typeof fetchFriendsByUUID) => {
+        let page = 0;
+        let allFriends: User[] = [];
+        let hasMorePages = true;
+
+        while (hasMorePages) {
+            const pagedResult = await fetcher(uuid, page);
+
+            // Burada her sayfadaki friends için işlem yapabilirsin
+            pagedResult.content.forEach(friend => {
+                console.log('Friend:', friend);
+                // Burada friend için istediğin işlemi yapabilirsin
+            });
+
+            allFriends = [...allFriends, ...pagedResult.content];
+
+            // Eğer son sayfaysa dur
+            hasMorePages = !pagedResult.last;
+            page += 1; // Sonraki sayfaya geç
+        }
+
+        return allFriends;
+    };
+
 
 
     useEffect(() => {
