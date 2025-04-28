@@ -5,8 +5,8 @@ import {
     fetchMovieCasts,
     fetchMovieCrews,
 } from '@/api/movieapi';
-import {CrewMember} from "@/types/crew";
-import {CastMember} from "@/types/crew";
+import { CrewMember } from '@/types/crew';
+import { CastMember } from '@/types/crew';
 import { Movie } from '@/types/movie';
 import MovieHeader from './components/MovieHeader';
 import CastList from './components/CastList';
@@ -22,26 +22,33 @@ export const MoviePage: React.FC = () => {
     const [casts, setCasts] = useState<CastMember[]>([]);
     const [crews, setCrews] = useState<CrewMember[]>([]);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        if ( !movieSlug) {
-            redirect("/");
+        if (!movieSlug) {
+            redirect('/');
             return;
         }
         const id = movieIdFromSlug(movieSlug);
         if (!id) return;
-        Promise.all([
-            fetchMovieById(id),
-            fetchMovieCasts(id),
-            fetchMovieCrews(id),
-        ])
-            .then(([m, castRes, crewRes]) => {
+
+        // 1) Film bilgisini çek
+        fetchMovieById(id)
+            .then(m => {
                 setMovie(m);
-                document.title = `${m.title} - Listopia`
-                setCasts(castRes.content);
-                setCrews(crewRes.content);
+                document.title = `${m.title} - Listopia`;
             })
-            .catch(console.error)
+            .catch(err => console.error('Failed to fetch movie:', err))
             .finally(() => setLoading(false));
+
+        // 2) Cast listesini çek (hata olsa bile devam etsin)
+        fetchMovieCasts(id)
+            .then(res => setCasts(res.content))
+            .catch(err => console.error('Failed to fetch casts:', err));
+
+        // 3) Crew listesini çek
+        fetchMovieCrews(id)
+            .then(res => setCrews(res.content))
+            .catch(err => console.error('Failed to fetch crews:', err));
     }, [movieSlug]);
 
     if (loading) return <p>Loading…</p>;
