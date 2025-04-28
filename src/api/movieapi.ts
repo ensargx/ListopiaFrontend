@@ -1,4 +1,4 @@
-// src/app/api.ts
+// src/appapi.ts
 import { Movie } from '@/types/movie';
 import { FrontMovie, PagedResponse } from '@/types/front';
 import { CrewMember, CastMember } from '@/types/crew';
@@ -14,7 +14,7 @@ export async function fetchMovieById(
     language: string = 'en'
 ): Promise<Movie> {
     const res = await fetch(
-        `${BASE_URL}/movies/${movieId}?language=${language}`
+        `${BASE_URL}api/v1/movies/${movieId}?language=${language}`
     );
     if (!res.ok) throw new Error('Failed to fetch movie');
     return res.json();
@@ -24,14 +24,14 @@ export async function fetchTopRatedMovies(
     language: string = 'en'
 ): Promise<FrontMovie[]> {
     const res = await fetch(
-        `${BASE_URL}/movies/top-rated?language=${language}`
+        `${BASE_URL}api/v1/movies/top-rated?language=${language}`
     );
     if (!res.ok) throw new Error('Failed to fetch top rated');
     return res.json();
 }
 
 export async function fetchTrendingGenres(): Promise<string[]> {
-    const res = await fetch(`${BASE_URL}/genres/trending`);
+    const res = await fetch(`${BASE_URL}api/v1/genres/trending`);
     if (!res.ok) throw new Error('Failed to fetch trending genres');
     return res.json();
 }
@@ -40,7 +40,7 @@ export async function fetchFrontMovies(
     options: {
         pageNumber?: number;
         pageSize?: number;
-        sortBy?: 'popularity' | 'ratingAverage' | "releaseDate";
+        sortBy?: 'popularity' | 'ratingAverage' | "releaseDate"| "clickCount"| "likeCount"| "watchCount"| "ratingCount";
         sortOrder?: 'dsc' | 'asc';
         genre?: string;
         language?: string;
@@ -64,7 +64,7 @@ export async function fetchFrontMovies(
     });
     if (genre) params.append('genre', genre);
 
-    const res = await fetch(`${BASE_URL}/movies/front?${params}`);
+    const res = await fetch(`${BASE_URL}api/v1/movies/front?${params}`);
     if (!res.ok) throw new Error('Failed to fetch front movies');
     return res.json();
 }
@@ -103,7 +103,7 @@ export async function searchFrontMovies(
     if (genre) params.append('genre', genre);
 
     const res = await fetch(
-        `${BASE_URL}/movies/front/search?${params.toString()}`
+        `${BASE_URL}api/v1/movies/front/search?${params.toString()}`
     );
     if (!res.ok) throw new Error('Failed to search front movies');
     return res.json();
@@ -132,7 +132,7 @@ export async function fetchMovieCrews(
         sortOrder,
     });
     const res = await fetch(
-        `${BASE_URL}/movies/${movieId}/crews?${params.toString()}`
+        `${BASE_URL}api/v1/movies/${movieId}/crews?${params.toString()}`
     );
     if (!res.ok) throw new Error('Failed to fetch movie crews');
     return res.json();
@@ -160,7 +160,7 @@ export async function fetchMovieCasts(
         sortOrder,
     });
     const res = await fetch(
-        `${BASE_URL}/movies/${movieId}/casts?${params.toString()}`
+        `${BASE_URL}api/v1/movies/${movieId}/casts?${params.toString()}`
     );
     if (!res.ok) throw new Error('Failed to fetch movie casts');
     return res.json();
@@ -176,7 +176,7 @@ export async function fetchMovieComments(
         pageSize: pageSize.toString(),
     });
 
-    const res = await fetch(`${BASE_URL}/movies/${movieId}/comment?${params.toString()}`);
+    const res = await fetch(`${BASE_URL}api/v1/movies/${movieId}/comment?${params.toString()}`);
     if (!res.ok) throw new Error('Failed to fetch movie comments');
 
     const data = await res.json();
@@ -203,7 +203,7 @@ export async function submitMovieComment(
         isSpoiler: isSpoiler.toString(),  // Convert isSpoiler to a string (query parameter)
     });
 
-    const response = await fetch(`${BASE_URL}/movies/${movieId}/comment?${params.toString()}`, {
+    const response = await fetch(`${BASE_URL}api/v1/movies/${movieId}/comment?${params.toString()}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -237,7 +237,7 @@ export async function updateMovieComment(
         isSpoiler: isSpoiler.toString(),
     });
     const res = await fetch(
-        `${BASE_URL}/movies/comment/${commentId}?${params.toString()}`,
+        `${BASE_URL}api/v1/movies/comment/${commentId}?${params.toString()}`,
         {
             method: 'PUT',
             credentials: 'include',
@@ -255,7 +255,7 @@ export async function deleteMovieComment(
     commentId: number
 ): Promise<{ message: string; success: boolean }> {
     const res = await fetch(
-        `${BASE_URL}/movies/comment/${commentId}`,
+        `${BASE_URL}api/v1/movies/comment/${commentId}`,
         {
             method: 'DELETE',
             credentials: 'include',
@@ -272,7 +272,7 @@ export async function reportMovieComment(
     commentId: number
 ): Promise<{ message: string; success: boolean }> {
     const res = await fetch(
-        `${BASE_URL}/movies/comment/${commentId}/report`,
+        `${BASE_URL}api/v1/movies/comment/${commentId}/report`,
         {
             method: 'POST',
             credentials: 'include',
@@ -291,7 +291,7 @@ export async function likeMovie(
     });
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/movie/${movieId}/like?${params.toString()}`,
+        `${BASE_URL}api/v1/user/movie/${movieId}/like?${params.toString()}`,
         {
             method: 'PUT',
             credentials: 'include',
@@ -332,7 +332,7 @@ export async function fetchWatchedMoviesByUser(
     });
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/uuid/${uuid}/watched?${params.toString()}`,
+        `${BASE_URL}api/v1/user/uuid/${uuid}/watched?${params.toString()}`,
         {
             credentials: 'include',
         }
@@ -369,7 +369,7 @@ export async function fetchWatchlistMoviesByUser(
     });
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/uuid/${uuid}/watchlist?${params.toString()}`,
+        `${BASE_URL}api/v1/user/uuid/${uuid}/watchlist?${params.toString()}`,
         {
             credentials: 'include',
         }
@@ -388,7 +388,7 @@ export async function addMovieToWatchlist(
 ): Promise<{ message: string; success: boolean }> {
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/movie/${movieId}/watchlist`,
+        `${BASE_URL}api/v1/user/movie/${movieId}/watchlist`,
         {
             method: 'POST',
             credentials: 'include',
@@ -412,7 +412,7 @@ export async function markMovieAsWatched(
 ): Promise<{ message: string; success: boolean }> {
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/movie/${movieId}/watched`,
+        `${BASE_URL}api/v1/user/movie/${movieId}/watched`,
         {
             method: 'POST',
             credentials: 'include',
@@ -436,7 +436,7 @@ export async function removeMovieFromWatchlist(
 
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/movie/${movieId}/watchlist`,
+        `${BASE_URL}api/v1/user/movie/${movieId}/watchlist`,
         {
             method: 'DELETE',
             credentials: 'include',
@@ -457,7 +457,7 @@ export async function removeMovieFromWatched(
 ): Promise<{ message: string; success: boolean }> {
 
     const res = await fetch(
-        `${BASE_URL}/v1/user/movie/${movieId}/watched`,
+        `${BASE_URL}api/v1/user/movie/${movieId}/watched`,
         {
             method: 'DELETE',
             credentials: 'include',

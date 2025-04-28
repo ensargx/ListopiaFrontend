@@ -23,7 +23,7 @@ export async function signUp(
     lastName: string,
     username: string
 ): Promise<APIResponse> {
-    const res = await fetch(`${BASE_URL}/auth/signup`, {
+    const res = await fetch(`${BASE_URL}api/v1/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, firstName, lastName, username }),
@@ -40,7 +40,7 @@ export async function signIn(
     email: string,
     password: string
 ): Promise<APIResponse> {
-    const res = await fetch(`${BASE_URL}/auth/signin`, {
+    const res = await fetch(`${BASE_URL}api/v1/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -54,7 +54,7 @@ export async function signIn(
 }
 
 export async function signOut(): Promise<APIResponse> {
-    const res = await fetch(`${BASE_URL}/auth/signout`, {
+    const res = await fetch(`${BASE_URL}api/v1/auth/signout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include"
@@ -72,7 +72,7 @@ export async function fetchUserByUsername(
     username: string
 ): Promise<User> {
     const res = await fetch(
-        `${BASE_URL}/user/username/${encodeURIComponent(username)}`,{
+        `${BASE_URL}api/v1/user/username/${encodeURIComponent(username)}`,{
             credentials: "include",
             method: "GET"
         });
@@ -85,7 +85,7 @@ export async function fetchUserByUsername(
 
 export async function changeUsernameRequest(username: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/username`, {
+        `${BASE_URL}api/v1/user/username`, {
             method: "PUT",
             credentials: "include",
             body: JSON.stringify({
@@ -99,7 +99,7 @@ export async function changeUsernameRequest(username: string) : Promise<APIRespo
 
 export async function changePasswordRequest(password: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/password`, {
+        `${BASE_URL}api/v1/user/password`, {
             method: "PUT",
             credentials: "include",
             body: JSON.stringify({
@@ -113,7 +113,7 @@ export async function changePasswordRequest(password: string) : Promise<APIRespo
 
 export async function changeBiographyRequest(biography: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/biography`, {
+        `${BASE_URL}api/v1/user/biography`, {
             method: "PUT",
             credentials: "include",
             body: JSON.stringify({
@@ -127,7 +127,7 @@ export async function changeBiographyRequest(biography: string) : Promise<APIRes
 
 export async function addFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/friend/add/${uuid}`, {
+        `${BASE_URL}api/v1/user/friend/add/${uuid}`, {
             method: "POST",
             credentials: "include",
         }
@@ -138,7 +138,7 @@ export async function addFriendRequest(uuid: string) : Promise<APIResponse> {
 
 export async function acceptFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/friend/accept/${uuid}`, {
+        `${BASE_URL}api/v1/user/friend/accept/${uuid}`, {
             method: "POST",
             credentials: "include",
         }
@@ -149,7 +149,7 @@ export async function acceptFriendRequest(uuid: string) : Promise<APIResponse> {
 
 export async function rejectFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/friend/reject/${uuid}`, {
+        `${BASE_URL}api/v1/user/friend/reject/${uuid}`, {
             method: "POST",
             credentials: "include",
         }
@@ -160,7 +160,7 @@ export async function rejectFriendRequest(uuid: string) : Promise<APIResponse> {
 
 export async function removeFriend(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}/user/friend/remove/${uuid}`, {
+        `${BASE_URL}api/v1/user/friend/remove/${uuid}`, {
             method: "DELETE",
             credentials: "include",
         }
@@ -174,7 +174,7 @@ export async function fetchFriendsByUUID(
     pageNumber: number = 0,
     pageSize: number = 30
 ): Promise<PaginatedResponse<User>> {
-    const url = new URL(`${BASE_URL}/user/uuid/${encodeURIComponent(uuid)}/friends`);
+    const url = new URL(`${BASE_URL}api/v1/user/uuid/${encodeURIComponent(uuid)}/friends`);
     url.searchParams.append('pageNumber', pageNumber.toString());
     url.searchParams.append('pageSize', pageSize.toString());
 
@@ -193,7 +193,7 @@ export async function fetchFriendsByUUID(
 }
 
 export async function fetchUserMe(): Promise<User>{
-    const res = await fetch(`${BASE_URL}/user/me`, {
+    const res = await fetch(`${BASE_URL}api/v1/user/me`, {
         method: "GET",
         credentials: "include"
     });
@@ -209,7 +209,7 @@ export async function fetchLikedMovies(
     pageSize: number = 30
 ): Promise<PaginatedResponse<Movie>> { // <--- Movie arayüzünü kullanıyoruz
     // Construct the URL with query parameters
-    const url = new URL(`${BASE_URL}/user/uuid/${encodeURIComponent(uuid)}/liked_movies`);
+    const url = new URL(`${BASE_URL}api/v1/user/uuid/${encodeURIComponent(uuid)}/liked_movies`);
     url.searchParams.append('pageNumber', pageNumber.toString());
     url.searchParams.append('pageSize', pageSize.toString());
 

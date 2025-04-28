@@ -11,7 +11,7 @@ export const SidebarSpecial: React.FC = () => {
 
     useEffect(() => {
         fetchFrontMovies({
-            sortBy: 'popularity',
+            sortBy: 'ratingAverage',
             sortOrder: 'dsc',
             pageSize: 5,           // sidebar’da sadece 5 tane göster
         })
@@ -31,7 +31,7 @@ export const SidebarSpecial: React.FC = () => {
                         <li key={m.movieId}>
                             <Link to={movieToSlug(m)} className="item">
                                 <img
-                                    src={`https://image.tmdb.org/t/p/w92${m.poster}`}
+                                    src={`https://image.tmdb.org/t/p/w200${m.poster}`}
                                     alt={m.title}
                                 />
                                 <span>{m.title}</span>

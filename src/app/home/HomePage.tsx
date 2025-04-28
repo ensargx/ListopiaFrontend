@@ -1,22 +1,33 @@
 // src/features/home/HomePage.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchMovieById } from '@/api/movieapi';
-import { Movie } from '@/types/movie';
+import { fetchFrontMovies } from '@/api/movieapi';
 import { HeroBanner } from './components/HeroBanner';
 import { PopularMovies } from './components/PopularMovies';
 import { RecentMovies } from './components/RecentMovies';
 import { SidebarSpecial } from './components/SidebarSpecial';
 import './style/HomePage.css';
+import {FrontMovie} from "@/types/front";
 
 export const HomePage: React.FC = () => {
-    const [featured, setFeatured] = useState<Movie | null>(null);
+    const [featured, setFeatured] = useState<FrontMovie | null>(null);
     const [loadingHero, setLoadingHero] = useState(true);
 
     document.title = "Listopia"
 
     useEffect(() => {
-        fetchMovieById(98, 'en')
-            .then(m => setFeatured(m))
+        fetchFrontMovies({
+            sortBy: 'popularity',
+            sortOrder: 'dsc',
+            pageSize: 1,
+        })
+            // PagedResponse<FrontMovie>'den content dizisini alıp ilk elemanı veriyoruz
+            .then(({ content }) => {
+                if (content.length > 0) {
+                    setFeatured(content[0]);
+                } else{
+                    console.log("No featured movies found");
+                }
+            })
             .catch(console.error)
             .finally(() => setLoadingHero(false));
     }, []);
