@@ -32,7 +32,7 @@
 }
 
 .sidebar-popular .item img {
-    /*width: 48px;*/
+    max-width: 144px;
     height: 72px;
     object-fit: cover;
     border-radius: 4px;
