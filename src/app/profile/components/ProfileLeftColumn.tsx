@@ -1,7 +1,7 @@
 "use client"
 
-import type React from "react"
-import { MessageCircle, UserPlus, UserMinus } from "lucide-react"
+import React, {useState} from "react"
+import {MessageCircle, UserPlus, UserMinus, Clock} from "lucide-react"
 import { Link } from "react-router-dom"
 import { formatTimeAgo } from "@/lib/utils"
 import { CardSlider } from "@/app/home/components/CardSlider"
@@ -33,20 +33,29 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                                                  setActiveTab,
                                                                  lists,
                                                              }) => {
-    const handleAddFriend = async () =>{
-        addFriendRequest(user.uuid).then(()=>{
-            alert(69);
-        }).catch(()=>{
-            alert(31);
-        })
+    const [isRequestSent, setIsRequestSent] = useState<boolean>(false)
+    const [isProcessing, setIsProcessing] = useState<boolean>(false)
+    const handleAddFriend = async () => {
+        setIsProcessing(true)
+        try {
+            await addFriendRequest(user.uuid)
+            setIsRequestSent(true)
+        } catch (e) {
+            alert("Request could not be sent")
+        } finally {
+            setIsProcessing(false)
+        }
     }
-    const handleRemoveFriend = async () =>{
-        removeFriend(user.uuid).then(()=>{
-            alert(68);
-        }).catch(()=>{
-            alert(31);
-        })
+
+    const handleRemoveFriend = async () => {
+        try {
+            await removeFriend(user.uuid)
+            setIsRequestSent(false)
+        } catch {
+            alert("Friend could not be removed")
+        }
     }
+
     return (
         <div className="profile-left-column">
             {/* Avatar */}
@@ -65,15 +74,26 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                         <button
                             className="stat-item"
                             onClick={handleAddFriend}
+                            disabled={isProcessing || isRequestSent}
                         >
-                            <UserPlus size={24} className="friend-action-icon" />
-                            <span className="stat-label">Add Friend</span>
+                            {isProcessing ? (
+                                <Clock size={24} className="friend-action-icon animate-spin" />
+                            ) : isRequestSent ? (
+                                <Clock size={24} className="friend-action-icon" />
+                            ) : (
+                                <UserPlus size={24} className="friend-action-icon" />
+                            )}
+                            <span className="stat-label">
+                {isProcessing
+                    ? "Request Sending..."
+                    : isRequestSent
+                        ? "Request Pending"
+                        : "Add Friend"}
+              </span>
                         </button>
                     ) : (
                         <>
-                            <button className="stat-item"
-                                    onClick={handleRemoveFriend}
-                            >
+                            <button className="stat-item" onClick={handleRemoveFriend}>
                                 <UserMinus size={24} className="friend-action-icon" />
                                 <span className="stat-label">Remove Friend</span>
                             </button>
