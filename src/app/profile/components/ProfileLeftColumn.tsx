@@ -41,6 +41,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
             await addFriendRequest(user.uuid)
             setIsRequestSent(true)
         } catch (e) {
+            console.error(e)
             alert("Request could not be sent")
         } finally {
             setIsProcessing(false)
