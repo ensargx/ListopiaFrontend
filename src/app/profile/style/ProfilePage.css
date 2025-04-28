@@ -614,7 +614,7 @@
     font-size: 0.85rem;
     padding: 0.25rem 0.5rem;
     border: none;
-    background-color: #e74c3c;
+    background-color: #9c9393;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -622,7 +622,7 @@
 
 /* “Accept” butonu için ayrı renk (isteğe bağlı) */
 .profile-left-column .received-requests li button:first-of-type {
-    background-color: #27ae60;
+    background-color: rgba(205, 21, 0, 0.87);
 }
 
 /* Mobilde tam genişlik */
