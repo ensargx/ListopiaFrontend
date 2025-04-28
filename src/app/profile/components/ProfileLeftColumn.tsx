@@ -7,7 +7,7 @@ import { formatTimeAgo } from "@/lib/utils"
 import { CardSlider } from "@/app/home/components/CardSlider"
 import { userProfilePath } from "@/app/home/util/slug"
 import type { User } from "@/types/user"
-import {addFriendRequest} from "@/api/userapi";
+import {addFriendRequest, removeFriend} from "@/api/userapi";
 
 interface ProfileLeftColumnProps {
     user: User
@@ -40,6 +40,13 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
             alert(31);
         })
     }
+    const handleRemoveFriend = async () =>{
+        removeFriend(user.uuid).then(()=>{
+            alert(68);
+        }).catch(()=>{
+            alert(31);
+        })
+    }
     return (
         <div className="profile-left-column">
             {/* Avatar */}
@@ -64,10 +71,12 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                         </button>
                     ) : (
                         <>
-                            <div className="stat-item">
+                            <button className="stat-item"
+                                    onClick={handleRemoveFriend}
+                            >
                                 <UserMinus size={24} className="friend-action-icon" />
                                 <span className="stat-label">Remove Friend</span>
-                            </div>
+                            </button>
                             <div className="stat-item">
                                 <MessageCircle size={24} />
                                 <span className="stat-label">Message</span>
@@ -87,6 +96,13 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                     <span className="info-label">Joined</span>
                     <span className="info-value">{formatTimeAgo(user.createdAt)}</span>
                 </div>
+            </div>
+            {/* About Section */}
+            <div className="about-section">
+                <h3 className="about-title">About</h3>
+                <p className="about-content">
+                    {user.biography || "Hello, I am using Listopia"}
+                </p>
             </div>
 
             {/* User Lists */}
