@@ -6,6 +6,9 @@ import { Eye, Clock, Heart } from "lucide-react"
 import { fetchWatchedMoviesByUser, fetchWatchlistMoviesByUser } from "@/api/movieapi"
 import type { Movie } from "@/types/movie"
 import type { PaginatedResponse } from "@/types/friends"
+import { Link } from "react-router-dom"
+import { ProfileCardSlider } from "../components/ProfileCardSlider"
+import { movieToSlug } from "@/app/home/util/slug"
 
 interface ProfileStatisticsProps {
     stats: {
@@ -42,9 +45,9 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
             let response: PaginatedResponse<Movie>
 
             if (type === "watched") {
-                response = await fetchWatchedMoviesByUser(userUuid, { pageNumber: 0, pageSize: 12 })
+                response = await fetchWatchedMoviesByUser(userUuid, { pageNumber: 0, pageSize: 20 })
             } else if (type === "watchlist") {
-                response = await fetchWatchlistMoviesByUser(userUuid, { pageNumber: 0, pageSize: 12 })
+                response = await fetchWatchlistMoviesByUser(userUuid, { pageNumber: 0, pageSize: 20 })
             } else {
                 // For liked movies, we would need a similar API
                 // This is a placeholder assuming there's a similar API
@@ -92,9 +95,9 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
             let response: PaginatedResponse<Movie>
 
             if (activeList === "watched") {
-                response = await fetchWatchedMoviesByUser(userUuid, { pageNumber: page, pageSize: 12 })
+                response = await fetchWatchedMoviesByUser(userUuid, { pageNumber: page, pageSize: 20 })
             } else if (activeList === "watchlist") {
-                response = await fetchWatchlistMoviesByUser(userUuid, { pageNumber: page, pageSize: 12 })
+                response = await fetchWatchlistMoviesByUser(userUuid, { pageNumber: page, pageSize: 20 })
             } else {
                 // Placeholder for liked movies
                 return
@@ -156,56 +159,14 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         borderRadius: "8px",
         overflow: "hidden",
         marginTop: "24px",
+        padding: "16px",
     }
 
     const movieListHeaderStyle: CSSProperties = {
-        padding: "16px",
-        borderBottom: "1px solid #333",
         fontSize: "1.25rem",
         fontWeight: 600,
-        margin: 0,
-    }
-
-    const movieItemsStyle: CSSProperties = {
-        padding: "16px",
-    }
-
-    const movieItemStyle: CSSProperties = {
-        display: "flex",
-        padding: "16px 0",
-        borderBottom: "1px solid #333",
-    }
-
-    const moviePosterStyle: CSSProperties = {
-        width: "64px",
-        height: "96px",
-        objectFit: "cover",
-        borderRadius: "4px",
-    }
-
-    const movieDetailsStyle: CSSProperties = {
-        marginLeft: "16px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-    }
-
-    const movieTitleStyle: CSSProperties = {
-        fontWeight: 500,
-        margin: "0 0 4px 0",
-    }
-
-    const movieYearStyle: CSSProperties = {
-        fontSize: "0.875rem",
-        color: "#aaa",
-        margin: 0,
-    }
-
-    const movieRatingStyle: CSSProperties = {
-        fontSize: "0.875rem",
-        color: "#f39c12",
-        display: "flex",
-        alignItems: "center",
+        margin: "0 0 16px 0",
+        color: "#e0e0e0",
     }
 
     const messageStyle: CSSProperties = {
@@ -227,8 +188,9 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "16px",
+        padding: "16px 0 0 0",
         borderTop: "1px solid #333",
+        marginTop: "16px",
     }
 
     const pageInfoStyle: CSSProperties = {
@@ -279,7 +241,7 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                         <Eye size={24} color="white" />
                     </div>
                     <div style={countStyle}>{stats.watched}</div>
-                    <div style={labelStyle}>İzledim</div>
+                    <div style={labelStyle}>Watched</div>
                 </div>
 
                 {/* Want to Watch Card */}
@@ -306,7 +268,7 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                         <Clock size={24} color="white" />
                     </div>
                     <div style={countStyle}>{stats.wantToWatch}</div>
-                    <div style={labelStyle}>İzleyeceğim</div>
+                    <div style={labelStyle}>To Watch</div>
                 </div>
 
                 {/* Liked Movies Card */}
@@ -333,7 +295,7 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                         <Heart size={24} color="white" />
                     </div>
                     <div style={countStyle}>{stats.liked}</div>
-                    <div style={labelStyle}>Beğenilen</div>
+                    <div style={labelStyle}>Liked</div>
                 </div>
             </div>
 
@@ -342,10 +304,10 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                 <div style={movieListStyle}>
                     <h3 style={movieListHeaderStyle}>
                         {activeList === "watched"
-                            ? "İzlenen Filmler"
+                            ? "Movies Watched"
                             : activeList === "watchlist"
-                                ? "İzlenecek Filmler"
-                                : "Beğenilen Filmler"}
+                                ? "Movies to Watch"
+                                : "Liked Movies"}
                     </h3>
 
                     {loading && <div style={messageStyle}>Yükleniyor...</div>}
@@ -358,55 +320,63 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
 
                     {!loading && !error && movies.length > 0 && (
                         <>
-                            <div style={movieItemsStyle}>
-                                {movies.map((movie) => (
-                                    <div key={movie.movieId} style={movieItemStyle}>
-                                        <img
-                                            src={movie.poster || "/placeholder.svg?height=150&width=100"}
-                                            alt={movie.title}
-                                            style={moviePosterStyle}
-                                        />
-                                        <div style={movieDetailsStyle}>
-                                            <div>
-                                                <h4 style={movieTitleStyle}>{movie.title}</h4>
-                                                <p style={movieYearStyle}>
-                                                    {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
-                                                </p>
-                                            </div>
-                                            {movie.ratingAverage > 0 && (
-                                                <div style={movieRatingStyle}>
-                                                    <span style={{ marginRight: "4px" }}>★</span>
-                                                    {movie.ratingAverage.toFixed(1)}
-                                                </div>
-                                            )}
+                            <ProfileCardSlider
+                                items={movies}
+                                renderItem={(movie) => (
+                                    <Link key={movie.movieId} to={movieToSlug(movie)} className="profile-movie-card">
+                                        <div className="profile-movie-poster">
+                                            <img
+                                                src={
+                                                    movie.poster
+                                                        ? `https://image.tmdb.org/t/p/w200${movie.poster}`
+                                                        : "/placeholder.svg?height=150&width=100"
+                                                }
+                                                alt={movie.title}
+                                                onError={(e) => {
+                                                    const t = e.target as HTMLImageElement
+                                                    t.src = "/placeholder.svg?height=150&width=100"
+                                                }}
+                                            />
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                        <div className="profile-movie-info">
+                                            <h4 className="profile-movie-title">{movie.title}</h4>
+                                            <div className="profile-movie-meta">
+                        <span className="profile-movie-year">
+                          {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
+                        </span>
+                                                {movie.ratingAverage !== undefined && movie.ratingAverage > 0 && (
+                                                    <span className="profile-movie-rating">★ {movie.ratingAverage.toFixed(1)}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Link>
+                                )}
+                            />
 
                             {/* Pagination */}
-                            <div style={paginationStyle}>
-                                <div style={pageInfoStyle}>
-                                    Sayfa {currentPage + 1}
-                                    {totalPages > 0 && ` / ${totalPages}`}
+                            {totalPages > 1 && (
+                                <div style={paginationStyle}>
+                                    <div style={pageInfoStyle}>
+                                        Sayfa {currentPage + 1} / {totalPages}
+                                    </div>
+                                    <div style={pageButtonsStyle}>
+                                        <button
+                                            onClick={() => loadPage(currentPage - 1)}
+                                            disabled={currentPage === 0}
+                                            style={getPageButtonStyle(currentPage === 0)}
+                                        >
+                                            Önceki
+                                        </button>
+                                        <button
+                                            onClick={() => loadPage(currentPage + 1)}
+                                            disabled={currentPage >= totalPages - 1}
+                                            style={getPageButtonStyle(currentPage >= totalPages - 1)}
+                                        >
+                                            Sonraki
+                                        </button>
+                                    </div>
                                 </div>
-                                <div style={pageButtonsStyle}>
-                                    <button
-                                        onClick={() => loadPage(currentPage - 1)}
-                                        disabled={currentPage === 0}
-                                        style={getPageButtonStyle(currentPage === 0)}
-                                    >
-                                        Önceki
-                                    </button>
-                                    <button
-                                        onClick={() => loadPage(currentPage + 1)}
-                                        disabled={totalPages > 0 && currentPage >= totalPages - 1}
-                                        style={getPageButtonStyle(totalPages > 0 && currentPage >= totalPages - 1)}
-                                    >
-                                        Sonraki
-                                    </button>
-                                </div>
-                            </div>
+                            )}
                         </>
                     )}
                 </div>
