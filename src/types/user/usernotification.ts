@@ -1,5 +1,7 @@
 import { User } from "../user";
 
+// TODO : FIX
+
 export interface UserNotificationResponse {
     id: number;
     type: string;

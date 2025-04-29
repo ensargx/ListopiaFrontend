@@ -6,19 +6,19 @@ export function parseUserNotification(raw: UserNotificationResponse): UserNotifi
         return {
           ...raw,
           type: "NEW_MESSAGE",
-          content: JSON.parse(raw.content) as UserNotificationNewMessage,
+          content: JSON.parse(raw.content),
         };
       case "FRIEND_REQUEST":
         return {
           ...raw,
           type: "FRIEND_REQUEST",
-          content: JSON.parse(raw.content) as UserNotificationFriendRequest,
+          content: JSON.parse(raw.content),
         };
       case "BECOME_FRIENDS":
         return {
           ...raw,
           type: "BECOME_FRIENDS",
-          content: JSON.parse(raw.content) as UserNotificationBecomeFriends,
+          content: JSON.parse(raw.content),
         };
       default:
         throw new Error(`Unknown notification type: ${raw.type}`);
