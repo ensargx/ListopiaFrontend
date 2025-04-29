@@ -9,7 +9,7 @@ interface Props {
     genre: string;
 }
 
-const OtherFilms: React.FC<Props> = ({ genre }) => {
+const OtherMovies: React.FC<Props> = ({ genre }) => {
     const [movies, setMovies] = useState<FrontMovie[]>([]);
 
     useEffect(() => {
@@ -39,4 +39,4 @@ const OtherFilms: React.FC<Props> = ({ genre }) => {
     );
 };
 
-export default OtherFilms;
+export default OtherMovies;
