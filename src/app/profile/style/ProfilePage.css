@@ -551,7 +551,7 @@
 /* Container’lara biraz iç boşluk ve arka plan ekleyelim */
 .profile-left-column .sent-requests,
 .profile-left-column .received-requests {
-    background-color: #737373;
+    background-color: rgba(115, 115, 115, 0.55);
     padding: 0.75rem;
     border-radius: 8px;
     margin-bottom: 1rem;
