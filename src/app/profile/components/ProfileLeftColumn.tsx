@@ -44,21 +44,21 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
     const [localSent, setLocalSent] = useState<User[]>(sentRequests);
     const [localReceived, setLocalReceived] = useState<User[]>(receivedRequests);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
-    const [listFriendsLoading, setListFriendsLoading] = useState<boolean>(true);
 
-    // gönderilen ve gelen istekleri local state ile takip et
-    const hasSentRequest = localSent.some((u) => u.uuid === user.uuid);
-    const hasReceivedRequest = localReceived.length > 0;
-
+    // Sync props → local state
     useEffect(() => {
         setLocalSent(sentRequests);
         setLocalReceived(receivedRequests);
     }, [sentRequests, receivedRequests]);
 
+    const hasSentRequest = localSent.some((u) => u.uuid === user.uuid);
+    const hasReceivedRequest = localReceived.length > 0;
+
     const handleAddFriend = async () => {
         setIsProcessing(true);
         try {
             await addFriendRequest(user.uuid);
+            setLocalSent((prev) => [...prev, user]);
         } catch {
             alert("Arkadaş isteği gönderilemedi.");
         } finally {
@@ -66,106 +66,142 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
         }
     };
 
-    const handleRemoveFriend = async () => {
-        if (!confirm("Bu arkadaşlığı kaldırmak istediğinize emin misiniz?")) return;
+    const handleCancel = async (uuid: string) => {
+        setIsProcessing(true);
         try {
-            await removeFriendRequest(user.uuid);
+            await cancelFriendRequest(uuid);
+            setLocalSent((prev) => prev.filter((u) => u.uuid !== uuid));
         } catch {
-            alert("Arkadaş kaldırma işlemi başarısız.");
+            alert("İstek iptali başarısız.");
+        } finally {
+            setIsProcessing(false);
         }
     };
 
-    const handleCancel = async (uuid: string) => {
+    const handleRemoveFriend = async () => {
+        if (!confirm("Bu arkadaşlığı kaldırmak istediğinize emin misiniz?")) return;
+        setIsProcessing(true);
         try {
-            await cancelFriendRequest(uuid);
-            setLocalSent((s) => s.filter((u) => u.uuid !== uuid));
+            await removeFriendRequest(user.uuid);
+            // Eğer arkadaş listesinde yerel güncelleme istiyorsanız, burada yapabilirsiniz.
         } catch {
-            alert("İstek iptali başarısız.");
+            alert("Arkadaş kaldırma işlemi başarısız.");
+        } finally {
+            setIsProcessing(false);
         }
     };
 
     const handleAccept = async (uuid: string) => {
+        setIsProcessing(true);
         try {
             await acceptFriendRequest(uuid);
-            setLocalReceived((r) => r.filter((u) => u.uuid !== uuid));
+            setLocalReceived((prev) => prev.filter((u) => u.uuid !== uuid));
         } catch {
             alert("İstek kabul edilemedi.");
+        } finally {
+            setIsProcessing(false);
         }
     };
 
     const handleDecline = async (uuid: string) => {
+        setIsProcessing(true);
         try {
             await rejectFriendRequest(uuid);
-            setLocalReceived((r) => r.filter((u) => u.uuid !== uuid));
+            setLocalReceived((prev) => prev.filter((u) => u.uuid !== uuid));
         } catch {
             alert("İstek reddedilemedi.");
+        } finally {
+            setIsProcessing(false);
         }
     };
 
     return (
         <div className="profile-left-column">
-            {/* Avatar ve ana aksiyonlar */}
-            <div className="profile-avatar-container">
+            {/* Avatar */}
+            <div className="profile-avatar-container mb-4">
                 <img
                     src={user.profilePicture || "/placeholder.svg?height=200&width=200"}
                     alt={`${user.username}'s avatar`}
                     className="profile-avatar"
                 />
+            </div>
 
-                {!isOwn && (
-                    <div className="social-stats flex space-x-2">
-                        {!isFriend? (
+            {/* Friend/Add buttons */}
+            {!isOwn && (
+                <div className="social-stats flex space-x-2 mb-4">
+                    {!isFriend ? (
+                        <button
+                            className="stat-item flex items-center"
+                            onClick={
+                                hasSentRequest
+                                    ? () => handleCancel(user.uuid)
+                                    : handleAddFriend
+                            }
+                            disabled={isProcessing}
+                        >
+                            {isProcessing ? (
+                                <Clock size={24} className="animate-spin" />
+                            ) : hasSentRequest ? (
+                                <Clock size={24} />
+                            ) : (
+                                <UserPlus size={24} />
+                            )}
+                            <span className="stat-label ml-1">
+                {isProcessing
+                    ? hasSentRequest
+                        ? "Cancelling..."
+                        : "Sending..."
+                    : hasSentRequest
+                        ? "Pending"
+                        : "Add Friend"}
+              </span>
+                        </button>
+                    ) : (
+                        <>
                             <button
                                 className="stat-item flex items-center"
-                                onClick={handleAddFriend}
-                                disabled={isProcessing || hasSentRequest}
+                                onClick={handleRemoveFriend}
+                                disabled={isProcessing}
                             >
                                 {isProcessing ? (
                                     <Clock size={24} className="animate-spin" />
-                                ) : hasSentRequest ? (
-                                    <Clock size={24} />
                                 ) : (
-                                    <UserPlus size={24} />
+                                    <UserMinus size={24} />
                                 )}
                                 <span className="stat-label ml-1">
-                                    {isProcessing
-                                        ? "Sending..."
-                                        : hasSentRequest
-                                            ? "Pending"
-                                            : "Add Friend"}
-                                </span>
+                  {isProcessing ? "Removing..." : "Remove Friend"}
+                </span>
                             </button>
-                        ) : (
-                            <>
-                                <button className="stat-item flex items-center" onClick={handleRemoveFriend}>
-                                    <UserMinus size={24} />
-                                    <span className="stat-label ml-1">Remove Friend</span>
-                                </button>
-                                <Link to={userProfilePath(user)} className="stat-item flex items-center">
-                                    <MessageCircle size={24} />
-                                    <span className="stat-label ml-1">Message</span>
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                )}
-            </div>
 
-            {/* Gelen istekler (Profil diğerinin) */}
+                            <Link
+                                to={userProfilePath(user)}
+                                className="stat-item flex items-center"
+                            >
+                                <MessageCircle size={24} />
+                                <span className="stat-label ml-1">Message</span>
+                            </Link>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {/* Incoming requests (if it's your own profile) */}
             {!isOwn && !isFriend && hasReceivedRequest && (
-                <section className="received-requests my-4">
+                <section className="received-requests mb-4">
                     <ul>
                         {localReceived.map((u) => (
                             <li key={u.uuid} className="flex items-center mb-2">
                                 <button
                                     onClick={() => handleAccept(u.uuid)}
                                     className="ml-auto btn btn-sm"
+                                    disabled={isProcessing}
                                 >
                                     Accept
                                 </button>
                                 <button
                                     onClick={() => handleDecline(u.uuid)}
                                     className="ml-2 btn btn-sm btn-danger"
+                                    disabled={isProcessing}
                                 >
                                     Decline
                                 </button>
@@ -175,15 +211,19 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 </section>
             )}
 
-            {/* Kullanıcı bilgileri */}
+            {/* User info */}
             <div className="user-info mb-4">
                 <div className="info-row flex justify-between">
                     <span className="info-label">Last Seen</span>
-                    <span className="info-value">{formatTimeAgo(user.lastOnline)}</span>
+                    <span className="info-value">
+            {formatTimeAgo(user.lastOnline)}
+          </span>
                 </div>
                 <div className="info-row flex justify-between">
                     <span className="info-label">Joined</span>
-                    <span className="info-value">{formatTimeAgo(user.createdAt)}</span>
+                    <span className="info-value">
+            {formatTimeAgo(user.createdAt)}
+          </span>
                 </div>
             </div>
 
@@ -193,7 +233,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 <p>{user.biography || "Hello, I am using Listopia."}</p>
             </div>
 
-            {/* İstatistikler */}
+            {/* Stats */}
             <div className="user-lists mb-4">
                 {Object.entries(lists).map(([label, val]) => (
                     <div key={label} className="flex justify-between mb-1">
@@ -203,25 +243,29 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 ))}
             </div>
 
-            {/* Sekmeler */}
+            {/* Tabs */}
             <div className="friends-tabs flex space-x-2 mb-4">
                 {isOwn && (
                     <button
-                        className={`tab-button ${activeTab === "requests" ? "active" : ""}`}
+                        className={`tab-button ${
+                            activeTab === "requests" ? "active" : ""
+                        }`}
                         onClick={() => setActiveTab("requests")}
                     >
                         Requests
                     </button>
                 )}
                 <button
-                    className={`tab-button ${activeTab === "friends" ? "active" : ""}`}
+                    className={`tab-button ${
+                        activeTab === "friends" ? "active" : ""
+                    }`}
                     onClick={() => setActiveTab("friends")}
                 >
                     Friends ({friends.length})
                 </button>
             </div>
 
-            {/* Sekme içerikleri */}
+            {/* Tab contents */}
             {activeTab === "requests" && isOwn && (
                 <>
                     <section className="received-requests mb-4">
@@ -232,17 +276,23 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                     <li key={u.uuid} className="flex items-center mb-2">
                                         <img
                                             src={u.profilePicture || "/placeholder.svg"}
-                                            alt={u.username} className="w-8 h-8 rounded-full mr-2" />
-                                        <Link to={userProfilePath(u)}>{u.firstName || u.username}</Link>
+                                            alt={u.username}
+                                            className="w-8 h-8 rounded-full mr-2"
+                                        />
+                                        <Link to={userProfilePath(u)}>
+                                            {u.firstName || u.username}
+                                        </Link>
                                         <button
                                             onClick={() => handleAccept(u.uuid)}
                                             className="ml-auto btn btn-sm"
+                                            disabled={isProcessing}
                                         >
                                             Accept
                                         </button>
                                         <button
                                             onClick={() => handleDecline(u.uuid)}
                                             className="ml-2 btn btn-sm btn-danger"
+                                            disabled={isProcessing}
                                         >
                                             Decline
                                         </button>
@@ -262,11 +312,16 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                     <li key={u.uuid} className="flex items-center mb-2">
                                         <img
                                             src={u.profilePicture || "/placeholder.svg"}
-                                            alt={u.username} className="w-8 h-8 rounded-full mr-2" />
-                                        <Link to={userProfilePath(u)}>{u.firstName || u.username}</Link>
+                                            alt={u.username}
+                                            className="w-8 h-8 rounded-full mr-2"
+                                        />
+                                        <Link to={userProfilePath(u)}>
+                                            {u.firstName || u.username}
+                                        </Link>
                                         <button
                                             onClick={() => handleCancel(u.uuid)}
                                             className="ml-auto btn btn-sm"
+                                            disabled={isProcessing}
                                         >
                                             Cancel
                                         </button>
@@ -281,7 +336,11 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
             )}
 
             {activeTab === "friends" && (
-                <ProfileListFriends friends={friends} friendsLoading={listFriendsLoading} friendsError="" />
+                <ProfileListFriends
+                    friends={friends}
+                    friendsLoading={true}
+                    friendsError=""
+                />
             )}
         </div>
     );
