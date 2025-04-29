@@ -282,7 +282,7 @@ const MovieHeader: React.FC<Props> = ({ movie }) => {
                         disabled={isBusy}
                         className={`action-button watched-button ${watched ? 'active' : ''} ${isUpdatingWatched ? 'processing' : ''}`}
                     >
-                        İzledim
+                        Watched
                     </button>
                     <button
                         title={watchlist ? "Remove from watchlist" : "Add to watchlist"}
@@ -290,7 +290,7 @@ const MovieHeader: React.FC<Props> = ({ movie }) => {
                         disabled={isBusy}
                         className={`action-button watchlist-button ${watchlist ? 'active' : ''} ${isUpdatingWatchlist ? 'processing' : ''}`}
                     >
-                        İzleyeceğim
+                        Want to Watch
                     </button>
                     {/* Hata Mesajları */}
                     {(likeError || fetchError || watchedError || watchlistError) && (
