@@ -1,0 +1,22 @@
+/* src/features/profile/style/ProfileListFriends.css */
+.section.profile-friends-section {
+    /* kendi stilin */
+}
+
+.profile-friend-card {
+    /* kartın stili */
+}
+
+.profile-friend-avatar img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+.profile-friend-name {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center; /* metni yatayda ortalar */
+
+}

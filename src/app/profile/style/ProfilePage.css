@@ -469,17 +469,16 @@
     font-weight: bold;
 }
 
-.status-badge.completed {
+
+.status-badge.want-to-watch {
     background-color: rgba(46, 204, 113, 0.2);
     color: #2ecc71;
 }
-
-.status-badge.watching {
+.status-badge.watched {
     background-color: rgba(52, 152, 219, 0.2);
     color: #3498db;
 }
-
-.status-badge.dropped {
+.status-badge.liked {
     background-color: rgba(231, 76, 60, 0.2);
     color: #e74c3c;
 }
