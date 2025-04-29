@@ -49,11 +49,11 @@ const ProfileLikedMovies: React.FC<ProfileLikedMoviesProps> = ({
                         <div className="profile-movie-info">
                             <h4 className="profile-movie-title">{movie.title}</h4>
                             <div className="profile-movie-meta">
-                <span className="profile-movie-year">
-                  {movie.releaseDate
-                      ? new Date(movie.releaseDate).getFullYear()
-                      : 'N/A'}
-                </span>
+                {/*<span className="profile-movie-year">*/}
+                {/*  {movie.releaseDate*/}
+                {/*      ? new Date(movie.releaseDate).getFullYear()*/}
+                {/*      : 'N/A'}*/}
+                {/*</span>*/}
                                 {movie.ratingAverage !== undefined &&
                                     movie.ratingAverage > 0 && (
                                         <span className="profile-movie-rating">
