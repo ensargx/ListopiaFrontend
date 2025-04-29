@@ -21,16 +21,17 @@ interface ProfileStatisticsProps {
 }
 
 const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }) => {
-    const [activeList, setActiveList] = useState<"watched" | "watchlist" | "liked" | null>(null)
+    // State hooks remain the same
+    const [activeList, setActiveList] = useState<"watched" | "watchlist" | null>(null) // Removed 'liked' from type
     const [movies, setMovies] = useState<Movie[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
 
-    const handleStatClick = async (type: "watched" | "watchlist" | "liked") => {
+    // Updated handleStatClick to only accept 'watched' or 'watchlist'
+    const handleStatClick = async (type: "watched" | "watchlist") => {
         if (activeList === type) {
-            // Toggle off if clicking the same list
             setActiveList(null)
             setMovies([])
             return
@@ -39,39 +40,15 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         setActiveList(type)
         setLoading(true)
         setError(null)
-        setCurrentPage(0) // Reset to first page when changing lists
+        setCurrentPage(0)
 
         try {
             let response: PaginatedResponse<Movie>
 
             if (type === "watched") {
                 response = await fetchWatchedMoviesByUser(userUuid, { pageNumber: 0, pageSize: 20 })
-            } else if (type === "watchlist") {
+            } else { // Only 'watchlist' remains
                 response = await fetchWatchlistMoviesByUser(userUuid, { pageNumber: 0, pageSize: 20 })
-            } else {
-                // For liked movies, we would need a similar API
-                // This is a placeholder assuming there's a similar API
-                response = {
-                    content: [],
-                    totalElements: 0,
-                    totalPages: 0,
-                    first: true,
-                    last: true,
-                    size: 0,
-                    number: 0,
-                    sort: { empty: true, sorted: false, unsorted: true },
-                    pageable: {
-                        offset: 0,
-                        pageSize: 0,
-                        pageNumber: 0,
-                        paged: true,
-                        unpaged: false,
-                        sort: { empty: true, sorted: false, unsorted: true },
-                    },
-                    numberOfElements: 0,
-                    empty: true,
-                } as PaginatedResponse<Movie>
-                setError("Liked movies list is not implemented yet")
             }
 
             setMovies(response.content)
@@ -85,7 +62,9 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         }
     }
 
+    // Updated loadPage to remove the 'liked' condition
     const loadPage = async (page: number) => {
+        // Removed check for activeList === 'liked'
         if (!activeList || page < 0 || (totalPages > 0 && page >= totalPages)) return
 
         setLoading(true)
@@ -96,11 +75,8 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
 
             if (activeList === "watched") {
                 response = await fetchWatchedMoviesByUser(userUuid, { pageNumber: page, pageSize: 20 })
-            } else if (activeList === "watchlist") {
+            } else { // Only 'watchlist' remains
                 response = await fetchWatchlistMoviesByUser(userUuid, { pageNumber: page, pageSize: 20 })
-            } else {
-                // Placeholder for liked movies
-                return
             }
 
             setMovies(response.content)
@@ -113,7 +89,7 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         }
     }
 
-    // Styles
+    // Styles remain the same (or add specific overrides if needed)
     const containerStyle: CSSProperties = {
         marginBottom: "2rem",
     }
@@ -130,8 +106,14 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         alignItems: "center",
         padding: "24px",
         borderRadius: "8px",
-        cursor: "pointer",
+        // Removed cursor: "pointer" from base, will add it back to clickable ones
         transition: "transform 0.2s",
+    }
+
+    // Style for clickable cards specifically
+    const clickableCardStyle: CSSProperties = {
+        ...cardBaseStyle,
+        cursor: "pointer",
     }
 
     const iconContainerBaseStyle: CSSProperties = {
@@ -169,6 +151,7 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         color: "#e0e0e0",
     }
 
+    // Message and pagination styles remain the same
     const messageStyle: CSSProperties = {
         textAlign: "center",
         padding: "32px 16px",
@@ -212,16 +195,17 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         border: "none",
         cursor: disabled ? "not-allowed" : "pointer",
     })
+    // --- End of Styles ---
 
     return (
         <div style={containerStyle}>
             {/* Stats Cards */}
             <div style={cardsContainerStyle}>
-                {/* Watched Movies Card */}
+                {/* Watched Movies Card - Remains clickable */}
                 <div
                     onClick={() => handleStatClick("watched")}
                     style={{
-                        ...cardBaseStyle,
+                        ...clickableCardStyle, // Use clickable style
                         backgroundColor: "#0F2818",
                         border: "1px solid #1E5631",
                     }}
@@ -244,11 +228,11 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                     <div style={labelStyle}>Watched</div>
                 </div>
 
-                {/* Want to Watch Card */}
+                {/* Want to Watch Card - Remains clickable */}
                 <div
                     onClick={() => handleStatClick("watchlist")}
                     style={{
-                        ...cardBaseStyle,
+                        ...clickableCardStyle, // Use clickable style
                         backgroundColor: "#0F1A2A",
                         border: "1px solid #1E3A5F",
                     }}
@@ -271,20 +255,16 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                     <div style={labelStyle}>To Watch</div>
                 </div>
 
-                {/* Liked Movies Card */}
+                {/* Liked Movies Card - Made non-interactive */}
                 <div
-                    onClick={() => handleStatClick("liked")}
+                    // Removed onClick handler
                     style={{
-                        ...cardBaseStyle,
+                        ...cardBaseStyle, // Use base style (no cursor: pointer)
                         backgroundColor: "#2A0F0F",
                         border: "1px solid #5F1E1E",
+                        cursor: "default", // Explicitly set default cursor
                     }}
-                    onMouseOver={(e) => {
-                        ;(e.currentTarget.style as CSSProperties).transform = "scale(1.05)"
-                    }}
-                    onMouseOut={(e) => {
-                        ;(e.currentTarget.style as CSSProperties).transform = "scale(1)"
-                    }}
+                    // Removed onMouseOver and onMouseOut handlers
                 >
                     <div
                         style={{
@@ -299,15 +279,13 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                 </div>
             </div>
 
-            {/* Movie List Section */}
-            {activeList && (
+            {/* Movie List Section - Logic remains mostly the same, but 'liked' case is unreachable */}
+            {activeList && ( // activeList can now only be 'watched' or 'watchlist'
                 <div style={movieListStyle}>
                     <h3 style={movieListHeaderStyle}>
                         {activeList === "watched"
                             ? "Movies Watched"
-                            : activeList === "watchlist"
-                                ? "Movies to Watch"
-                                : "Liked Movies"}
+                            : "Movies to Watch"} {/* Removed Liked Movies title option */}
                     </h3>
 
                     {loading && <div style={messageStyle}>Yükleniyor...</div>}
@@ -341,9 +319,9 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                                         <div className="profile-movie-info">
                                             <h4 className="profile-movie-title">{movie.title}</h4>
                                             <div className="profile-movie-meta">
-                        <span className="profile-movie-year">
-                          {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
-                        </span>
+                                                <span className="profile-movie-year">
+                                                  {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
+                                                </span>
                                                 {movie.ratingAverage !== undefined && movie.ratingAverage > 0 && (
                                                     <span className="profile-movie-rating">★ {movie.ratingAverage.toFixed(1)}</span>
                                                 )}
@@ -353,7 +331,7 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                                 )}
                             />
 
-                            {/* Pagination */}
+                            {/* Pagination - Logic remains the same */}
                             {totalPages > 1 && (
                                 <div style={paginationStyle}>
                                     <div style={pageInfoStyle}>
