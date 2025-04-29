@@ -22,7 +22,7 @@ const ProfileListFriends: React.FC<ProfileListFriendsProps> = ({
     if (friends.length === 0) return <p>No friends found.</p>;
 
     return (
-        <section className="section profile-friends-section">
+        <section className="profile-friends-section">
             <ProfileCardSlider
                 items={friends}
                 renderItem={friend => (
