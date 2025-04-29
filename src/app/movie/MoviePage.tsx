@@ -12,7 +12,7 @@ import MovieHeader from './components/MovieHeader';
 import CastList from './components/CastList';
 import CrewList from './components/CrewList';
 import ReviewList from './components/ReviewList';
-import OtherFilms from './components/OtherFilms';
+import OtherMovies from './components/OtherMovies';
 import './style/MoviePage.css';
 import { movieIdFromSlug } from '../home/util/slug';
 
@@ -69,7 +69,7 @@ export const MoviePage: React.FC = () => {
 
             <ReviewList />
 
-            <OtherFilms genre={primaryGenre} />
+            <OtherMovies genre={primaryGenre} />
         </main>
     );
 };
