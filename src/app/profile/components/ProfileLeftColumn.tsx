@@ -198,9 +198,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                 </button>
                             </li>
                         </ul>
-                    ) : (
-                        <p>No incoming requests.</p>
-                    )}
+                    ) : null}
                 </section>
             )}
 
