@@ -1,40 +1,34 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import "./style/ProfilePage.css";
-import { Settings, Brush } from "lucide-react";
-import { useParams } from "react-router-dom";
-import {
-    fetchWatchedMoviesByUser,
-    fetchWatchlistMoviesByUser,
-} from "@/api/movieapi";
-import {
-    fetchFriendsByUUID,
-    fetchUserByUsername,
-    fetchLikedMovies,
-} from "@/api/userapi";
-import type { User } from "@/types/user";
-import type { Movie } from "@/types/movie";
-import { useAuth } from "@/app/auth/hooks/AuthContext";
+import type React from "react"
+import { useEffect, useState } from "react"
+import "./style/ProfilePage.css"
+import { Settings, Brush } from "lucide-react"
+import { useParams } from "react-router-dom"
+import { fetchWatchedMoviesByUser, fetchWatchlistMoviesByUser } from "@/api/movieapi"
+import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
+import type { User } from "@/types/user"
+import type { Movie } from "@/types/movie"
+import { useAuth } from "@/app/auth/hooks/AuthContext"
 
 // Import components
-import ProfileLeftColumn from "./components/ProfileLeftColumn";
-import ProfileStatistics from "./components/ProfileStatistics";
-import LikedMovies from "./components/ProfileLikedMovies";
-import ProfileUpdates from "./components/ProfileUpdates";
+import ProfileLeftColumn from "./components/ProfileLeftColumn"
+import ProfileStatistics from "./components/ProfileStatistics"
+import LikedMovies from "./components/ProfileLikedMovies"
+import ProfileUpdates from "./components/ProfileUpdates"
 
 // Mock data for parts not replaced yet
 const mockStats = {
     watched: 3,
-    wantToWatch: 1,
-    liked: 1,
-    totalFilms: 3,
-};
+    wantToWatch: 2,
+    liked: 6,
+    totalFilms: 11,
+}
 
 const mockLists = {
     lists: 2,
     reviews: 3,
-};
+}
 
 // Mock data for profile updates
 const mockProfileUpdates = [
@@ -103,91 +97,83 @@ const mockProfileUpdates = [
         },
         updatedAt: 174574515714,
     },
-];
+]
 
 const ProfilePage: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<"requests" | "friends">("requests");
-    const { username } = useParams<{ username: string }>();
-    const [user, setUser] = useState<User | null>(null);
-    const [friends, setFriends] = useState<User[]>([]);
-    const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [likedMoviesLoading, setLikedMoviesLoading] = useState(true);
-    const [likedMoviesError, setLikedMoviesError] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<"requests" | "friends">("requests")
+    const { username } = useParams<{ username: string }>()
+    const [user, setUser] = useState<User | null>(null)
+    const [friends, setFriends] = useState<User[]>([])
+    const [likedMovies, setLikedMovies] = useState<Movie[]>([])
+    const [loading, setLoading] = useState(true)
+    const [likedMoviesLoading, setLikedMoviesLoading] = useState(true)
+    const [likedMoviesError, setLikedMoviesError] = useState<string | null>(null)
 
     // Single useAuth call
-    const {
-        user: userMe,
-        sendingRequests,
-        receivedRequests,
-    } = useAuth();
+    const { user: userMe, sendingRequests, receivedRequests } = useAuth()
 
-    const isOwn = userMe?.username === username;
-    const [isFriend, setIsFriend] = useState(false);
+    const isOwn = userMe?.username === username
+    const [isFriend, setIsFriend] = useState(false)
 
-    document.title = `${username} - Listopia`;
+    document.title = `${username} - Listopia`
 
     // Using mock data
-    const stats = mockStats;
-    const lists = mockLists;
-    const profileUpdates = mockProfileUpdates;
+    const stats = mockStats
+    const lists = mockLists
+    const profileUpdates = mockProfileUpdates
 
     useEffect(() => {
         if (!username) {
-            setLoading(false);
-            return;
+            setLoading(false)
+            return
         }
 
-        setLoading(true);
-        setLikedMoviesLoading(true);
-        setLikedMoviesError(null);
-        setUser(null);
-        setFriends([]);
-        setLikedMovies([]);
+        setLoading(true)
+        setLikedMoviesLoading(true)
+        setLikedMoviesError(null)
+        setUser(null)
+        setFriends([])
+        setLikedMovies([])
 
         fetchUserByUsername(username)
             .then((userData) => {
-                setUser(userData);
+                setUser(userData)
 
                 fetchFriendsByUUID(userData.uuid)
                     .then((retFriends) => {
-                        setFriends(retFriends.content);
-                        setIsFriend(retFriends.content.some((f) => f.uuid === userMe?.uuid));
+                        setFriends(retFriends.content)
+                        setIsFriend(retFriends.content.some((f) => f.uuid === userMe?.uuid))
                     })
-                    .catch((err) => console.error("Error fetching friends:", err));
+                    .catch((err) => console.error("Error fetching friends:", err))
 
                 fetchLikedMovies(userData.uuid)
                     .then((liked) => setLikedMovies(liked.content))
                     .catch((err: Error) => {
-                        console.error("Error fetching liked movies:", err);
-                        setLikedMoviesError(err.message || "Failed to load liked movies.");
+                        console.error("Error fetching liked movies:", err)
+                        setLikedMoviesError(err.message || "Failed to load liked movies.")
                     })
-                    .finally(() => setLikedMoviesLoading(false));
+                    .finally(() => setLikedMoviesLoading(false))
 
-                fetchWatchedMoviesByUser(userData.uuid).catch((err) =>
-                    console.error("Error fetching watched movies:", err)
-                );
+                fetchWatchedMoviesByUser(userData.uuid).catch((err) => console.error("Error fetching watched movies:", err))
 
-                fetchWatchlistMoviesByUser(userData.uuid).catch((err) =>
-                    console.error("Error fetching watchlist movies:", err)
-                );
+                fetchWatchlistMoviesByUser(userData.uuid).catch((err) => console.error("Error fetching watchlist movies:", err))
 
-                setLoading(false);
+                setLoading(false)
             })
             .catch((err: Error) => {
-                console.error("Error fetching user profile:", err);
-                setUser(null);
-                setLoading(false);
-                setLikedMoviesLoading(false);
-            });
-    }, [username, userMe]);
+                console.error("Error fetching user profile:", err)
+                setUser(null)
+                setLoading(false)
+                setLikedMoviesLoading(false)
+            })
+    }, [username, userMe])
 
     if (loading) {
         return (
             <div className="profile-page-loading">
                 <h1>Loading profile...</h1>
             </div>
-        );
+        )
     }
 
     if (!user) {
@@ -195,7 +181,7 @@ const ProfilePage: React.FC = () => {
             <div className="profile-page-error">
                 <h1>User '{username}' not found.</h1>
             </div>
-        );
+        )
     }
 
     return (
@@ -226,7 +212,7 @@ const ProfilePage: React.FC = () => {
                 />
 
                 <div className="profile-right-column">
-                    <ProfileStatistics stats={stats} />
+                    <ProfileStatistics stats={stats} userUuid={user.uuid} />
 
                     <LikedMovies
                         likedMovies={likedMovies}
@@ -238,7 +224,7 @@ const ProfilePage: React.FC = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProfilePage;
+export default ProfilePage
