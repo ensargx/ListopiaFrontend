@@ -11,6 +11,7 @@ import {
     acceptFriendRequest,
     addFriendRequest,
     cancelFriendRequest,
+    rejectFriendRequest,
     removeFriend,
 } from "@/api/userapi";
 
@@ -118,7 +119,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
 
     const handleDecline = async (uuid: string) => {
         try {
-            await cancelFriendRequest(uuid);
+            await rejectFriendRequest(uuid);
             setLocalReceived((r) => r.filter((u) => u.uuid !== uuid));
         } catch {
             alert("İstek reddedilemedi.");

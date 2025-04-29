@@ -148,6 +148,17 @@ export async function acceptFriendRequest(uuid: string) : Promise<APIResponse> {
     return res.json();
 }
 
+export async function rejectFriendRequest(uuid: string) : Promise<APIResponse> {
+    const res = await fetch(
+        `${BASE_URL}api/v1/user/friend/reject/${uuid}`, {
+            method: "POST",
+            credentials: "include",
+        }
+    );
+    if (!res.ok) throw new Error('Could not reject this request');
+    return res.json();
+}
+
 export async function cancelFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
         `${BASE_URL}api/v1/user/friend/request/${uuid}`, {
