@@ -10,7 +10,7 @@ import type { User } from "@/types/user";
 import {
     acceptFriendRequest,
     addFriendRequest,
-    rejectFriendRequest,
+    cancelFriendRequest,
     removeFriend,
 } from "@/api/userapi";
 
@@ -100,7 +100,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
 
     const handleCancel = async (uuid: string) => {
         try {
-            await rejectFriendRequest(uuid);
+            await cancelFriendRequest(uuid);
             setLocalSent((s) => s.filter((u) => u.uuid !== uuid));
         } catch {
             alert("İstek iptali başarısız.");
@@ -118,7 +118,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
 
     const handleDecline = async (uuid: string) => {
         try {
-            await rejectFriendRequest(uuid);
+            await cancelFriendRequest(uuid);
             setLocalReceived((r) => r.filter((u) => u.uuid !== uuid));
         } catch {
             alert("İstek reddedilemedi.");
