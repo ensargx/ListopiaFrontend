@@ -155,20 +155,22 @@ export async function cancelFriendRequest(uuid: string) : Promise<APIResponse> {
             credentials: "include",
         }
     );
-    if (!res.ok) throw new Error('Could not reject this request');
+    if (!res.ok) throw new Error('Could not cancel this request');
     return res.json();
 }
 
-export async function removeFriend(uuid: string) : Promise<APIResponse> {
+export async function removeFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
         `${BASE_URL}api/v1/user/friend/remove/${uuid}`, {
             method: "DELETE",
             credentials: "include",
         }
     );
-    if (!res.ok) throw new Error('Could not change password');
+    if (!res.ok) throw new Error('Could not remove friend');
     return res.json();
 }
+
+
 
 export async function fetchSentFriendRequests(
     pageNumber: number = 0,

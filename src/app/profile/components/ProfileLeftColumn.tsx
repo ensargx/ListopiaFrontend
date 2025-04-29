@@ -4,15 +4,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatTimeAgo } from "@/lib/utils";
-import { CardSlider } from "@/app/home/components/CardSlider";
 import { userProfilePath } from "@/app/home/util/slug";
 import type { User } from "@/types/user";
 import {
     acceptFriendRequest,
+    removeFriendRequest,
     addFriendRequest,
     cancelFriendRequest,
-    removeFriend,
 } from "@/api/userapi";
+import ProfileListFriends from "@/app/profile/components/ProfileFriends";
 
 interface ProfileLeftColumnProps {
     user: User;
@@ -21,13 +21,11 @@ interface ProfileLeftColumnProps {
     receivedRequests: User[];
     isOwn: boolean;
     isFriend: boolean;
-    activeTab: "all" | "friends";
-    setActiveTab: (tab: "all" | "friends") => void;
+    activeTab: "requests" | "friends";
+    setActiveTab: (tab: "requests" | "friends") => void;
     lists: {
         lists: number;
         reviews: number;
-        communities: number;
-        recommendations: number;
     };
 }
 
@@ -48,9 +46,10 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
     const [isRequestSent, setIsRequestSent] = useState<boolean>(
         sentRequests.some((u) => u.uuid === user.uuid)
     );
+    const [listFriendsLoading, setListFriendsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-    // true if bu kullanıcıya hem gönderilmiş hem gelen istek var
+    // true if both sent and received
     const isRequestedBefore = useMemo(() => {
         const sent = sentRequests.some((u) => u.uuid === user.uuid);
         const received = receivedRequests.some((u) => u.uuid === user.uuid);
@@ -70,12 +69,12 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
         setLocalReceived(receivedRequests);
     }, [receivedRequests]);
 
-    // doğrulama için log
+    // debug
     useEffect(() => {
         console.log("isRequestedBefore:", isRequestedBefore);
     }, [isRequestedBefore]);
 
-    // CRUD işlemleri
+    // actions
     const handleAddFriend = async () => {
         setIsProcessing(true);
         try {
@@ -91,7 +90,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
     const handleRemoveFriend = async () => {
         if (!confirm("Bu arkadaşlığı kaldırmak istediğinize emin misiniz?")) return;
         try {
-            await removeFriend(user.uuid);
+            await removeFriendRequest(user.uuid);
             setIsRequestSent(false);
         } catch {
             alert("Arkadaş kaldırma işlemi başarısız.");
@@ -135,9 +134,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                     className="profile-avatar"
                 />
 
-
-
-                {/* Butonlar */}
+                {/* Buttons */}
                 {!isOwn && (
                     <div className="social-stats">
                         {!isFriend ? (
@@ -154,14 +151,14 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                     <UserPlus size={24} />
                                 )}
                                 <span className="stat-label">
-                  {isProcessing
-                      ? "Sending..."
-                      : isRequestSent
-                          ? "Pending"
-                          : isRequestedBefore
-                              ? "Already Sending"
-                              : "Add Friend"}
-                </span>
+                                    {isProcessing
+                                        ? "Sending..."
+                                        : isRequestSent
+                                            ? "Pending"
+                                            : isRequestedBefore
+                                                ? "Already Sending"
+                                                : "Add Friend"}
+                                </span>
                             </button>
                         ) : (
                             <>
@@ -178,31 +175,33 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                     </div>
                 )}
             </div>
+
+            {/* Gelen istek butonları */}
             {!isOwn && !isFriend && isRequestedBefore && (
                 <section className="received-requests">
                     {localReceived.length > 0 ? (
                         <ul>
-                                <li key={user.uuid} className="flex items-center">
-                                    <button
-                                        onClick={() => handleAccept(user.uuid)}
-                                        className="ml-auto btn btn-sm"
-                                    >
-                                        Accept
-                                    </button>
-                                    <button
-                                        onClick={() => handleDecline(user.uuid)}
-                                        className="ml-2 btn btn-sm btn-danger"
-                                    >
-                                        Decline
-                                    </button>
-                                </li>
-
+                            <li key={user.uuid} className="flex items-center">
+                                <button
+                                    onClick={() => handleAccept(user.uuid)}
+                                    className="ml-auto btn btn-sm"
+                                >
+                                    Accept
+                                </button>
+                                <button
+                                    onClick={() => handleDecline(user.uuid)}
+                                    className="ml-2 btn btn-sm btn-danger"
+                                >
+                                    Decline
+                                </button>
+                            </li>
                         </ul>
                     ) : (
                         <p>No incoming requests.</p>
                     )}
                 </section>
             )}
+
             {/* Last online / joined */}
             <div className="user-info">
                 <div className="info-row">
@@ -215,33 +214,35 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 </div>
             </div>
 
-            {/* Hakkında */}
+            {/* About */}
             <div className="about-section">
                 <h3>About</h3>
                 <br/>
                 <p>{user.biography || "Hello, I am using Listopia."}</p>
             </div>
 
-            {/* İstatistikler */}
+            {/* Statistics */}
             <div className="user-lists">
                 {Object.entries(lists).map(([label, val]) => (
                     <div key={label} className="list-row">
-            <span className="list-label">
-              {label.charAt(0).toUpperCase() + label.slice(1)}
-            </span>
+                        <span className="list-label">
+                            {label.charAt(0).toUpperCase() + label.slice(1)}
+                        </span>
                         <span className="list-value">{val}</span>
                     </div>
                 ))}
             </div>
 
-            {/* Sekmeler */}
+            {/* Tabs */}
             <div className="friends-tabs">
-                <button
-                    className={`tab-button ${activeTab === "all" ? "active" : ""}`}
-                    onClick={() => setActiveTab("all")}
-                >
-                    All
-                </button>
+                {isOwn && (
+                    <button
+                        className={`tab-button ${activeTab === "requests" ? "active" : ""}`}
+                        onClick={() => setActiveTab("requests")}
+                    >
+                        Requests
+                    </button>
+                )}
                 <button
                     className={`tab-button ${activeTab === "friends" ? "active" : ""}`}
                     onClick={() => setActiveTab("friends")}
@@ -250,9 +251,8 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 </button>
             </div>
 
-            {/* Sekme İçeriği */}
-
-            {activeTab === "all" && isOwn && (
+            {/* Tab Contents */}
+            {activeTab === "requests" && isOwn && (
                 <>
                     <section className="received-requests">
                         <h3>Received Requests</h3>
@@ -318,6 +318,15 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 </>
             )}
 
+            {activeTab === "friends" && (
+                <>
+                    <ProfileListFriends
+                        friends={friends}
+                        friendsLoading={listFriendsLoading}
+                        friendsError=""
+                    />
+                </>
+            )}
         </div>
     );
 };

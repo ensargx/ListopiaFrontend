@@ -28,6 +28,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center; /* metni yatayda ortalar */
+
 }
 
 .profile-movie-meta {
@@ -39,6 +41,8 @@
 
 .profile-movie-rating {
     color: #f39c12;
+
+
 }
 
 .profile-liked-movies-section .error {
