@@ -1,116 +1,213 @@
-"use client"
+"use client";
 
-import React, {useState} from "react"
-import {MessageCircle, UserPlus, UserMinus, Clock} from "lucide-react"
-import { Link } from "react-router-dom"
-import { formatTimeAgo } from "@/lib/utils"
-import { CardSlider } from "@/app/home/components/CardSlider"
-import { userProfilePath } from "@/app/home/util/slug"
-import type { User } from "@/types/user"
-import {addFriendRequest, removeFriend} from "@/api/userapi";
+import React, { useEffect, useMemo, useState } from "react";
+import { MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
+import { formatTimeAgo } from "@/lib/utils";
+import { userProfilePath } from "@/app/home/util/slug";
+import type { User } from "@/types/user";
+import {
+    acceptFriendRequest,
+    removeFriendRequest,
+    addFriendRequest,
+    cancelFriendRequest,
+rejectFriendRequest,
+
+} from "@/api/userapi";
+import ProfileListFriends from "@/app/profile/components/ProfileFriends";
 
 interface ProfileLeftColumnProps {
-    user: User
-    friends: User[]
-    isOwn: boolean
-    isFriend: boolean
-    activeTab: "all" | "friends"
-    setActiveTab: (tab: "all" | "friends") => void
+    user: User;
+    friends: User[];
+    sentRequests: User[];
+    receivedRequests: User[];
+    isOwn: boolean;
+    isFriend: boolean;
+    activeTab: "requests" | "friends";
+    setActiveTab: (tab: "requests" | "friends") => void;
     lists: {
-        lists: number
-        reviews: number
-        communities: number
-        recommendations: number
-    }
+        lists: number;
+        reviews: number;
+    };
 }
 
 const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                                                  user,
                                                                  friends,
+                                                                 sentRequests,
+                                                                 receivedRequests,
                                                                  isOwn,
                                                                  isFriend,
                                                                  activeTab,
                                                                  setActiveTab,
                                                                  lists,
                                                              }) => {
-    const [isRequestSent, setIsRequestSent] = useState<boolean>(false)
-    const [isProcessing, setIsProcessing] = useState<boolean>(false)
+    // local state for optimistic updates
+    const [localSent, setLocalSent] = useState<User[]>(sentRequests);
+    const [localReceived, setLocalReceived] = useState<User[]>(receivedRequests);
+    const [isRequestSent, setIsRequestSent] = useState<boolean>(
+        sentRequests.some((u) => u.uuid === user.uuid)
+    );
+    const [listFriendsLoading, setListFriendsLoading] = useState(true);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
+    // true if both sent and received
+    const isRequestedBefore = useMemo(() => {
+        const sent = sentRequests.some((u) => u.uuid === user.uuid);
+        const received = receivedRequests.some((u) => u.uuid === user.uuid);
+        return sent && received;
+    }, [sentRequests, receivedRequests, user.uuid]);
+
+    // sync props → state
+    useEffect(() => {
+        setIsRequestSent(sentRequests.some((u) => u.uuid === user.uuid));
+    }, [sentRequests, user.uuid]);
+
+    useEffect(() => {
+        setLocalSent(sentRequests);
+    }, [sentRequests]);
+
+    useEffect(() => {
+        setLocalReceived(receivedRequests);
+    }, [receivedRequests]);
+
+    // debug
+    useEffect(() => {
+        console.log("isRequestedBefore:", isRequestedBefore);
+    }, [isRequestedBefore]);
+
+    // actions
     const handleAddFriend = async () => {
-        setIsProcessing(true)
+        setIsProcessing(true);
         try {
-            await addFriendRequest(user.uuid)
-            setIsRequestSent(true)
-        } catch (e) {
-            console.error(e)
-            alert("Request could not be sent")
+            await addFriendRequest(user.uuid);
+            setIsRequestSent(true);
+        } catch {
+            alert("Arkadaş isteği gönderilemedi.");
         } finally {
-            setIsProcessing(false)
+            setIsProcessing(false);
         }
-    }
+    };
 
     const handleRemoveFriend = async () => {
+        if (!confirm("Bu arkadaşlığı kaldırmak istediğinize emin misiniz?")) return;
         try {
-            await removeFriend(user.uuid)
-            setIsRequestSent(false)
+            await removeFriendRequest(user.uuid);
+            setIsRequestSent(false);
         } catch {
-            alert("Friend could not be removed")
+            alert("Arkadaş kaldırma işlemi başarısız.");
         }
-    }
+    };
+
+    const handleCancel = async (uuid: string) => {
+        try {
+            await cancelFriendRequest(uuid);
+            setLocalSent((s) => s.filter((u) => u.uuid !== uuid));
+        } catch {
+            alert("İstek iptali başarısız.");
+        }
+    };
+
+    const handleAccept = async (uuid: string) => {
+        try {
+            await acceptFriendRequest(uuid);
+            setLocalReceived((r) => r.filter((u) => u.uuid !== uuid));
+        } catch {
+            alert("İstek kabul edilemedi.");
+        }
+    };
+
+    const handleDecline = async (uuid: string) => {
+        try {
+            await rejectFriendRequest(uuid);
+            setLocalReceived((r) => r.filter((u) => u.uuid !== uuid));
+        } catch {
+            alert("İstek reddedilemedi.");
+        }
+    };
 
     return (
         <div className="profile-left-column">
-            {/* Avatar */}
+            {/* Avatar + primary actions */}
             <div className="profile-avatar-container">
                 <img
                     src={user.profilePicture || "/placeholder.svg?height=200&width=200"}
-                    alt={`${user.username}'s Avatar`}
+                    alt={`${user.username}'s avatar`}
                     className="profile-avatar"
                 />
+
+                {/* Buttons */}
+                {!isOwn && (
+                    <div className="social-stats">
+                        {!isFriend ? (
+                            <button
+                                className="stat-item"
+                                onClick={handleAddFriend}
+                                disabled={isProcessing || isRequestSent || isRequestedBefore}
+                            >
+                                {isProcessing ? (
+                                    <Clock size={24} className="animate-spin" />
+                                ) : isRequestSent ? (
+                                    <Clock size={24} />
+                                ) : (
+                                    <UserPlus size={24} />
+                                )}
+                                <span className="stat-label">
+                                    {isProcessing
+                                        ? "Sending..."
+                                        : isRequestSent
+                                            ? "Pending"
+                                            : isRequestedBefore
+                                                ? "Already Sending"
+                                                : "Add Friend"}
+                                </span>
+                            </button>
+                        ) : (
+                            <>
+                                <button className="stat-item" onClick={handleRemoveFriend}>
+                                    <UserMinus size={24} />
+                                    <span className="stat-label">Remove Friend</span>
+                                </button>
+                                <Link to={userProfilePath(user)} className="stat-item">
+                                    <MessageCircle size={24} />
+                                    <span className="stat-label">Message</span>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
 
-            {/* Social Actions */}
-            {!isOwn ? (
-                <div className="social-stats">
-                    {!isFriend ? (
-                        <button
-                            className="stat-item"
-                            onClick={handleAddFriend}
-                            disabled={isProcessing || isRequestSent}
-                        >
-                            {isProcessing ? (
-                                <Clock size={24} className="friend-action-icon animate-spin" />
-                            ) : isRequestSent ? (
-                                <Clock size={24} className="friend-action-icon" />
-                            ) : (
-                                <UserPlus size={24} className="friend-action-icon" />
-                            )}
-                            <span className="stat-label">
-                {isProcessing
-                    ? "Request Sending..."
-                    : isRequestSent
-                        ? "Request Pending"
-                        : "Add Friend"}
-              </span>
-                        </button>
+            {/* Gelen istek butonları */}
+            {!isOwn && !isFriend && isRequestedBefore && (
+                <section className="received-requests">
+                    {localReceived.length > 0 ? (
+                        <ul>
+                            <li key={user.uuid} className="flex items-center">
+                                <button
+                                    onClick={() => handleAccept(user.uuid)}
+                                    className="ml-auto btn btn-sm"
+                                >
+                                    Accept
+                                </button>
+                                <button
+                                    onClick={() => handleDecline(user.uuid)}
+                                    className="ml-2 btn btn-sm btn-danger"
+                                >
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
                     ) : (
-                        <>
-                            <button className="stat-item" onClick={handleRemoveFriend}>
-                                <UserMinus size={24} className="friend-action-icon" />
-                                <span className="stat-label">Remove Friend</span>
-                            </button>
-                            <div className="stat-item">
-                                <MessageCircle size={24} />
-                                <span className="stat-label">Message</span>
-                            </div>
-                        </>
+                        <p>No incoming requests.</p>
                     )}
-                </div>
-            ) : null}
+                </section>
+            )}
 
-            {/* User Info */}
+            {/* Last online / joined */}
             <div className="user-info">
                 <div className="info-row">
-                    <span className="info-label">Last Online</span>
+                    <span className="info-label">Last Seen</span>
                     <span className="info-value">{formatTimeAgo(user.lastOnline)}</span>
                 </div>
                 <div className="info-row">
@@ -118,74 +215,122 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                     <span className="info-value">{formatTimeAgo(user.createdAt)}</span>
                 </div>
             </div>
-            {/* About Section */}
+
+            {/* About */}
             <div className="about-section">
-                <h3 className="about-title">About</h3>
-                <p className="about-content">
-                    {user.biography || "Hello, I am using Listopia"}
-                </p>
+                <h3>About</h3>
+                <br/>
+                <p>{user.biography || "Hello, I am using Listopia."}</p>
             </div>
 
-            {/* User Lists */}
+            {/* Statistics */}
             <div className="user-lists">
-                <div className="list-row">
-                    <span className="list-label">Lists</span>
-                    <span className="list-value">{lists.lists}</span>
-                </div>
-                <div className="list-row">
-                    <span className="list-label">Reviews</span>
-                    <span className="list-value">{lists.reviews}</span>
-                </div>
-                <div className="list-row">
-                    <span className="list-label">Communities</span>
-                    <span className="list-value">{lists.communities}</span>
-                </div>
-                <div className="list-row">
-                    <span className="list-label">Recommendations</span>
-                    <span className="list-value">{lists.recommendations}</span>
-                </div>
-            </div>
-
-            {/* Friends Section */}
-            <div className="friends-section">
-                <div className="friends-header">
-                    <h3>Friends</h3>
-
-                    {/* Tabs - Currently only 'All' is functional */}
-                    <div className="friends-tabs">
-                        <button className={`tab-button ${activeTab === "all" ? "active" : ""}`} onClick={() => setActiveTab("all")}>
-                            All ({friends.length})
-                        </button>
-                        {/* Add other tabs like 'Online' if needed later */}
+                {Object.entries(lists).map(([label, val]) => (
+                    <div key={label} className="list-row">
+                        <span className="list-label">
+                            {label.charAt(0).toUpperCase() + label.slice(1)}
+                        </span>
+                        <span className="list-value">{val}</span>
                     </div>
-                </div>
-
-                <div className="friends-grid">
-                    {friends.length === 0 && <p>No friends yet.</p>}
-                    {friends.length > 0 && (
-                        <CardSlider
-                            items={friends}
-                            className=""
-                            renderItem={(friend) => (
-                                <Link to={userProfilePath(friend)} className="">
-                                    <div key={friend.uuid} className="friend-item">
-                                        <img
-                                            src={friend.profilePicture || "/placeholder.svg?height=50&width=50"}
-                                            alt={friend.username}
-                                            className=""
-                                        />
-                                        <span className="friend-name">
-                      {friend.firstName ? `${friend.firstName} ${friend.lastName}` : friend.username}
-                    </span>
-                                    </div>
-                                </Link>
-                            )}
-                        />
-                    )}
-                </div>
+                ))}
             </div>
-        </div>
-    )
-}
 
-export default ProfileLeftColumn
+            {/* Tabs */}
+            <div className="friends-tabs">
+                {isOwn && (
+                    <button
+                        className={`tab-button ${activeTab === "requests" ? "active" : ""}`}
+                        onClick={() => setActiveTab("requests")}
+                    >
+                        Requests
+                    </button>
+                )}
+                <button
+                    className={`tab-button ${activeTab === "friends" ? "active" : ""}`}
+                    onClick={() => setActiveTab("friends")}
+                >
+                    Friends ({friends.length})
+                </button>
+            </div>
+
+            {/* Tab Contents */}
+            {activeTab === "requests" && isOwn && (
+                <>
+                    <section className="received-requests">
+                        <h3>Received Requests</h3>
+                        {localReceived.length > 0 ? (
+                            <ul>
+                                {localReceived.map((u) => (
+                                    <li key={u.uuid} className="flex items-center">
+                                        <img
+                                            src={u.profilePicture || "/placeholder.svg"}
+                                            alt={u.username}
+                                            className="w-8 h-8 rounded-full mr-2"
+                                        />
+                                        <Link to={userProfilePath(u)}>
+                                            {u.firstName || u.username}
+                                        </Link>
+                                        <button
+                                            onClick={() => handleAccept(u.uuid)}
+                                            className="ml-auto btn btn-sm"
+                                        >
+                                            Accept
+                                        </button>
+                                        <button
+                                            onClick={() => handleDecline(u.uuid)}
+                                            className="ml-2 btn btn-sm btn-danger"
+                                        >
+                                            Decline
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No incoming requests.</p>
+                        )}
+                    </section>
+
+                    <section className="sent-requests">
+                        <h3>Sending Requests</h3>
+                        {localSent.length > 0 ? (
+                            <ul>
+                                {localSent.map((u) => (
+                                    <li key={u.uuid} className="flex items-center">
+                                        <img
+                                            src={u.profilePicture || "/placeholder.svg"}
+                                            alt={u.username}
+                                            className="w-8 h-8 rounded-full mr-2"
+                                        />
+                                        <Link to={userProfilePath(u)}>
+                                            {u.firstName || u.username}
+                                        </Link>
+                                        <button
+                                            onClick={() => handleCancel(u.uuid)}
+                                            className="ml-auto btn btn-sm"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No sent requests.</p>
+                        )}
+                    </section>
+                </>
+            )}
+
+            {activeTab === "friends" && (
+                <>
+                    <ProfileListFriends
+                        friends={friends}
+                        friendsLoading={listFriendsLoading}
+                        friendsError=""
+                    />
+                </>
+            )}
+        </div>
+    );
+};
+
+export default ProfileLeftColumn;

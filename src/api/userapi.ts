@@ -5,6 +5,7 @@ import { Movie } from '@/types/movie';
 import { apiFetch as fetch } from './apiClient';
 
 import {BASE_URL} from "./apiClient";
+import { UserFriendRequest } from "@/types/userfriendrequest";
 
 ////
 // @TODO: DO BETTER ERROR HANDLING AND TYPES 
@@ -138,7 +139,7 @@ export async function addFriendRequest(uuid: string) : Promise<APIResponse> {
 
 export async function acceptFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}api/v1/user/friend/accept/${uuid}`, {
+        `${BASE_URL}api/v1/user/friend/add/${uuid}`, {
             method: "POST",
             credentials: "include",
         }
@@ -158,15 +159,78 @@ export async function rejectFriendRequest(uuid: string) : Promise<APIResponse> {
     return res.json();
 }
 
-export async function removeFriend(uuid: string) : Promise<APIResponse> {
+export async function cancelFriendRequest(uuid: string) : Promise<APIResponse> {
+    const res = await fetch(
+        `${BASE_URL}api/v1/user/friend/request/${uuid}`, {
+            method: "DELETE",
+            credentials: "include",
+        }
+    );
+    if (!res.ok) throw new Error('Could not cancel this request');
+    return res.json();
+}
+
+export async function removeFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
         `${BASE_URL}api/v1/user/friend/remove/${uuid}`, {
             method: "DELETE",
             credentials: "include",
         }
     );
-    if (!res.ok) throw new Error('Could not change password');
+    if (!res.ok) throw new Error('Could not remove friend');
     return res.json();
+}
+
+
+
+export async function fetchSentFriendRequests(
+    pageNumber: number = 0,
+    pageSize: number = 30
+): Promise<PaginatedResponse<User>> {
+    const url = new URL(`${BASE_URL}api/v1/user/friend/requests/sent`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `Failed to fetch sent friend requests`);
+    }
+    const data = await res.json() as PaginatedResponse<UserFriendRequest>;
+
+    return {
+        ...data,
+        content: data.content.map(request => request.userRequestReceived)
+    };
+}
+
+export async function fetchReceivedFriendRequests(
+    pageNumber: number = 0,
+    pageSize: number = 30
+): Promise<PaginatedResponse<User>> {
+    const url = new URL(`${BASE_URL}api/v1/user/friend/requests/received`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `Failed to fetch received friend requests`);
+    }
+    const data = await res.json() as PaginatedResponse<UserFriendRequest>;
+
+    return {
+        ...data,
+        content: data.content.map(request => request.userRequestSent)
+    };
 }
 
 export async function fetchFriendsByUUID(
