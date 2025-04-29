@@ -139,7 +139,7 @@ export async function addFriendRequest(uuid: string) : Promise<APIResponse> {
 
 export async function acceptFriendRequest(uuid: string) : Promise<APIResponse> {
     const res = await fetch(
-        `${BASE_URL}api/v1/user/friend/accept/${uuid}`, {
+        `${BASE_URL}api/v1/user/friend/add/${uuid}`, {
             method: "POST",
             credentials: "include",
         }
