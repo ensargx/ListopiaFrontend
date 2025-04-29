@@ -13,7 +13,6 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     padding: 0.5rem 0;      /* vertical padding, no bottom padding pushing page */
-    margin: 0 -1rem;       /* optional: align first/last cards under arrows */
     scrollbar-width: none; /* Firefox */
 }
 .profile-card-slider .profile-slider-container::-webkit-scrollbar {
