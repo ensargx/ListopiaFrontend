@@ -5,6 +5,7 @@ import { Movie } from '@/types/movie';
 import { apiFetch as fetch } from './apiClient';
 
 import {BASE_URL} from "./apiClient";
+import { UserFriendRequest } from "@/types/userfriendrequest";
 
 ////
 // @TODO: DO BETTER ERROR HANDLING AND TYPES 
@@ -186,7 +187,12 @@ export async function fetchSentFriendRequests(
         const errorText = await res.text();
         throw new Error(errorText || `Failed to fetch sent friend requests`);
     }
-    return res.json() as Promise<PaginatedResponse<User>>;
+    const data = await res.json() as PaginatedResponse<UserFriendRequest>;
+
+    return {
+        ...data,
+        content: data.content.map(request => request.userRequestReceived)
+    };
 }
 
 export async function fetchReceivedFriendRequests(
@@ -206,7 +212,12 @@ export async function fetchReceivedFriendRequests(
         const errorText = await res.text();
         throw new Error(errorText || `Failed to fetch received friend requests`);
     }
-    return res.json() as Promise<PaginatedResponse<User>>;
+    const data = await res.json() as PaginatedResponse<UserFriendRequest>;
+
+    return {
+        ...data,
+        content: data.content.map(request => request.userRequestSent)
+    };
 }
 
 export async function fetchFriendsByUUID(
