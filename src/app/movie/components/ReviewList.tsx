@@ -39,7 +39,11 @@ const ReviewList: React.FC = () => {
         try {
             const resp = await fetchMovieComments(movieId, page, COMMENTS_PER_PAGE);
             setComments(resp.content);
-            setTotalPages(resp.totalPages);
+            if (resp.totalPages == 0){
+                setTotalPages(1);
+            } else {
+                setTotalPages(resp.totalPages);
+            }
         } catch (err) {
             console.error(err);
         } finally {
