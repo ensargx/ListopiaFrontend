@@ -45,6 +45,8 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
     const [localReceived, setLocalReceived] = useState<User[]>(receivedRequests);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const [listFriendsLoading, setListFriendsLoading] = useState<boolean>(true);
+    const [clkToggled, setClkToggled] = useState(false);
+
 
     // gönderilen ve gelen istekleri local state ile takip et
     const hasSentRequest = localSent.some((u) => u.uuid === user.uuid);
@@ -112,44 +114,54 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                     className="profile-avatar"
                 />
 
-                {!isOwn && (
-                    <div className="social-stats flex space-x-2">
-                        {!isFriend? (
-                            <button
-                                className="stat-item flex items-center"
-                                onClick={handleAddFriend}
-                                disabled={isProcessing || hasSentRequest}
-                            >
-                                {isProcessing ? (
-                                    <Clock size={24} className="animate-spin" />
-                                ) : hasSentRequest ? (
-                                    <Clock size={24} />
-                                ) : (
-                                    <UserPlus size={24} />
-                                )}
-                                <span className="stat-label ml-1">
+            </div>
+            {!isOwn && (
+                <div className="social-stats flex space-x-2">
+                    {!isFriend? (
+                        <button
+                            className="stat-item flex items-center"
+                            onClick={
+                                hasSentRequest
+                                    ? () => handleCancel(user.uuid)
+                                    : handleAddFriend
+                            }
+                            disabled={isProcessing}
+                        >
+                            { (isProcessing || hasSentRequest) ? (
+                                clkToggled
+                                    ? <UserMinus size={24} onClick={() => setClkToggled(false)} />
+                                    : <Clock
+                                        size={24}
+                                        className={isProcessing ? "animate-spin" : ""}
+                                        onClick={() => setClkToggled(true)}
+                                    />
+                            ) : (
+                                <UserPlus size={24} />
+                            )
+                            }
+                            <span className="stat-label ml-1">
                                     {isProcessing
                                         ? "Sending..."
                                         : hasSentRequest
                                             ? "Pending"
                                             : "Add Friend"}
                                 </span>
+
+                        </button>
+                    ) : (
+                        <>
+                            <button className="stat-item flex items-center" onClick={handleRemoveFriend}>
+                                <UserMinus size={24} />
+                                <span className="stat-label ml-1">Remove Friend</span>
                             </button>
-                        ) : (
-                            <>
-                                <button className="stat-item flex items-center" onClick={handleRemoveFriend}>
-                                    <UserMinus size={24} />
-                                    <span className="stat-label ml-1">Remove Friend</span>
-                                </button>
-                                <Link to={userProfilePath(user)} className="stat-item flex items-center">
-                                    <MessageCircle size={24} />
-                                    <span className="stat-label ml-1">Message</span>
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                )}
-            </div>
+                            <Link to={userProfilePath(user)} className="stat-item flex items-center">
+                                <MessageCircle size={24} />
+                                <span className="stat-label ml-1">Message</span>
+                            </Link>
+                        </>
+                    )}
+                </div>
+            )}
 
             {/* Gelen istekler (Profil diğerinin) */}
             {!isOwn && !isFriend && hasReceivedRequest && (
