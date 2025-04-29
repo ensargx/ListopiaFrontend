@@ -1,263 +1,187 @@
+/* MovieHeader.css */
+
 .movie-header {
+    position: relative;
+    color: #fff;
+    padding: 2rem;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+.movie-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.movie-header__inner {
+    position: relative;
     display: flex;
     gap: 1.5rem;
-    margin-bottom: 2rem;
     align-items: flex-start;
+    z-index: 1;
 }
 
-.movie-header .poster img {
+.movie-header__poster img {
     width: 200px;
     border-radius: 8px;
-    display: block;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
-.movie-header .info {
+.movie-header__info {
     flex: 1;
     font-family: 'Segoe UI', sans-serif;
-    color: #fff;
 }
 
-.movie-header .info h1 {
+.movie-header__title {
     margin: 0 0 0.5rem;
-    font-size: 2rem;
+    font-size: 2.5rem;
 }
 
-.movie-header .info .tagline {
-    font-style: italic;
-    color: #ccc;
+.movie-header__tagline {
     margin: 0.5rem 0;
+    font-style: italic;
+    color: #ddd;
 }
 
-.movie-header .info p {
-    margin: 0.25rem 0;
-}
-
-.btn-trailer {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #e50914;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-@media (max-width: 768px) {
-    .movie-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 1rem;
-    }
-    .movie-header .poster img {
-        width: 100%;
-        max-width: 300px;
-    }
-    .movie-header .info {
-        margin-top: 0;
-    }
-    .btn-trailer {
-        width: 100%;
-        max-width: 200px;
-        margin: 1rem auto 0;
-    }
-}
-
-.movie-header .movie-actions {
-    margin-top: 1rem;
+.movie-header__meta {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
-    flex-direction: column;
+    margin: 1rem 0;
+}
+.movie-header__meta span {
+    font-size: 0.95rem;
+    color: #ccc;
 }
 
-.movie-header .movie-actions button {
-    padding: 0.5rem 1rem;
+.movie-header__imdb-link {
+    margin-bottom: 1rem;
+}
+.movie-header__imdb-link a {
+    color: #f5c518; /* IMDb sarısı */
+    font-weight: 600;
+    text-decoration: none;
+}
+.movie-header__imdb-link a:hover {
+    text-decoration: underline;
+}
+
+.movie-header__overview {
     font-size: 1rem;
-    cursor: pointer;
-    border-radius: 4px;
-    border: none;
-    background-color: #e50914;
-    color: #fff;
-    font-weight: 500;
+    line-height: 1.4;
+    color: #eee;
+    margin-bottom: 1.5rem;
 }
 
-.movie-header .movie-actions .btn-like.liked {
-    background-color: #ff1a3c;
-}
-
-.movie-header .movie-actions .btn-like {
-    background-color: #e50914;
-    font-size: 1.5rem;
-}
-
-.movie-header .movie-actions .btn-comment {
-    background-color: #444;
-    color: #fff;
-    margin-top: 1rem;
-}
-
-.movie-header .comment-section {
+.movie-header__actions {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 0.5rem;
 }
 
-.movie-header .comment-section textarea {
-    padding: 0.75rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    width: 100%;
-    min-height: 100px;
-    background-color: #333;
-    color: #fff;
-}
-
-.movie-header .comment-section textarea::placeholder {
-    color: #bbb;
-}
-
-.movie-header .overview {
-    margin: 1rem 0;
-    font-size: 1.1rem;
-    color: #ccc;
-}
-
-@media (max-width: 768px) {
-    .movie-header .movie-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-}
-/* MovieHeader.css */
-
-.actions {
-    margin-top: 15px; /* Buton ile diğer içerik arasına boşluk */
-}
-
-.like-button {
-    padding: 8px 15px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f0f0f0;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.like-button:hover:not(:disabled) {
-    background-color: #e0e0e0;
-}
-
-.like-button.liked {
-    background-color: #ff6b6b;
-    color: white;
-    border-color: #ff6b6b;
-}
-
-.like-button.liked:hover:not(:disabled) {
-    background-color: #e05252;
-}
-
-
-.like-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: 5px;
-}
-
-/* -------- YENİ BUTON STİLLERİ (Dosyanın sonuna ekleyin) -------- */
-
-/* Butonları içeren alan */
-.movie-header .info .actions {
-    margin-top: 1rem; /* Üstteki içerikle arasına boşluk */
-    display: flex; /* Butonları yan yana dizer */
-    flex-wrap: wrap; /* Ekran küçülünce alt satıra atar */
-    gap: 10px; /* Butonlar arasına boşluk koyar */
-    align-items: center; /* Butonları dikeyde ortalar */
-}
-
-/* Tüm yeni butonlar için temel stil */
+/* Button base */
 .action-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 12px; /* İç boşluk */
-    font-size: 0.9rem; /* Yazı boyutu */
-    border: 1px solid #555; /* Kenarlık */
-    border-radius: 15px; /* Köşe yuvarlaklığı */
-    background-color: #333; /* Arka plan rengi */
-    color: #eee; /* Yazı rengi */
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #555;
+    border-radius: 15px;
+    background-color: #333;
+    color: #eee;
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    line-height: 1.2;
 }
-
 .action-button:hover:not(:disabled) {
     background-color: #444;
     border-color: #777;
     color: #fff;
 }
-
 .action-button:disabled {
-    cursor: not-allowed;
     opacity: 0.6;
+    cursor: not-allowed;
 }
 
-/* Kalp Butonu Özel Stili */
+/* Like button */
 .like-button {
-    font-size: 1.4rem; /* Kalp boyutu */
-    padding: 4px 8px; /* Kalbe uygun daha az boşluk */
+    font-size: 1.4rem;
+    padding: 4px 8px;
     min-width: 40px;
 }
-
-/* Beğenilmiş Kalp Rengi */
 .like-button.liked {
-    color: #ff6b6b; /* Kırmızı */
-    border-color: #ff8f8f; /* Biraz daha açık kenarlık */
-}
-.like-button.liked:hover:not(:disabled) {
-    background-color: rgba(255, 107, 107, 0.1); /* Hafif kırmızı hover */
+    color: #ff6b6b;
+    border-color: #ff8f8f;
 }
 
-/* İzledim Butonu Aktif Stili */
+/* Watched button */
 .watched-button.active {
-    background-color: #28a745; /* Yeşil */
+    background-color: #28a745;
     border-color: #3bc75a;
-    color: white;
-}
-.watched-button.active:hover:not(:disabled) {
-    background-color: #218838; /* Koyu yeşil hover */
-    border-color: #1e7e34;
+    color: #fff;
 }
 
-/* İzleyeceğim Butonu Aktif Stili */
+/* Watchlist button */
 .watchlist-button.active {
-    background-color: #007bff; /* Mavi */
+    background-color: #007bff;
     border-color: #3395ff;
-    color: white;
-}
-.watchlist-button.active:hover:not(:disabled) {
-    background-color: #0069d9; /* Koyu mavi hover */
-    border-color: #0062cc;
+    color: #fff;
 }
 
-/* İşlem devam ediyor stili (isteğe bağlı) */
-.action-button.processing {
+/* Processing state */
+.processing {
     opacity: 0.7;
 }
 
-/* Hata mesajı için (zaten vardı ama flex layout için ekleme) */
-.actions .error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: 5px;
-    flex-basis: 100%; /* Hata mesajının alt satıra geçmesini sağlar */
+/* Error messages */
+.error-message {
+    color: #f66;
+    font-size: 0.9rem;
+    flex-basis: 100%;
+    margin-top: 0.5rem;
 }
 
-/* -------- YENİ BUTON STİLLERİ SONU -------- */
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .movie-header {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .movie-header__inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .movie-header__poster img {
+        width: 60%;
+        max-width: 200px;
+        margin-bottom: 1rem;
+    }
+    .movie-header__title {
+        font-size: 2rem;
+    }
+    .movie-header__tagline {
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+    .movie-header__meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 0.75rem 0;
+    }
+    .movie-header__imdb-link {
+        margin: 0.5rem auto 1rem;
+    }
+    .movie-header__overview {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+    .movie-header__actions {
+        justify-content: center;
+    }
+}
