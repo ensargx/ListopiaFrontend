@@ -11,6 +11,7 @@ import {
     removeFriendRequest,
     addFriendRequest,
     cancelFriendRequest,
+rejectFriendRequest,
 
 } from "@/api/userapi";
 import ProfileListFriends from "@/app/profile/components/ProfileFriends";
