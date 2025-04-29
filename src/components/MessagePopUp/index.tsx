@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
 import { useAuth } from '@/app/auth/hooks/AuthContext';
 import ChatPanel from '../Message';
+import {useNavigate} from "react-router-dom";
 
 interface Message {
     id: string;
@@ -20,6 +21,7 @@ const dummyMessages: Message[] = [
 
 const LinkedInMessagePopup: React.FC = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -37,7 +39,7 @@ const LinkedInMessagePopup: React.FC = () => {
 
     const handleButtonClick = () => {
         if (!user) {
-            alert('Lütfen giriş yapın');
+            navigate('/login/');
             return;
         }
         setIsOpen(o => !o);
