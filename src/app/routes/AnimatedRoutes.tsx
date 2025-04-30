@@ -6,7 +6,7 @@ import GenrePage from '@/app/genre/GenrePage';
 import MoviePage from '@/app/movie/MoviePage';
 import ProfilePage from '@/app/profile/ProfilePage';
 import SignPage from '@/app/auth/SignPage';
-
+import DashboardPage from '@/app/dashboard/AdminDashboardPage';
 
 import './AnimatedRoutes.css';
 
@@ -35,6 +35,7 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/signin" element={<SignPage/>}/>
                         <Route path="/login" element={<SignPage/>}/>
                         <Route path="/register" element={<SignPage/>}/>
+                        <Route path="/admin/dashboard" element={<DashboardPage/>}/>
                         {/* …other routes… */}
                     </Routes>
                 </div>
