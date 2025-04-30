@@ -16,14 +16,13 @@ import ProfileUpdates from "./components/ProfileUpdates"
 import { UserAcitivity } from "@/types/user/useractivity"
 
 const mockStats = {
-    watched: 3,
-    wantToWatch: 2,
-    liked: 6,
+    watched: 0,
+    wantToWatch: 0,
+    liked: 0,
     totalFilms: 11,
 }
 
 const mockLists = {
-    lists: 2,
     reviews: 3,
 }
 

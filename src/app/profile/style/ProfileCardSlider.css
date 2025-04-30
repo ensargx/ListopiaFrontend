@@ -23,7 +23,7 @@
 .profile-card-slider .profile-card {
     flex: 0 0 auto;
     width: 180px;
-    margin: 0 0.5rem;      /* horizontal gap between cards */
+    margin: 0 1.5rem;      /* horizontal gap between cards */
     transition: transform 0.3s;
     position: relative;
     z-index: 1;
