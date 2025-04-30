@@ -15,7 +15,7 @@ const AdminDashboardPage: React.FC = () => {
     useEffect(() => {
         (async () => {
             try { await fetchUserMe(); }
-            catch {}
+            catch { /* empty */ }
             setLoading(false);
         })();
     }, []);

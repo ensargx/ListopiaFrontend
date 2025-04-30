@@ -15,9 +15,9 @@ import {
 } from 'recharts';
 import {
     AdminStats,
-    MovieStat,
+    // MovieStat,
     GenreStat,
-    UserStat
+    // UserStat
 } from '@/types/stats';
 import '../styles/AdminStats.css';
 
