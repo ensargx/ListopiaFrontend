@@ -25,7 +25,6 @@ interface ProfileLeftColumnProps {
     activeTab: "requests" | "friends";
     setActiveTab: (tab: "requests" | "friends") => void;
     lists: {
-        lists: number;
         reviews: number;
     };
 }
@@ -234,14 +233,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
             </div>
 
             {/* Stats */}
-            <div className="user-lists mb-4">
-                {Object.entries(lists).map(([label, val]) => (
-                    <div key={label} className="flex justify-between mb-1">
-                        <span className="capitalize">{label}</span>
-                        <span>{val}</span>
-                    </div>
-                ))}
-            </div>
+
 
             {/* Tabs */}
             <div className="friends-tabs flex space-x-2 mb-4">
