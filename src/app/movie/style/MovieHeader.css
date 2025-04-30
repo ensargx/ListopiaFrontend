@@ -197,8 +197,8 @@
 /* Hover etkisi */
 .trailer-button:hover:not(:disabled) {
     background-color: #f52a18;
-    border-color:     #ffffff;
-    color:            #000;
+    border-color:     #000000;
+    color:            #fff;
 }
 
 .movie-header__links {
