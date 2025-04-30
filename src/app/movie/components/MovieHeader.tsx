@@ -206,25 +206,32 @@ const MovieHeader: React.FC<Props> = ({ movie }) => {
                         <span><strong>Genres:</strong> {movie.genres.map(g => g.name).join(', ') || 'N/A'}</span>
                     </div>
 
-                    {imdbLink && (
-                        <div className="movie-header__imdb-link">
-                            <a href={imdbLink} target="_blank" rel="noopener noreferrer">
-                                View on IMDb
-                            </a>
-                        </div>
-                    )}
-                    {movie.trailerLink && (
-                        <div className="movie-header__trailer-link">
-                               <a
-                                   href={movie.trailerLink}
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                   className="action-button trailer-button"
-                               >
-                                   Fragman
-                               </a>
-                        </div>
-                    )}
+                    <div className="movie-side-by-side-links">
+                        {imdbLink && (
+                            <div className="movie-header__imdb-link">
+                                <a href={imdbLink} target="_blank" rel="noopener noreferrer">
+                                    View on IMDb
+                                </a>
+                            </div>
+                        )}
+                        {movie.trailerLink && (
+                            <div className="movie-header__trailer-link">
+                                <a
+                                    href={movie.trailerLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="action-button trailer-button"
+                                >
+                                    <img
+                                        src="https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_social_white_squircle_(2017).svg"
+                                        alt="YouTube"
+                                        className="youtube-logo"
+                                    />
+                                    Fragman
+                                </a>
+                            </div>
+                        )}
+                    </div>
 
                     {movie.overview && (
                         <p className="movie-header__overview">
