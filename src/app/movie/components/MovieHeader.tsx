@@ -213,6 +213,18 @@ const MovieHeader: React.FC<Props> = ({ movie }) => {
                             </a>
                         </div>
                     )}
+                    {movie.trailerLink && (
+                        <div className="movie-header__trailer-link">
+                               <a
+                                   href={movie.trailerLink}
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   className="action-button trailer-button"
+                               >
+                                   Fragman
+                               </a>
+                        </div>
+                    )}
 
                     {movie.overview && (
                         <p className="movie-header__overview">

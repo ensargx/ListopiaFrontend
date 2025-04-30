@@ -184,4 +184,31 @@
     .movie-header__actions {
         justify-content: center;
     }
+    /* Fragman butonu wrapper’ı */
+    .movie-header__trailer-link {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .trailer-button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
 }
+/* Fragman butonu*/
+.trailer-button {
+    background-color: #f5c518;    /* IMDb sarısı arkaplan */
+    border-color:     #f5c518;
+    color:            #000;        /* siyah metin */
+    max-width: 100px;
+
+}
+
+/* Hover etkisi */
+.trailer-button:hover:not(:disabled) {
+    background-color: #ffe15a;
+    border-color:     #ffe15a;
+    color:            #000;
+}
+
