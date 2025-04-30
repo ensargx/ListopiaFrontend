@@ -11,30 +11,14 @@ import {BASE_URL} from "./apiClient";
 
 export async function fetchMovieById(
     movieId: number,
-    language: string = 'en'
 ): Promise<Movie> {
     const res = await fetch(
-        `${BASE_URL}api/v1/movies/${movieId}?language=${language}`
+        `${BASE_URL}api/v1/movies/${movieId}`
     );
     if (!res.ok) throw new Error('Failed to fetch movie');
     return res.json();
 }
 
-export async function fetchTopRatedMovies(
-    language: string = 'en'
-): Promise<FrontMovie[]> {
-    const res = await fetch(
-        `${BASE_URL}api/v1/movies/top-rated?language=${language}`
-    );
-    if (!res.ok) throw new Error('Failed to fetch top rated');
-    return res.json();
-}
-
-export async function fetchTrendingGenres(): Promise<string[]> {
-    const res = await fetch(`${BASE_URL}api/v1/genres/trending`);
-    if (!res.ok) throw new Error('Failed to fetch trending genres');
-    return res.json();
-}
 
 export async function fetchFrontMovies(
     options: {
@@ -43,7 +27,6 @@ export async function fetchFrontMovies(
         sortBy?: 'popularity' | "releaseDate"| "clickCount"| "likeCount"| "watchCount"| "ratingCount";
         sortOrder?: 'dsc' | 'asc';
         genre?: string;
-        language?: string;
     } = {}
 ): Promise<PagedResponse<FrontMovie>> {
     const {
@@ -52,7 +35,6 @@ export async function fetchFrontMovies(
         sortBy = 'popularity',
         sortOrder = 'dsc',
         genre,
-        language = 'en',
     } = options;
 
     const params = new URLSearchParams({
@@ -60,7 +42,6 @@ export async function fetchFrontMovies(
         pageSize: pageSize.toString(),
         sortBy,
         sortOrder,
-        language,
     });
     if (genre) params.append('genre', genre);
 
@@ -76,7 +57,6 @@ export async function searchFrontMovies(
         sortBy?: 'popularity';
         sortOrder?: 'dsc' | 'asc';
         genre?: string;
-        language?: string;
         word: string;
     }
 ): Promise<PagedResponse<FrontMovie>> {
@@ -86,7 +66,6 @@ export async function searchFrontMovies(
         sortBy = 'popularity',
         sortOrder = 'dsc',
         genre,
-        language = 'en',
         word,
     } = options;
 
@@ -97,7 +76,6 @@ export async function searchFrontMovies(
         pageSize: pageSize.toString(),
         sortBy,
         sortOrder,
-        language,
         word,
     });
     if (genre) params.append('genre', genre);
