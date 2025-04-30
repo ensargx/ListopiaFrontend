@@ -4,7 +4,6 @@ export interface FrontMovie {
     poster: string | null;
     watchCount: number;
     likeCount: number;
-    ratingAverage: number;
 }
 
 export interface PagedResponse<T> {

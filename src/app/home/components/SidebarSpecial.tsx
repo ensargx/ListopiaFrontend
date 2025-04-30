@@ -11,7 +11,7 @@ export const SidebarSpecial: React.FC = () => {
 
     useEffect(() => {
         fetchFrontMovies({
-            sortBy: 'ratingAverage',
+            sortBy: "popularity",
             sortOrder: 'dsc',
             pageSize: 5,           // sidebar’da sadece 5 tane göster
         })

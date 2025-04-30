@@ -40,7 +40,7 @@ export async function fetchFrontMovies(
     options: {
         pageNumber?: number;
         pageSize?: number;
-        sortBy?: 'popularity' | 'ratingAverage' | "releaseDate"| "clickCount"| "likeCount"| "watchCount"| "ratingCount";
+        sortBy?: 'popularity' | "releaseDate"| "clickCount"| "likeCount"| "watchCount"| "ratingCount";
         sortOrder?: 'dsc' | 'asc';
         genre?: string;
         language?: string;
@@ -73,7 +73,7 @@ export async function searchFrontMovies(
     options: {
         pageNumber?: number;
         pageSize?: number;
-        sortBy?: 'popularity' | 'ratingAverage';
+        sortBy?: 'popularity';
         sortOrder?: 'dsc' | 'asc';
         genre?: string;
         language?: string;

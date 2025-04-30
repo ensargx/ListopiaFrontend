@@ -23,7 +23,6 @@ interface ProfileStatisticsProps {
 
 
 const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }) => {
-    // State ve fonksiyonlar aynı kalır...
     const [activeList, setActiveList] = useState<"watched" | "watchlist" | "liked" | null>(null)
     const [movies, setMovies] = useState<Movie[]>([])
     const [loading, setLoading] = useState(false)
@@ -97,24 +96,11 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
         }
     }
 
-    // --- Stiller ---
+    // --- Stiller (Değişiklik Yok) ---
     const containerStyle: CSSProperties = { marginBottom: "2rem" }
     const cardsContainerStyle: CSSProperties = { display: "flex", gap: "16px", flexWrap: "wrap" }
-    // Adım 1: position: 'relative' eklendi
-    const cardBaseStyle: CSSProperties = {
-        position: 'relative', // z-index için gerekli
-        zIndex: 0, // Başlangıç z-index'i
-        flex: '1 1 200px',
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "24px",
-        borderRadius: "8px",
-        transition: "transform 0.2s", // Sadece transform için transition
-        minWidth: '180px'
-    }
+    const cardBaseStyle: CSSProperties = { flex: '1 1 200px', display: "flex", flexDirection: "column", alignItems: "center", padding: "24px", borderRadius: "8px", transition: "transform 0.2s", minWidth: '180px' }
     const clickableCardStyle: CSSProperties = { ...cardBaseStyle, cursor: "pointer" }
-    // Diğer stiller aynı kalır...
     const iconContainerBaseStyle: CSSProperties = { borderRadius: "50%", padding: "16px", marginBottom: "16px", display: "flex", justifyContent: "center", alignItems: "center" }
     const countStyle: CSSProperties = { fontSize: "clamp(24px, 5vw, 48px)", fontWeight: "bold", color: "white", marginBottom: "8px" }
     const labelStyle: CSSProperties = { color: "#d1d1d1" }
@@ -137,17 +123,8 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                 <div
                     onClick={() => handleStatClick("watched")}
                     style={{ ...clickableCardStyle, backgroundColor: "#0F2818", border: "1px solid #1E5631" }}
-                    // Adım 2: onMouseOver ve onMouseOut ile z-index değiştir
-                    onMouseOver={(e) => {
-                        const style = e.currentTarget.style as CSSProperties;
-                        style.transform = "scale(1.03)";
-                        style.zIndex = "10"; // Öne getir
-                    }}
-                    onMouseOut={(e) => {
-                        const style = e.currentTarget.style as CSSProperties;
-                        style.transform = "scale(1)";
-                        style.zIndex = "0"; // Eski haline getir
-                    }}
+                    onMouseOver={(e) => {(e.currentTarget.style as CSSProperties).transform = "scale(1.03)" }}
+                    onMouseOut={(e) => {(e.currentTarget.style as CSSProperties).transform = "scale(1)" }}
                 >
                     <div style={{ ...iconContainerBaseStyle, backgroundColor: "#1E5631" }}>
                         <Eye size={24} color="white" />
@@ -160,17 +137,8 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                 <div
                     onClick={() => handleStatClick("watchlist")}
                     style={{ ...clickableCardStyle, backgroundColor: "#0F1A2A", border: "1px solid #1E3A5F" }}
-                    // Adım 2: onMouseOver ve onMouseOut ile z-index değiştir
-                    onMouseOver={(e) => {
-                        const style = e.currentTarget.style as CSSProperties;
-                        style.transform = "scale(1.03)";
-                        style.zIndex = "10"; // Öne getir
-                    }}
-                    onMouseOut={(e) => {
-                        const style = e.currentTarget.style as CSSProperties;
-                        style.transform = "scale(1)";
-                        style.zIndex = "0"; // Eski haline getir
-                    }}
+                    onMouseOver={(e) => {(e.currentTarget.style as CSSProperties).transform = "scale(1.03)" }}
+                    onMouseOut={(e) => {(e.currentTarget.style as CSSProperties).transform = "scale(1)" }}
                 >
                     <div style={{ ...iconContainerBaseStyle, backgroundColor: "#1E3A5F" }}>
                         <Clock size={24} color="white" />
@@ -183,17 +151,8 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                 <div
                     onClick={() => handleStatClick("liked")}
                     style={{ ...clickableCardStyle, backgroundColor: "#2A0F0F", border: "1px solid #5F1E1E" }}
-                    // Adım 2: onMouseOver ve onMouseOut ile z-index değiştir
-                    onMouseOver={(e) => {
-                        const style = e.currentTarget.style as CSSProperties;
-                        style.transform = "scale(1.03)";
-                        style.zIndex = "10"; // Öne getir
-                    }}
-                    onMouseOut={(e) => {
-                        const style = e.currentTarget.style as CSSProperties;
-                        style.transform = "scale(1)";
-                        style.zIndex = "0"; // Eski haline getir
-                    }}
+                    onMouseOver={(e) => {(e.currentTarget.style as CSSProperties).transform = "scale(1.03)" }}
+                    onMouseOut={(e) => {(e.currentTarget.style as CSSProperties).transform = "scale(1)" }}
                 >
                     <div style={{ ...iconContainerBaseStyle, backgroundColor: "#5F1E1E" }}>
                         <Heart size={24} color="white" />
@@ -206,7 +165,6 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
             {/* Film Listesi Bölümü (Değişiklik yok) */}
             {activeList && (
                 <div style={movieListStyle}>
-                    {/* ... list content ... */}
                     <h3 style={movieListHeaderStyle}>
                         {activeList === "watched"
                             ? "Movies Watched"
@@ -226,7 +184,6 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                                 items={movies}
                                 renderItem={(movie) => (
                                     <Link key={movie.movieId} to={movieToSlug(movie)} className="profile-movie-card">
-                                        {/* ... movie card içeriği ... */}
                                         <div className="profile-movie-poster">
                                             <img
                                                 src={
@@ -248,9 +205,6 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                                                 <span className="profile-movie-year">
                                                   {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A"}
                                                 </span>
-                                                {movie.ratingAverage !== undefined && movie.ratingAverage > 0 && (
-                                                    <span className="profile-movie-rating">★ {movie.ratingAverage.toFixed(1)}</span>
-                                                )}
                                             </div>
                                         </div>
                                     </Link>
@@ -258,7 +212,6 @@ const ProfileStatistics: React.FC<ProfileStatisticsProps> = ({ stats, userUuid }
                             />
                             {totalPages > 1 && (
                                 <div style={paginationStyle}>
-                                    {/* ... pagination content ... */}
                                     <div style={pageInfoStyle}>
                                         Sayfa {currentPage + 1} / {totalPages}
                                     </div>

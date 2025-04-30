@@ -17,7 +17,6 @@ export interface Movie {
     genres: Genre[];
     watchCount: number;
     likeCount: number;
-    ratingAverage: number;
     ratingCount: number;
     imdbId: string;
     wikidataId: string;
