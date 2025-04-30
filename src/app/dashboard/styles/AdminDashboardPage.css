@@ -46,3 +46,20 @@
     margin-top: 0;
     color: var(--accent);
 }
+
+/* ─── AdminDashboardPage.css ─── */
+@media (max-width: 768px) {
+    .admin-dashboard {
+        padding: 1rem;
+    }
+    .admin-dashboard__wrap {
+        flex-direction: column;
+    }
+    .admin-sidebar {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .admin-dashboard__content {
+        width: 100%;
+    }
+}

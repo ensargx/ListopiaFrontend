@@ -5,6 +5,7 @@ import './styles/AdminDashboardPage.css';
 import AdminSidebar from './components/AdminSidebar';
 import AdminMovieEditor from './components/AdminMovieEditor';
 
+import AdminStats  from './components/AdminStats';
 type Tab = 'stats' | 'movie-editor';
 
 const AdminDashboardPage: React.FC = () => {
@@ -29,8 +30,7 @@ const AdminDashboardPage: React.FC = () => {
                 <section className="admin-dashboard__content">
                     {tab === 'stats' && (
                         <div className="admin-stats">
-                            {/* İstatistikleriniz buraya */}
-                            İstatistikler burada görünecek.
+                            <AdminStats />
                         </div>
                     )}
                     {tab === 'movie-editor' && <AdminMovieEditor />}
