@@ -78,14 +78,16 @@ export async function searchFrontMovies(
         sortOrder,
         word,
     });
-    if (genre) params.append('genre', genre);
+    if (genre) {
+        params.append('genre', genre);
+    }
 
-    const res = await fetch(
-        `${BASE_URL}api/v1/movies/front/search?${params.toString()}`
-    );
-    if (!res.ok) throw new Error('Failed to search front movies');
+    const url = `${BASE_URL}api/v1/movies/front?${params.toString()}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to search front movies (${res.status})`);
     return res.json();
 }
+
 
 
 export async function fetchMovieCrews(
