@@ -78,7 +78,9 @@
     width: 200px;
     height: 200px;
     border-radius: 80%;
-    object-fit: cover;
+    aspect-ratio: 1 / 1; /* Her zaman kare */
+    object-fit: cover;,
+
 }
 
 /* Social stats - updated for friend actions */
@@ -230,7 +232,7 @@
     flex-direction: column;
     gap: 2rem;
     min-width: 0;
-    overflow: hidden;
+    /*overflow: hidden;*/
     max-width: 1000px;
 }
 

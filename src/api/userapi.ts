@@ -6,6 +6,8 @@ import { apiFetch as fetch } from './apiClient';
 
 import {BASE_URL} from "./apiClient";
 import { UserFriendRequest } from "@/types/userfriendrequest";
+import { UserAcitivity, UserActivityResponse } from "@/types/user/useractivity";
+import { parseUserActivity } from "@/lib/user/useractivity";
 
 ////
 // @TODO: DO BETTER ERROR HANDLING AND TYPES 
@@ -291,3 +293,25 @@ export async function fetchLikedMovies(
     return res.json() as Promise<PaginatedResponse<Movie>>;
 }
 
+export async function fetchUserActivity(
+    uuid: string,
+    pageNumber: number = 0,
+    pageSize: number = 30
+): Promise<PaginatedResponse<UserAcitivity>> {
+    const url = new URL(`${BASE_URL}api/v1/user/uuid/${encodeURIComponent(uuid)}/activity`);
+    url.searchParams.append('pageNumber', pageNumber.toString());
+    url.searchParams.append('pageSize', pageSize.toString());
+    const res = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include"
+    });
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to fetch user activity");
+    }
+    const data = await res.json() as PaginatedResponse<UserActivityResponse>;
+    return {
+        ...data,
+        content: data.content.map(activity => parseUserActivity(activity))
+    };
+}

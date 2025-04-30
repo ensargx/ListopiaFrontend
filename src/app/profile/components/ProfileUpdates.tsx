@@ -3,6 +3,12 @@ import React from "react"
 import { Clock } from "lucide-react"
 import { formatTimeAgo } from "@/lib/utils"
 import "../style/ProfilePage.css"
+import BecomeFriendUpdate from "./updates/BecomeFriendsUpdate"
+import { UserAcitivity } from "@/types/user/useractivity"
+import MovieAddWatchlistUpdate from "./updates/MovieAddWatchlistUpdate"
+import MovieAddWatchedUpdate from "./updates/MovieAddWatchedUpdate"
+import MovieLikedUpdate from "./updates/MovieLikedUpdate"
+import MovieCommentedUpdate from "./updates/MovieCommentUpdate"
 
 interface MovieType {
     id: number
@@ -20,7 +26,30 @@ interface ProfileUpdate {
 }
 
 interface ProfileUpdatesProps {
-    profileUpdates: ProfileUpdate[]
+    profileUpdates: UserAcitivity[]
+}
+
+function renderUpdateComponent(update: UserAcitivity) {
+    switch (update.type) {
+      case "BECOME_FRIENDS":
+        return <BecomeFriendUpdate activity={update} />;
+      case "MOVIE_ADD_WATCHLIST":
+        return <MovieAddWatchlistUpdate activity={update} />;
+      case "MOVIE_ADD_WATCHED":
+        return <MovieAddWatchedUpdate activity={update} />;
+      case "MOVIE_LIKED":
+        return <MovieLikedUpdate activity={update} />;
+      case "MOVIE_COMMENT":
+        return <MovieCommentedUpdate activity={update} />;
+    };
+    return null;
+} 
+
+function strTimeToCorrectDate(date: number) {
+    let strnow = formatTimeAgo(date);
+    if (strnow == "online")
+        return "now";
+    return strnow;
 }
 
 const ProfileUpdates: React.FC<ProfileUpdatesProps> = ({ profileUpdates }) => {
@@ -36,51 +65,18 @@ const ProfileUpdates: React.FC<ProfileUpdatesProps> = ({ profileUpdates }) => {
             <h2>Profile Updates</h2>
             <div className="updates-list">
                 {profileUpdates.map((update) => {
-                    const badgeClass = toKebab(update.type)
+                    const { type, time } = update
+                    const formattedType = toKebab(type)
+                    const timeAgo = formatTimeAgo(time)
+
                     return (
-                        <div key={update.id} className="update-item">
-                            <div className="update-poster">
-                                <img
-                                    src={
-                                        update.movie.posterPath
-                                            ? `https://image.tmdb.org/t/p/w200${update.movie.posterPath}`
-                                            : "/placeholder.svg?height=150&width=100"
-                                    }
-                                    alt={update.movie.title}
-                                    onError={(e) => {
-                                        const img = e.target as HTMLImageElement
-                                        img.src = "/placeholder.svg?height=150&width=100"
-                                    }}
-                                />
+                        <div key={update.id} className={`update-item ${formattedType}`}>
+                            <div className="update-content">
+                                {renderUpdateComponent(update)}
                             </div>
-                            <div className="update-details">
-                                <div className="update-header">
-                                    <h4>{update.movie.title}</h4>
-                                    <span className="update-year">
-                    {update.movie.releaseDate
-                        ? new Date(update.movie.releaseDate).getFullYear()
-                        : "N/A"}
-                  </span>
-                                </div>
-
-                                {update.movie.overview && (
-                                    <p className="update-description">
-                                        {update.movie.overview.slice(0, 150)}
-                                        {update.movie.overview.length > 150 ? "…" : ""}
-                                    </p>
-                                )}
-
-                                <div className="update-status">
-                  <span className={`status-badge ${badgeClass}`}>
-                    {/* Görünen metin için, orijinal tipten baş harf büyük */}
-                      {update.type
-                          .replace(/\b\w/g, (c) => c.toUpperCase())}
-                  </span>
-                                    <div className="update-time">
-                                        <Clock size={14} />
-                                        <span>{formatTimeAgo(update.updatedAt)}</span>
-                                    </div>
-                                </div>
+                            <div className="update-time">
+                                <Clock size={16} />
+                                <span>{strTimeToCorrectDate(update.time)}</span>
                             </div>
                         </div>
                     )
