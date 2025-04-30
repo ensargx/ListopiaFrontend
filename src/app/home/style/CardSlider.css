@@ -1,80 +1,84 @@
-/* src/features/home/components/CardSlider.css */
 .card-slider {
     position: relative;
+    padding-bottom: 1rem;
 }
 
 .slider-container {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    padding-bottom: 0.5rem;
-    scrollbar-width: none; /* Firefox */
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding-inline: 1rem;
+    scrollbar-width: none;
 }
 .slider-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
 }
 
 .card {
     flex: 0 0 auto;
-    width: 180px;
-    margin-right: 1rem;
-    transition: transform .3s;
-    position: relative; /* Kartın konumunu izlemek için */
-    z-index: 1; /* Varsayılan z-index */
+    width: 200px;
+    scroll-snap-align: start;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(4px);
+    z-index: 1;
 }
 .card img {
     width: 100%;
-    border-radius: 6px;
     display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
 }
 .card:hover {
-    transform: scale(1.05);
-    z-index: 3; /* Kart büyüdüğünde üstte olacak */
+    transform: scale(1.06);
+    z-index: 3;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* Navigation buttons styling */
+/* Navigation buttons */
 .nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.8); /* Darker background for more contrast */
-    color: #ffffff;
-    width: 40px; /* Increased size for better visibility */
-    height: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem; /* Larger font size for the arrows */
-    cursor: pointer; /* Make it clear that it's clickable */
-    opacity: 0.8; /* Slightly transparent by default */
-    transition: opacity 0.3s, background 0.3s;
-    z-index: 5; /* Navigation buttons always on top of cards */
+    font-size: 1.5rem;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: background 0.3s, box-shadow 0.3s;
+    z-index: 10;
 }
-
-/* Hover effect for better interactivity */
 .nav:hover {
-    opacity: 1; /* Fully opaque on hover */
-    background: rgb(214, 93, 93); /* Darker on hover for more contrast */
+    background: rgba(229, 9, 20, 0.9); /* Netflix kırmızısı */
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
 }
-
-/* Positioning the arrows */
 .prev {
-    left: 10px; /* Adjusted for better placement */
+    left: 1rem;
 }
 .next {
-    right: 10px; /* Adjusted for better placement */
+    right: 1rem;
 }
 
-/* ===== Mobil Ayarlar ===== */
+/* Mobile adjustments */
 @media (max-width: 768px) {
     .card {
-        width: 140px; /* Narrower card width for mobile */
-        margin-right: 0.75rem;
+        width: 150px;
     }
     .nav {
-        width: 36px; /* Slightly smaller nav button on mobile */
+        width: 36px;
         height: 36px;
-        font-size: 1.3rem; /* Slightly smaller arrows for mobile */
+        font-size: 1.25rem;
     }
 }
