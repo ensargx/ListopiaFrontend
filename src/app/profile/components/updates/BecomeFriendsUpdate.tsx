@@ -13,6 +13,17 @@ const BecomeFriendUpdate: React.FC<BecomeFriendUpdateProps> = ({ activity }) => 
       <p className="text-gray-800">
         <strong>{user.username}</strong> ile arkadaş oldunuz.
       </p>
+      <div className="profile-friend-avatar">
+                            <img
+
+                                src={user.profilePicture}
+                                alt={user.username}
+                                onError={e => {
+                                    (e.target as HTMLImageElement).src =
+                                        '/placeholder.svg?height=150&width=100';
+                                }}
+                            />
+                        </div>
       <p className="text-sm text-gray-500">
         {new Date(activity.time).toLocaleString()}
       </p>

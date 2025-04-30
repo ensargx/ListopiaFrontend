@@ -45,6 +45,13 @@ function renderUpdateComponent(update: UserAcitivity) {
     return null;
 } 
 
+function strTimeToCorrectDate(date: number) {
+    let strnow = formatTimeAgo(date);
+    if (strnow == "online")
+        return "now";
+    return strnow;
+}
+
 const ProfileUpdates: React.FC<ProfileUpdatesProps> = ({ profileUpdates }) => {
     // CamelCase ve boşluklu tipleri kebab-case'e çevirir:
     const toKebab = (str: string) =>
@@ -69,7 +76,7 @@ const ProfileUpdates: React.FC<ProfileUpdatesProps> = ({ profileUpdates }) => {
                             </div>
                             <div className="update-time">
                                 <Clock size={16} />
-                                <span>{formatTimeAgo(update.time)}</span>
+                                <span>{strTimeToCorrectDate(update.time)}</span>
                             </div>
                         </div>
                     )
