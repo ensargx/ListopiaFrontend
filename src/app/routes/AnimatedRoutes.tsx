@@ -6,7 +6,7 @@ import GenrePage from '@/app/genre/GenrePage';
 import MoviePage from '@/app/movie/MoviePage';
 import ProfilePage from '@/app/profile/ProfilePage';
 import SignPage from '@/app/auth/SignPage';
-import DashboardPage from '@/app/dashboard/DashboardPage';
+import DashboardPage from '@/app/dashboard/AdminDashboardPage';
 
 import './AnimatedRoutes.css';
 
