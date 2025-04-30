@@ -29,7 +29,7 @@ const SignPage: React.FC = () => {
 
         try {
             // 1) Sign in, get token
-            const response  = await signIn(email, password);
+            const response  = await signIn(username, password);
             if(response.success){
                 const me = await fetchUserMe();
                 login(me);
@@ -96,15 +96,15 @@ const SignPage: React.FC = () => {
                 {isLogin ? (
                     <form onSubmit={handleLoginSubmit} className="auth-form">
                         <div className="form-group">
-                            <label htmlFor="login-email">Email</label>
+                            <label htmlFor="login-email">Username</label>
                             <input
-                                id="login-email"
-                                type="email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
+                                id="login-username"
+                                // type="email"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
                                 required
                                 disabled={loading}
-                                placeholder="Email Address"
+                                placeholder="Username"
                             />
                         </div>
 

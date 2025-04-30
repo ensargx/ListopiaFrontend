@@ -40,13 +40,13 @@ export async function signUp(
 }
 
 export async function signIn(
-    email: string,
+    username: string,
     password: string
 ): Promise<APIResponse> {
     const res = await fetch(`${BASE_URL}api/v1/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
         credentials: "include"
     });
     if (!res.ok) {
