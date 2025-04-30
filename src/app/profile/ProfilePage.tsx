@@ -6,7 +6,7 @@ import "./style/ProfilePage.css"
 import { Settings, Brush } from "lucide-react"
 import { useParams } from "react-router-dom"
 import { fetchWatchedMoviesByUser, fetchWatchlistMoviesByUser } from "@/api/movieapi"
-import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies } from "@/api/userapi"
+import { fetchFriendsByUUID, fetchUserByUsername, fetchLikedMovies, fetchUserActivity } from "@/api/userapi"
 import type { User } from "@/types/user"
 import type { Movie } from "@/types/movie"
 import { useAuth } from "@/app/auth/hooks/AuthContext"
@@ -16,6 +16,7 @@ import ProfileLeftColumn from "./components/ProfileLeftColumn"
 import ProfileStatistics from "./components/ProfileStatistics"
 import LikedMovies from "./components/ProfileLikedMovies"
 import ProfileUpdates from "./components/ProfileUpdates"
+import { UserAcitivity } from "@/types/user/useractivity"
 
 // Mock data for parts not replaced yet
 const mockStats = {
@@ -108,6 +109,7 @@ const ProfilePage: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const [likedMoviesLoading, setLikedMoviesLoading] = useState(true)
     const [likedMoviesError, setLikedMoviesError] = useState<string | null>(null)
+    const [profileUpdates, setProfileUpdates] = useState<UserAcitivity[]>([])
 
     // Single useAuth call
     const { user: userMe, sendingRequests, receivedRequests } = useAuth()
@@ -120,7 +122,7 @@ const ProfilePage: React.FC = () => {
     // Using mock data
     const stats = mockStats
     const lists = mockLists
-    const profileUpdates = mockProfileUpdates
+    // const profileUpdates = mockProfileUpdates
 
     useEffect(() => {
         if (!username) {
@@ -157,6 +159,16 @@ const ProfilePage: React.FC = () => {
                 fetchWatchedMoviesByUser(userData.uuid).catch((err) => console.error("Error fetching watched movies:", err))
 
                 fetchWatchlistMoviesByUser(userData.uuid).catch((err) => console.error("Error fetching watchlist movies:", err))
+
+                fetchUserActivity(userData.uuid)
+                    .then((resp) => {
+                        setProfileUpdates(resp.content)
+                    })
+                    .catch((err: Error) => {
+                        console.error("Error fetching user activity:", err)
+                        setProfileUpdates([])
+                    });
+                        
 
                 setLoading(false)
             })
