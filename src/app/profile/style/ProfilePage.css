@@ -232,7 +232,7 @@
     flex-direction: column;
     gap: 2rem;
     min-width: 0;
-    overflow: hidden;
+    /*overflow: hidden;*/
     max-width: 1000px;
 }
 

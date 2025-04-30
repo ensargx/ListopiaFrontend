@@ -18,6 +18,7 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
 }
 
 /* Poster alanı: grid benzeri görünüm için sabit kutu */
