@@ -53,7 +53,7 @@ const ReviewList: React.FC = () => {
 
     useEffect(() => {
         if (movieId) fetchComments(currentPage);
-    }, [movieId, currentPage, fetchComments]);
+    }, [movieId, currentPage]);
 
     // submit new
     const submitCommentHandler = async () => {
