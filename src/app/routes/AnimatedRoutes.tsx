@@ -9,6 +9,8 @@ import SignPage from '@/app/auth/SignPage';
 import DashboardPage from '@/app/dashboard/AdminDashboardPage';
 
 import './AnimatedRoutes.css';
+import ChatPage from "@/app/messages/MessagePage";
+import NotFoundPage from "@/app/NotFoundPage";
 
 const AnimatedRoutes: React.FC = () => {
     const location = useLocation();
@@ -36,6 +38,8 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/login" element={<SignPage/>}/>
                         <Route path="/register" element={<SignPage/>}/>
                         <Route path="/admin/dashboard" element={<DashboardPage/>}/>
+                        <Route path="/messages" element={<ChatPage/>}/>
+                        <Route path="*" element={<NotFoundPage />} />
                         {/* …other routes… */}
                     </Routes>
                 </div>

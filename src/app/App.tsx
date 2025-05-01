@@ -5,7 +5,6 @@ import Navbar from '@/components/Navbar';
 import ScrollToTop from '@/components/ScrollToTop';
 import AnimatedRoutes from '@/app/routes/AnimatedRoutes';
 import Footer from '@/components/Footer';
-import LinkedInMessagePopup from "@/components/MessagePopUp";
 
 export default function App() {
     return (
@@ -13,7 +12,6 @@ export default function App() {
             <Navbar />
             <ScrollToTop />
             <AnimatedRoutes />
-            <LinkedInMessagePopup/>
             <Footer />
         </BrowserRouter>
     );
