@@ -11,6 +11,8 @@ import DashboardPage from '@/app/dashboard/AdminDashboardPage';
 import './AnimatedRoutes.css';
 import ChatPage from "@/app/messages/MessagePage";
 import NotFoundPage from "@/app/NotFoundPage";
+import {PrivacyPolicyPage} from "@/app/auth/PrivacyPolicyPage";
+import {UsageConditionPage} from "@/app/auth/UsageConditionPage";
 
 const AnimatedRoutes: React.FC = () => {
     const location = useLocation();
@@ -39,6 +41,8 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/register" element={<SignPage/>}/>
                         <Route path="/admin/dashboard" element={<DashboardPage/>}/>
                         <Route path="/messages" element={<ChatPage/>}/>
+                        <Route path="/privacy-policy" element={<PrivacyPolicyPage/>}/>
+                        <Route path="/usage-condition" element={<UsageConditionPage/>}/>
                         <Route path="*" element={<NotFoundPage />} />
                         {/* …other routes… */}
                     </Routes>

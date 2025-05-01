@@ -137,7 +137,31 @@
     background-color: #d68e8e;
     cursor: not-allowed;
 }
+.checkbox-group {
+    display: flex;
+    flex-direction: column;  /* dikey yığın */
+    gap: 0.5rem;             /* label’lar arası boşluk */
+}
 
+/* 2) Label + checkbox hizalaması */
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #000;             /* metin rengi; arka planınıza göre #fff de olabilir */
+    font-size: 1rem;
+    cursor: pointer;
+}
+.checkbox-link {
+    color: #e50914;
+    text-decoration: underline;
+}
+/* 3) Checkbox’un görünümü (modern tarayıcılarda) */
+.checkbox-group input[type="checkbox"] {
+    width: 1rem;             /* kutu genişliği */
+    height: 1rem;            /* kutu yüksekliği */
+    accent-color: #e50914;   /* Chrome, Firefox, Edge vs. için onay işareti rengi */
+}
 /* Responsive adjustments */
 @media (max-width: 576px) {
     .auth-card {
