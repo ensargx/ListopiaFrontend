@@ -1,5 +1,5 @@
 // src/pages/SignInPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/api/userapi";
 import "./style/SignPage.css";
@@ -16,6 +16,8 @@ const SignPage: React.FC = () => {
     const [username, setUsername] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [privacyPolicy, setPrivacyPolicy] = useState<boolean>(false);
+    const [usageCondition, setUsageCondition] = useState<boolean>(false);
     const navigate = useNavigate();
     const { user, login, logout } = useAuth();
     const { loaded, execute } = useReCaptcha()
@@ -141,6 +143,7 @@ const SignPage: React.FC = () => {
                         <button type="submit" className="auth-button" disabled={loading}>
                             {loading ? "Signing In..." : "Sign In"}
                         </button>
+
                     </form>
                 ) : (
                     <form onSubmit={handleRegisterSubmit} className="auth-form">
@@ -210,14 +213,59 @@ const SignPage: React.FC = () => {
                                 placeholder="Password"
                             />
                         </div>
+                        // React / TSX içinde
+                        <div className="checkbox-group">
+                            <label htmlFor="privacyPolicy">
+                                <input
+                                    id="privacyPolicy"
+                                    type="checkbox"
+                                    name="privacyPolicy"
+                                    checked={privacyPolicy}
+                                    onChange={e => setPrivacyPolicy(e.target.checked)}
+                                    disabled={loading}
+                                    required
+                                />
+                                <a
+                                    href="/privacy-policy"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="checkbox-link"
+                                >
+                                    Privacy Policy
+                                </a>
+                            </label>
+
+                            <label htmlFor="usageCondition">
+                                <input
+                                    id="usageCondition"
+                                    type="checkbox"
+                                    name="usageCondition"
+                                    checked={usageCondition}
+                                    onChange={e => setUsageCondition(e.target.checked)}
+                                    disabled={loading}
+                                    required
+                                />
+                                <a
+                                    href="/usage-condition"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="checkbox-link"
+                                >
+                                    Usage Condition
+                                </a>
+                            </label>
+                        </div>
+
+
 
                         {error && <p className="error-message">{error}</p>}
 
                         <button type="submit" className="auth-button" disabled={loading}>
                             {loading ? "Signing Up..." : "Sign Up"}
                         </button>
+
                     </form>
-                )}
+                    )}
             </div>
         </div>
     );
