@@ -53,7 +53,7 @@ const ReviewList: React.FC = () => {
 
     useEffect(() => {
         if (movieId) fetchComments(currentPage);
-    }, [movieId, currentPage]);
+    }, [movieId, currentPage, fetchComments]);
 
     // submit new
     const submitCommentHandler = async () => {
@@ -238,14 +238,15 @@ const ReviewList: React.FC = () => {
                                                     </button>
                                                 </>
                                             )}
-                                            <button
+                                            {user?.uuid !== c.user.uuid &&
+                                                (<button
                                                 className="report-button"
                                                 onClick={() =>
                                                     handleReport(c.commentId)
                                                 }
                                             >
                                                 Report
-                                            </button>
+                                            </button> )}
                                         </div>
                                     </div>
 
