@@ -1,12 +1,12 @@
 // src/pages/SignInPage.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/api/userapi";
 import "./style/SignPage.css";
 import { useAuth } from "@/app/auth/hooks/AuthContext";
-import { GoogleReCaptcha, GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useReCaptcha } from "./hooks/useReCaptcha";
 
-const SignPageIn: React.FC = () => {
+const SignPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,27 +17,19 @@ const SignPageIn: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { user, login, logout } = useAuth();
-    const { executeRecaptcha } = useGoogleReCaptcha();
-  
+    const { loaded, execute } = useReCaptcha()
+
     if ( user ) {
         redirect("/");
         return;
     }
-
-    const getRecaptchaToken = async (action: string) => {
-        if (!executeRecaptcha) {
-            return;
-        }
-        const token = await executeRecaptcha(action);
-        return token;
-    };
-
+    
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
 
-        const token = await getRecaptchaToken("login");
+        const token = await execute("login");
         if (!token) {
             setError("Recaptcha token not generated");
             setLoading(false);
@@ -69,7 +61,7 @@ const SignPageIn: React.FC = () => {
         setError(null);
         setLoading(true);
 
-        const token = await getRecaptchaToken("register");
+        const token = await execute("register");
         if (!token) {
             setError("Recaptcha token not generated");
             setLoading(false);
@@ -126,7 +118,7 @@ const SignPageIn: React.FC = () => {
                                 value={username}
                                 onChange={e => setUsername(e.target.value)}
                                 required
-                                disabled={loading}
+                                disabled={loading || !loaded}
                                 placeholder="Username"
                             />
                         </div>
@@ -139,7 +131,7 @@ const SignPageIn: React.FC = () => {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 required
-                                disabled={loading}
+                                disabled={loading || !loaded}
                                 placeholder="Password"
                             />
                         </div>
@@ -230,11 +222,5 @@ const SignPageIn: React.FC = () => {
         </div>
     );
 };
-
-const SignPage = () => (
-    <GoogleReCaptchaProvider reCaptchaKey="6LdaU34nAAAAACWvi3JAQ-jy8mxNGu_3-XMREDNh">
-        <SignPageIn />
-    </GoogleReCaptchaProvider>
-);
 
 export default SignPage;
