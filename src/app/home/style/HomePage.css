@@ -44,7 +44,7 @@ body {
 .hero-row {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
+    gap: calc(var(--spacing) * 1.2);
     align-items: stretch;
     animation: fadeIn 0.8s ease-out;
 }
@@ -55,6 +55,7 @@ body {
 .hero-container {
     position: relative;
     width: 100%;
+    height: 60vh;
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow-heavy);
@@ -78,7 +79,7 @@ body {
 /* --------------------------
    5) Hero Sidebar
 --------------------------- */
-
+/* HeroSidebar’ı 60vh (HeroBanner’ın yüksekliği) ile sınırla */
 /* --------------------------
    5) Hero Sidebar
 --------------------------- */
@@ -117,24 +118,16 @@ body {
 /* --------------------------
    6) Responsive
 --------------------------- */
-/* ===== mobil ayarlar ===== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .hero-row {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-
+        grid-template-columns: 1fr;
+    }
+    .hero-container {
+        height: 50vh;
     }
     .hero-sidebar {
-        max-height: 60vh;
-        overflow: hidden;
-        padding: 0;          /* slider zaten kendi padding’ini yönetir */
-        background: none;
-    }
-
-    .hero-sidebar h3 {
-        padding-left: 0.5rem;
-        font-size: 1.1rem;
+        max-height: 50vh;
+        margin-top: var(--spacing);
     }
 }
 
@@ -180,6 +173,7 @@ body {
         font-size: 0.95rem;
     }
 }
+
 
 /* --------------------------
    7) Yardımcı Sınıflar
