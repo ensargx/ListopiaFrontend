@@ -4,8 +4,9 @@ import { redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/api/userapi";
 import "./style/SignPage.css";
 import { useAuth } from "@/app/auth/hooks/AuthContext";
+import { GoogleReCaptcha, GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
-const SignPage: React.FC = () => {
+const SignPageIn: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,20 +17,36 @@ const SignPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { user, login, logout } = useAuth();
-
+    const { executeRecaptcha } = useGoogleReCaptcha();
+  
     if ( user ) {
         redirect("/");
         return;
     }
+
+    const getRecaptchaToken = async (action: string) => {
+        if (!executeRecaptcha) {
+            return;
+        }
+        const token = await executeRecaptcha(action);
+        return token;
+    };
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
 
+        const token = await getRecaptchaToken("login");
+        if (!token) {
+            setError("Recaptcha token not generated");
+            setLoading(false);
+            return;
+        }
+        
         try {
             // 1) Sign in, get token
-            const response  = await signIn(username, password);
+            const response  = await signIn(username, password, token);
             if(response.success){
                 const me = await fetchUserMe();
                 login(me);
@@ -52,9 +69,16 @@ const SignPage: React.FC = () => {
         setError(null);
         setLoading(true);
 
+        const token = await getRecaptchaToken("register");
+        if (!token) {
+            setError("Recaptcha token not generated");
+            setLoading(false);
+            return;
+        }
+
         try {
             // 1) Sign up, get token
-            const response = await signUp(email, password, firstName, lastName, username);
+            const response = await signUp(email, password, firstName, lastName, username, token);
             if(response.success){
                 const me = await fetchUserMe();
                 navigate(`/profile/${encodeURIComponent(me.username)}`);
@@ -68,7 +92,6 @@ const SignPage: React.FC = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="auth-container">
@@ -89,7 +112,7 @@ const SignPage: React.FC = () => {
                             type="button"
                         >
                             Register
-                        </button>z
+                        </button>
                     </div>
                 </div>
 
@@ -207,5 +230,11 @@ const SignPage: React.FC = () => {
         </div>
     );
 };
+
+const SignPage = () => (
+    <GoogleReCaptchaProvider reCaptchaKey="6LdaU34nAAAAACWvi3JAQ-jy8mxNGu_3-XMREDNh">
+        <SignPageIn />
+    </GoogleReCaptchaProvider>
+);
 
 export default SignPage;
