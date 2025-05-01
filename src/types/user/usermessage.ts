@@ -6,4 +6,5 @@ export interface UserMessage {
     recipient: User;
     sentAt: number;
     message: string;
+    isRead: boolean;
 } 

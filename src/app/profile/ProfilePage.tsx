@@ -4,7 +4,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import "./style/ProfilePage.css"
 import { Settings, Brush } from "lucide-react"
-import { useParams } from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import { fetchWatchedMoviesByUser, fetchWatchlistMoviesByUser } from "@/api/movieapi"
 import { fetchFriendsByUUID, fetchUserByUsername, fetchUserActivity } from "@/api/userapi"
 import type { User } from "@/types/user"
@@ -42,6 +42,8 @@ const ProfilePage: React.FC = () => {
 
     const stats = mockStats // Mock stats kullanılmaya devam ediyor
     const lists = mockLists
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (!username) {
@@ -88,6 +90,8 @@ const ProfilePage: React.FC = () => {
                 document.title = `User not found - Listopia`;
                 setUser(null)
                 setLoading(false)
+                navigate('/404', { replace: true });
+
             })
     }, [username, userMe])
 

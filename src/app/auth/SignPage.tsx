@@ -5,6 +5,7 @@ import { signIn, signUp, fetchUserMe } from "@/api/userapi";
 import "./style/SignPage.css";
 import { useAuth } from "@/app/auth/hooks/AuthContext";
 import { useReCaptcha } from "./hooks/useReCaptcha";
+import {toast} from "react-toastify";
 
 const SignPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -72,8 +73,7 @@ const SignPage: React.FC = () => {
             // 1) Sign up, get token
             const response = await signUp(email, password, firstName, lastName, username, token);
             if(response.success){
-                const me = await fetchUserMe();
-                navigate(`/profile/${encodeURIComponent(me.username)}`);
+                toast.success('Succesfully registered. Please check your mail immediately expires 15 min');
             }else{
                 setError(response.message);
             }
