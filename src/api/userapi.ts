@@ -24,12 +24,13 @@ export async function signUp(
     password: string,
     firstName: string,
     lastName: string,
-    username: string
+    username: string,
+    recaptchaToken: string
 ): Promise<APIResponse> {
     const res = await fetch(`${BASE_URL}api/v1/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, firstName, lastName, username }),
+        body: JSON.stringify({ email, password, firstName, lastName, username, recaptchaToken }),
         credentials: "include"
     });
     if (!res.ok) {
@@ -41,12 +42,13 @@ export async function signUp(
 
 export async function signIn(
     username: string,
-    password: string
+    password: string,
+    recaptchaToken: string
 ): Promise<APIResponse> {
     const res = await fetch(`${BASE_URL}api/v1/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, recaptchaToken }),
         credentials: "include"
     });
     if (!res.ok) {

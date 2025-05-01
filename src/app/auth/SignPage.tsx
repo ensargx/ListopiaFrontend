@@ -1,9 +1,10 @@
 // src/pages/SignInPage.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/api/userapi";
 import "./style/SignPage.css";
 import { useAuth } from "@/app/auth/hooks/AuthContext";
+import { useReCaptcha } from "./hooks/useReCaptcha";
 
 const SignPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -16,20 +17,28 @@ const SignPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { user, login, logout } = useAuth();
+    const { loaded, execute } = useReCaptcha()
 
     if ( user ) {
         redirect("/");
         return;
     }
-
+    
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
 
+        const token = await execute("login");
+        if (!token) {
+            setError("Recaptcha token not generated");
+            setLoading(false);
+            return;
+        }
+        
         try {
             // 1) Sign in, get token
-            const response  = await signIn(username, password);
+            const response  = await signIn(username, password, token);
             if(response.success){
                 const me = await fetchUserMe();
                 login(me);
@@ -52,9 +61,16 @@ const SignPage: React.FC = () => {
         setError(null);
         setLoading(true);
 
+        const token = await execute("register");
+        if (!token) {
+            setError("Recaptcha token not generated");
+            setLoading(false);
+            return;
+        }
+
         try {
             // 1) Sign up, get token
-            const response = await signUp(email, password, firstName, lastName, username);
+            const response = await signUp(email, password, firstName, lastName, username, token);
             if(response.success){
                 const me = await fetchUserMe();
                 navigate(`/profile/${encodeURIComponent(me.username)}`);
@@ -68,7 +84,6 @@ const SignPage: React.FC = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="auth-container">
@@ -89,7 +104,7 @@ const SignPage: React.FC = () => {
                             type="button"
                         >
                             Register
-                        </button>z
+                        </button>
                     </div>
                 </div>
 
@@ -103,7 +118,7 @@ const SignPage: React.FC = () => {
                                 value={username}
                                 onChange={e => setUsername(e.target.value)}
                                 required
-                                disabled={loading}
+                                disabled={loading || !loaded}
                                 placeholder="Username"
                             />
                         </div>
@@ -116,7 +131,7 @@ const SignPage: React.FC = () => {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 required
-                                disabled={loading}
+                                disabled={loading || !loaded}
                                 placeholder="Password"
                             />
                         </div>
