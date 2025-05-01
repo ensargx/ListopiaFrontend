@@ -26,7 +26,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(4px);
     z-index: 1;
 }
 .card img {
@@ -71,14 +70,15 @@
     right: 1rem;
 }
 
-/* Mobile adjustments */
+/* ===== Mobil Ayarlar ===== */
 @media (max-width: 768px) {
     .card {
-        width: 150px;
+        width: 140px; /* Narrower card width for mobile */
+        margin-right: 0.75rem;
     }
     .nav {
-        width: 36px;
+        width: 36px; /* Slightly smaller nav button on mobile */
         height: 36px;
-        font-size: 1.25rem;
+        font-size: 1.3rem; /* Slightly smaller arrows for mobile */
     }
 }
