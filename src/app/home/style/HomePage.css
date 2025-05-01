@@ -1,251 +1,63 @@
-/* --------------------------
-   1) Temel Değişkenler
---------------------------- */
-:root {
-    --spacing: 1.5rem;
-    --radius: 1rem;
-    --color-bg: #f5f7fa;
-    --color-surface: #ffffff;
-    --color-primary: #3f51b5;
-    --color-accent: #ff4081;
-    --color-text-main: #212121;
-    --color-text-sub: #555555;
-    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.06);
-    --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --max-width: 1200px;
-}
-
-/* --------------------------
-   2) Genel Reset & Body
---------------------------- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--color-bg);
-    color: var(--color-text-main);
-    line-height: 1.7;
-    scroll-behavior: smooth;
-    transition: background-color var(--transition), color var(--transition);
-}
-
-/* --------------------------
-   3) Container & Grid
---------------------------- */
+/* src/features/home/HomePage.css */
 .home-page {
-    max-width: var(--max-width);
+    padding: 2rem;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing);
 }
+
 .hero-row {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: calc(var(--spacing) * 1.2);
+    gap: 1.5rem;
+    /* desktop’ta her iki kolonu da eşit yükseklikte yap */
     align-items: stretch;
-    animation: fadeIn 0.8s ease-out;
 }
 
-/* --------------------------
-   4) Hero Banner / Container
---------------------------- */
-.hero-container {
-    position: relative;
-    width: 100%;
-    height: 60vh;
-    background-color: var(--color-surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-heavy);
-    transition: transform var(--transition), box-shadow var(--transition);
-}
-.hero-container:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-.hero-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    background: #eceff1;
-    color: var(--color-text-sub);
-    font-size: 1.2rem;
-    animation: pulse 2s infinite;
-}
-
-/* --------------------------
-   5) Hero Sidebar
---------------------------- */
 /* HeroSidebar’ı 60vh (HeroBanner’ın yüksekliği) ile sınırla */
-/* --------------------------
-   5) Hero Sidebar
---------------------------- */
 .hero-sidebar {
     display: flex;
     flex-direction: column;
-    max-height: 60vh;     /* HeroBanner’ın yüksekliği ile eşitlendi */
+    max-height: 60vh;     /* <<< ekledik */
+    overflow: hidden;
+}
+.hero-container {
+    width: 100%;
+    border-radius: 8px;
     overflow: hidden;
 }
 
-.hero-sidebar a {
-    /* Daha yavaş ve ease-out eğrisi ile transform ve underline animasyonu */
-    transition: transform 0.6s ease-out, color 0.6s ease-out;
+.hero-loading {
+    height: 60vh;
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 1.2rem;
 }
+
+
 
 .hero-sidebar h3 {
     margin-bottom: 1rem;
     font-size: 1.25rem;
 }
 
-.hero-sidebar a:hover {
-    transform: translateY(-4px);
-}
-
-.hero-sidebar a::after {
-    transition: width 0.6s ease-out;
-}
-
-.hero-sidebar a:hover::after {
-    width: 100%;
-}
-
-/* --------------------------
-   6) Responsive
---------------------------- */
-/* --------------------------
-   6) Responsive
---------------------------- */
-@media (max-width: 1024px) {
-    .hero-row {
-        grid-template-columns: 1fr;
-    }
-    .hero-container {
-        height: 50vh;
-    }
-    .hero-sidebar {
-        max-height: 50vh;
-        margin-top: var(--spacing);
-    }
-}
-
+/* ===== mobil ayarlar ===== */
 @media (max-width: 768px) {
-    .home-page {
-        padding: 1rem;
+    .hero-row {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
-
-    .hero-container {
-        height: 40vh;
-    }
-
     .hero-sidebar {
-        max-height: none;
-        overflow: visible;
+        max-height: 60vh;
+        overflow: hidden;
+        padding: 0;          /* slider zaten kendi padding’ini yönetir */
+        background: none;
     }
-
     .hero-sidebar h3 {
+        padding-left: 0.5rem;
         font-size: 1.1rem;
-    }
-
-    .hero-sidebar a {
-        font-size: 0.95rem;
-        padding: 0.5rem 0;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-container {
-        height: 35vh;
-    }
-
-    .movie-card .title {
-        font-size: 1.1rem;
-    }
-
-    .movie-card .meta {
-        font-size: 0.85rem;
-    }
-
-    .btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.95rem;
-    }
-}
-
-
-/* --------------------------
-   7) Yardımcı Sınıflar
---------------------------- */
-.btn {
-    display: inline-block;
-    background-color: var(--color-primary);
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    text-decoration: none;
-    box-shadow: var(--shadow-light);
-    transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition);
-}
-.btn:hover {
-    background-color: var(--color-accent);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-heavy);
-}
-.movie-card {
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-light);
-    overflow: hidden;
-    transition: transform var(--transition), box-shadow var(--transition);
-    display: flex;
-    flex-direction: column;
-}
-.movie-card:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: var(--shadow-heavy);
-}
-.movie-card img {
-    width: 100%;
-    display: block;
-}
-.movie-card .content {
-    padding: var(--spacing);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.movie-card .title {
-    font-size: 1.3rem;
-    color: var(--color-text-main);
-}
-.movie-card .meta {
-    font-size: 0.95rem;
-    color: var(--color-text-sub);
-}
-
-/* --------------------------
-   8) Animasyonlar
---------------------------- */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-    100% {
-        opacity: 1;
     }
 }
