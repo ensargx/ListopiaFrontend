@@ -12,7 +12,7 @@ import './AnimatedRoutes.css';
 import NotFoundPage from "@/app/NotFoundPage";
 import {PrivacyPolicyPage} from "@/app/auth/PrivacyPolicyPage";
 import {UsageConditionPage} from "@/app/auth/UsageConditionPage";
-import {Chat} from "@/app/dc/Chat";
+import Chat from "@/app/dc/Chat";
 
 const AnimatedRoutes: React.FC = () => {
     const location = useLocation();

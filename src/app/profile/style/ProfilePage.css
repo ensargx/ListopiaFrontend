@@ -169,13 +169,25 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     margin-bottom: 1rem;
 }
-
-.friends-header h3 {
-    margin: 0;
-    font-size: 1rem;
+.friends-header::before,
+.friends-header::after {
+    content: "";
+    flex: 1;           /* çizgiyi olabildiğince uzatır */
+    height: 1px;       /* çizgi kalınlığı */
+    background: #555;  /* çizgi rengi */
 }
+
+.friends-header::before {
+    margin-right: 0.5rem;  /* yazı ile çizgi arası boşluk */
+}
+
+.friends-header::after {
+    margin-left: 0.5rem;   /* yazı ile çizgi arası boşluk */
+}
+
 
 .friends-count {
     color: #aaa;

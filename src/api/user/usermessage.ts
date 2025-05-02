@@ -1,6 +1,5 @@
 import { PaginatedResponse } from "@/types/friends";
 import { BASE_URL } from "../apiClient";
-import APIResponse from "../userapi";
 import { UserMessage } from "@/types/user/usermessage";
 
 const API_URL = BASE_URL + "api/v1/user/message";
@@ -23,7 +22,7 @@ export async function reportMessage(
 export async function sendMessageToUser(
     message: string,
     uuid: string,
-): Promise<APIResponse> {
+): Promise<UserMessage> {
     const url = `${API_URL}/`;
     const response = await fetch(url, {
         method: "POST",
