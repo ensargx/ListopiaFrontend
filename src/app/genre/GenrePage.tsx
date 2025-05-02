@@ -53,7 +53,7 @@ export const GenrePage: React.FC = () => {
         <main className="genre-page">
             <GenreSidebar genres={genres} selected={genre} />
             <div className="genre-content">
-                <SearchBar value={searchWord} onChange={handleSearch} />
+                <SearchBar value={searchWord} onChange={handleSearch} placeholder="Search movies..."/>
                 {loading
                     ? <div className="loading">Loading…</div>
                     : data && (
