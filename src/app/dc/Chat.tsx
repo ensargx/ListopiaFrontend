@@ -28,6 +28,17 @@ export const mockUsers: User[] = [
         lastOnline: 1714694400000,
         createdAt: 1612137600000,
         profilePicture: "https://i.pinimg.com/736x/29/00/f4/2900f4b5e90c85147e5df0c6fae1e8fe.jpg",
+    },
+    {
+        uuid: "f90c1876-789f-4031-afc3-723b37834714",
+        username: "ensargok",
+        firstName: "Ensar",
+        lastName: "Gök",
+        biography: "Ben ensar!",
+        role: "USER",
+        lastOnline: 1746218048203,
+        createdAt: 174574515714,
+        profilePicture: "https://i.pinimg.com/736x/9f/65/58/9f6558e8577b152aea517a09b748567c.jpg"
     }
 ];
 
@@ -36,7 +47,7 @@ export const mockMessages: UserMessage[] = [
         id: 1,
         from: mockUsers[0],
         recipient: mockUsers[1],
-        sentAt: 1714680000000,
+        sentAt: 1799990000000,
         message: "Merhaba Orçun, nasılsın?",
         isRead: true,
     },
@@ -56,14 +67,14 @@ export const mockMessages: UserMessage[] = [
         message: "Ben de iyiyim. Yarın için planın var mı?",
         isRead: false,
     }
-];
+].sort((a, b) => a.sentAt - b.sentAt);
 
 // FriendContainer component
-interface FriendContainerProps {
+type FriendContainerProps = {
     friend: User;
     isSelected: boolean;
     onClick: (friend: User) => void;
-}
+};
 
 const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, onClick }) => (
     <div
@@ -95,6 +106,37 @@ const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, o
     </div>
 );
 
+// UserInfo component
+const UserInfo: React.FC<{ user: User }> = ({ user }) => (
+    <aside className="top-right">
+        <img
+            className="avatar"
+            src={user.profilePicture}
+            alt={`${user.firstName} ${user.lastName}`}
+            style={{ width: '60px', height: '60px', borderRadius: '50%', marginBottom: '12px' }}
+        />
+        <div className="user-details">
+      <span className="name" style={{ fontWeight: 'bold', display: 'block' }}>
+        {user.firstName} {user.lastName}
+      </span>
+            <span className="username" style={{ color: '#aaa', display: 'block', marginBottom: '8px' }}>
+        @{user.username}
+      </span>
+            {user.biography && (
+                <p className="bio" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
+                    {user.biography}
+                </p>
+            )}
+            <span className="role" style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+        Role: {user.role}
+      </span>
+            <span className="last-online" style={{ fontSize: '0.8rem', color: '#888' }}>
+        Son Görülme: {new Date(user.lastOnline).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}
+      </span>
+        </div>
+    </aside>
+);
+
 // Main Chat component
 export const Chat: React.FC = () => {
     const currentUser = mockUsers[0];
@@ -103,7 +145,8 @@ export const Chat: React.FC = () => {
     const [messages, setMessages] = useState<UserMessage[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    document.title = `Chat - Listopia`
+    document.title = `Chat - Listopia`;
+
     // Scroll to bottom on new message
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -153,7 +196,6 @@ export const Chat: React.FC = () => {
                     placeholder="Search friends..."
                 />
             </div>
-            <div className="top-main" />
 
             {/* Friends list panel */}
             <section className="main-left">
@@ -200,7 +242,6 @@ export const Chat: React.FC = () => {
                             ))}
                             <div ref={messagesEndRef} />
                         </div>
-
                         <div className="message-input">
                             <input
                                 ref={inputRef}
@@ -217,7 +258,13 @@ export const Chat: React.FC = () => {
                     </div>
                 )}
             </section>
-            <h1 className="top-right">User Info</h1>
+
+            {/* User info panel */}
+            {selectedFriend?
+                <UserInfo user={selectedFriend} />:
+                 null
+            }
+
         </div>
     );
 };
