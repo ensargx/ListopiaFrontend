@@ -93,25 +93,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             .catch(console.error);
     }, [uuid]);
 
-    const fetchMe = () =>{
-        fetchUserMe().then((res)=>{
-            if(!user){
-                setUser(res)
-            }else{
-                if(res.uuid != user.uuid){
-                    setUser(res)
-                }
-            }
-        });
-    }
-
-    useEffect(() => {
-        // İlk hemen çağrı isterseniz:
-        fetchMe();
-
-        const intervalId = setInterval(fetchMe, 5000);
-        return () => clearInterval(intervalId);
-    }, []);
+    // const fetchMe = () =>{
+    //     fetchUserMe().then((res)=>{
+    //         if(!user){
+    //             setUser(res)
+    //         }else{
+    //             if(res.uuid != user.uuid){
+    //                 setUser(res)
+    //             }
+    //         }
+    //     });
+    // }
+    //
+    // useEffect(() => {
+    //     // İlk hemen çağrı isterseniz:
+    //     fetchMe();
+    //
+    //     const intervalId = setInterval(fetchMe, 5000);
+    //     return () => clearInterval(intervalId);
+    // }, []);
 
     // --- login / logout ---
     const login = (u: User) => {
