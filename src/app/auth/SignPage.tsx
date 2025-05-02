@@ -21,7 +21,7 @@ const SignPage: React.FC = () => {
     const navigate = useNavigate();
     const { user, login, logout } = useAuth();
     const { loaded, execute } = useReCaptcha()
-
+    document.title = `Sign - Listopia`
     if ( user ) {
         redirect("/");
         return;
