@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@/types/user";
 import { getUserFromStorage, saveUserToStorage, clearUserFromStorage } from "../../../lib/auth";
-import { fetchFriendsByUUID, fetchSentFriendRequests, fetchReceivedFriendRequests } from "@/api/userapi";
+import {fetchFriendsByUUID, fetchSentFriendRequests, fetchReceivedFriendRequests, fetchUserMe} from "@/api/userapi";
 import { PaginatedResponse } from "@/types/friends";
 
 interface AuthContextType {
@@ -28,7 +28,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [uuid, setUuid] = useState<string | null>(null);
-
     const [friends, setFriends] = useState<User[]>([]);
     const [sendingRequests, setSendingRequests] = useState<User[]>([]);
     const [receivedRequests, setReceivedRequests] = useState<User[]>([]);
@@ -52,6 +51,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         return result;
     };
+
 
     // --- useEffects ---
     // 1) Oturumu local storage’dan yükle
@@ -92,6 +92,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             .then(setReceivedRequests)
             .catch(console.error);
     }, [uuid]);
+
+    const fetchMe = () =>{
+        fetchUserMe().then((res)=>{
+            if(!user){
+                setUser(res)
+            }else{
+                if(res.uuid != user.uuid){
+                    setUser(res)
+                }
+            }
+        });
+    }
+
+    useEffect(() => {
+        // İlk hemen çağrı isterseniz:
+        fetchMe();
+
+        const intervalId = setInterval(fetchMe, 5000);
+        return () => clearInterval(intervalId);
+    }, []);
 
     // --- login / logout ---
     const login = (u: User) => {
