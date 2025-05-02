@@ -105,11 +105,11 @@
         useEffect(() => {
             getMessagesSent().then((res)=>{
                 setMessages(res.content);
-                console.log("REPSPONSE GELDİ AMCIK: ", res);
+                console.log("RESPONSE GELDİ sent messages: ", res);
             })
         }, []);
         if(!user){
-            console.log("REPSPONSE GELDİ AMCIK: ", user);
+            console.log("RESPONSE GELDİ: user ", user);
             return <Navigate to="/" replace />;
         }
 
