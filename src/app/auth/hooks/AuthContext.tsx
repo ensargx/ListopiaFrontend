@@ -62,6 +62,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }, []);
 
+
+    useEffect(() => {
+         fetchUserMe().then((res)=>{
+             if(res){
+                 setUser(res)
+             }
+         })
+
+    }, []);
+
     // 2) user değiştiğinde uuid’yi ayarla
     useEffect(() => {
         if (user) setUuid(user.uuid);
