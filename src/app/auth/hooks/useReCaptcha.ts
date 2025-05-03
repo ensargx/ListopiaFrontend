@@ -15,20 +15,39 @@ export const useReCaptcha = () => {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const existingScript = document.querySelector(`script[src^="https://www.google.com/recaptcha/api.js"]`)
-    if (!existingScript) {
-      const script = document.createElement('script')
-      script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`
-      script.async = true
-      script.onload = () => setLoaded(true)
-      document.body.appendChild(script)
+    if (typeof window === 'undefined') return;
+  
+    const scriptSrc = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+    let scriptElement = document.querySelector(`script[src^="https://www.google.com/recaptcha/api.js"]`) as HTMLScriptElement | null;
+    let scriptAppended = false;
+  
+    if (!scriptElement) {
+      scriptElement = document.createElement('script');
+      scriptElement.src = scriptSrc;
+      scriptElement.async = true;
+      scriptElement.onload = () => setLoaded(true);
+      document.body.appendChild(scriptElement);
+      scriptAppended = true;
     } else {
-      setLoaded(true)
+      setLoaded(true);
     }
-  }, [])
-
+  
+    return () => {
+      if (scriptAppended && scriptElement) {
+        scriptElement.remove();
+      }
+  
+      const badge = document.querySelector('.grecaptcha-badge') as HTMLElement | null;
+      if (badge?.parentElement) {
+        badge.parentElement.removeChild(badge);
+      }
+  
+      if (window.grecaptcha) {
+        delete window.grecaptcha;
+      }
+    };
+  }, []);
+    
   const execute = async (action: string): Promise<string> => {
     return new Promise((resolve, reject) => {
       if (!loaded || !window.grecaptcha) {

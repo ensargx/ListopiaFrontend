@@ -1,6 +1,6 @@
 // src/pages/SignInPage.tsx
 import React, { useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { Navigate, redirect, useNavigate } from "react-router-dom";
 import { signIn, signUp, fetchUserMe } from "@/api/userapi";
 import "./style/SignPage.css";
 import { useAuth } from "@/app/auth/hooks/AuthContext";
@@ -22,9 +22,9 @@ const SignPage: React.FC = () => {
     const { user, login, logout } = useAuth();
     const { loaded, execute } = useReCaptcha()
     document.title = `Sign - Listopia`
+
     if ( user ) {
-        redirect("/");
-        return;
+        return <Navigate to={`/profile/${encodeURIComponent(user.username)}`} />;
     }
     
     const handleLoginSubmit = async (e: React.FormEvent) => {
