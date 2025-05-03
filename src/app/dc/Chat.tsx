@@ -5,8 +5,8 @@
     import type { User } from "@/types/user";
     import { SearchBar } from "@/app/genre/components/SearchBar";
     import {getMessagesSent, sendMessageToUser} from "@/api/user/usermessage";
-    import {useAuth} from "@/app/auth/hooks/AuthContext";
-    import {Navigate, useNavigate} from "react-router-dom";
+    import {Navigate} from "react-router-dom";
+    import {fetchFriendsByUUID, fetchUserMe} from "@/api/userapi";
 
     // Mock users
 
@@ -93,7 +93,10 @@
         const [messages, setMessages] = useState<UserMessage[]>([]);
         const inputRef = useRef<HTMLInputElement>(null);
         const messagesEndRef = useRef<HTMLDivElement>(null);
-        const {user, friends} = useAuth();
+        const [user, setUser] = useState<User|null>(null);
+        const [friends, setFriends] = useState<User[]>([]);
+
+        const [isLoading, setLoading] = useState(true);
 
         document.title = `Chat - Listopia`;
 
@@ -103,13 +106,25 @@
         }, [messages]);
 
         useEffect(() => {
+            if(!user){return}
             getMessagesSent().then((res)=>{
                 setMessages(res.content);
-                console.log("RESPONSE GELDİ sent messages: ", res);
+            })
+            fetchFriendsByUUID(user.uuid).then((res)=>{
+                setFriends(res.content);
+            })
+        }, [user]);
+
+        useEffect(() => {
+            fetchUserMe().then(setUser).finally(()=>{
+                setLoading(false);
             })
         }, []);
+
+        if(isLoading){
+            return <div>Loading...</div>
+        }
         if(!user){
-            console.log("RESPONSE GELDİ: user ", user);
             return <Navigate to="/" replace />;
         }
 
