@@ -71,6 +71,18 @@ export const Navbar: React.FC = () => {
                             </NavLink>
                         </>
                     ) : null}
+
+                    {user && user.role == "ADMIN" && (
+                        <NavLink
+                            to={`/admin/dashboard`}
+                            className={({ isActive }) =>
+                                isActive ? 'navbar-link active' : 'navbar-link'
+                            }
+                            onClick={() => setIsOpen(false)}
+                        >
+                        Admin Dashboard
+                        </NavLink>
+                    )}
                     
                     {user ? (
                         <>

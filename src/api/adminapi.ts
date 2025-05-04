@@ -1,6 +1,7 @@
 import { apiFetch, BASE_URL } from './apiClient';
 import { AdminStats, MovieStat, GenreStat, UserStat } from '@/types/stats';
 import {Movie} from "@/types/movie";
+import { User } from '@/types/user';
 
 function clampNonNegative(n: number): number {
     return n < 0 ? 0 : n;
@@ -93,4 +94,34 @@ export async function fetchExternalAdminMovieById(id: number): Promise<Movie> {
     });
     if (!res.ok) throw new Error('Dış kaynaktan çekme başarısız');
     return res.json();
+}
+
+export async function adminUpdateUserByUuid(uuid: string, updatedUser: User) {
+    const response = await fetch(`${BASE_URL}api/v1/admin/user/uuid/${uuid}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to update user');
+    }
+
+    return await response.json();
+}
+
+export async function adminDeleteUserByUuid(uuid: string) {
+    const response = await fetch(`${BASE_URL}api/v1/admin/user/uuid/${uuid}`, {
+        method: 'DELETE',
+        credentials: 'include',
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to update user');
+    }
+
+    return await response.json();
 }
