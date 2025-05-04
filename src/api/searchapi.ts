@@ -35,23 +35,34 @@ export enum SearchCategory {
 
 
 export async function searchUsersMovies(
-    query: string, 
+    query: string,
     category: SearchCategory,
-    page: number = 0,
-    size: number = 15
+    pageNumber = 0,
+    pageSize   = 15
 ): Promise<SearchResponse> {
-    const url = new URL(`${API_URL}`);
-    url.searchParams.append("query", query.toString());
-    url.searchParams.append("category", category.toString());
-    url.searchParams.append("pageNumber",     page.toString());
-    url.searchParams.append("pageSize",     size.toString());
-    const response = await fetch(url, {
-        method: "GET",
-        credentials: "include",
+    const url = new URL(API_URL);
+    url.searchParams.set("query",     query);
+    url.searchParams.set("category",  category);
+    url.searchParams.set("pageNumber", pageNumber.toString());
+    url.searchParams.set("pageSize",   pageSize.toString());
+
+    const res = await fetch(url.toString(), { credentials: "include" });
+    if (!res.ok) throw new Error("Search failed");
+
+    const json = await res.json();
+    const normalize = <T>(p: any): PagedResponse<T> => ({
+        content:       p.content || [],
+        pageNumber:    p.number     ?? 0,
+        pageSize:      p.size       ?? pageSize,
+        totalElements: p.totalElements ?? 0,
+        totalPages:    p.totalPages ?? 0,
+        lastPage:      p.last       ?? true,
     });
-    if (!response.ok) {
-        throw new Error("Failed to get received messages");
-    }
-    const data = await response.json();
-    return data;
+
+    return {
+        results: {
+            users:  normalize<User>(json.results.users),
+            movies: normalize<FrontMovie>(json.results.movies),
+        }
+    };
 }
