@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { User } from '@/types/user';
-import { SearchCategory, searchUsersMovies } from '@/api/searchapi';
+import { SearchCategory, searchUsersMovies } from '@/api/searchadminapi';
 import { PaginatedResponse } from '@/types/friends';
 import { adminUpdateUserByUuid, adminDeleteUserByUuid } from '@/api/adminapi'; // Gerçek API fonksiyonları
 
