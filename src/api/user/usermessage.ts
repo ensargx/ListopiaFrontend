@@ -1,6 +1,7 @@
 import { PaginatedResponse } from "@/types/friends";
 import { BASE_URL } from "../apiClient";
 import { UserMessage } from "@/types/user/usermessage";
+import APIResponse from "../userapi";
 
 const API_URL = BASE_URL + "api/v1/user/message";
 
@@ -118,4 +119,42 @@ export async function getMessagesReceivedFromUser(
     }
     const data = await response.json();
     return data;
+}
+
+export async function getMessagesWithUser(
+    uuid: string,
+    pageNumber: number = 0,
+    pageSize: number = 30,
+): Promise<PaginatedResponse<UserMessage>> {
+    const url = new URL(`${API_URL}/with/${uuid}`);
+    url.searchParams.append("pageNumber", pageNumber.toString());
+    url.searchParams.append("pageSize", pageSize.toString());
+    const response = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to get received messages");
+    }
+    const data = await response.json();
+    return data;
+}
+
+export async function markMessagesAsRead(
+    uuid: string,
+    time: number
+): Promise<APIResponse> {
+    const url = new URL(`${API_URL}/read}`);
+    url.searchParams.append("userUuid", uuid.toString());
+    url.searchParams.append("time", time.toString());
+    const response = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to get received messages");
+    }
+    const data = await response.json();
+    return data;
+    
 }
