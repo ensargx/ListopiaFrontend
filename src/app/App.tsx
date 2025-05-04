@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import ScrollToTop from '@/components/ScrollToTop';
 import AnimatedRoutes from '@/app/routes/AnimatedRoutes';
 import Footer from '@/components/Footer';
+import CookieConsent from '@/components/CookieContent';
 
 export default function App() {
     return (
@@ -13,6 +14,7 @@ export default function App() {
             <ScrollToTop />
             <AnimatedRoutes />
             <Footer />
+            <CookieConsent />
         </BrowserRouter>
     );
 }

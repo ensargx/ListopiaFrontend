@@ -13,6 +13,7 @@ import NotFoundPage from "@/app/NotFoundPage";
 import {PrivacyPolicyPage} from "@/app/auth/PrivacyPolicyPage";
 import {UsageConditionPage} from "@/app/auth/UsageConditionPage";
 import Chat from "@/app/dc/Chat";
+import { CookiePolicyPage } from '@/components/CookiePolicyPage';
 
 const AnimatedRoutes: React.FC = () => {
     const location = useLocation();
@@ -43,6 +44,7 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/chat" element={<Chat />} />
                         <Route path="/privacy-policy" element={<PrivacyPolicyPage/>}/>
                         <Route path="/usage-condition" element={<UsageConditionPage/>}/>
+                        <Route path="/cookie-policy" element={<CookiePolicyPage />}/>
                         <Route path="*" element={<NotFoundPage />} />
                         {/* …other routes… */}
                     </Routes>
