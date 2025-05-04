@@ -29,6 +29,13 @@ interface ProfileLeftColumnProps {
     };
 }
 
+const getCreatedAt = (user: User): string =>  {
+    let res = formatTimeAgo(user.createdAt)
+    if ( res == 'online' )
+        return "now";
+    return res;
+}
+
 const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                                                  user,
                                                                  friends,
@@ -221,7 +228,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 <div className="info-row flex justify-between">
                     <span className="info-label">Joined</span>
                     <span className="info-value">
-            {formatTimeAgo(user.createdAt)}
+            {getCreatedAt(user)}
           </span>
                 </div>
             </div>

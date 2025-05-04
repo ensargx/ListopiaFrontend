@@ -5,6 +5,7 @@ import { SearchBar } from "@/app/genre/components/SearchBar";
 import {Navigate} from "react-router-dom";
 import {fetchFriendsByUUID, fetchUserMe} from "@/api/userapi";
 import ChatSingle from './components/ChatSingle';
+import { formatTimeAgo } from '@/lib/utils';
 
 // FriendContainer component
 type FriendContainerProps = {
@@ -12,6 +13,10 @@ type FriendContainerProps = {
     isSelected: boolean;
     onClick: (friend: User) => void;
 };
+
+const getLastSeen = (user: User): string =>  {
+    return formatTimeAgo(user.lastOnline)
+}
 
 const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, onClick }) => (
     <div
@@ -38,7 +43,7 @@ const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, o
         {friend.firstName} {friend.lastName}
         </span>
             <span style={{ fontSize: '0.75rem', color: '#4caf50', marginTop: '2px' }}>
-        Online
+            {getLastSeen(friend)}
         </span>
         </div>
     </div>
