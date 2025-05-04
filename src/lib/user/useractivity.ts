@@ -1,6 +1,6 @@
-import { UserAcitivity, UserActivityResponse } from "@/types/user/useractivity";
+import { UserActivity, UserActivityResponse } from "@/types/user/useractivity";
 
-export function parseUserActivity(raw: UserActivityResponse): UserAcitivity {
+export function parseUserActivity(raw: UserActivityResponse): UserActivity {
     switch (raw.type) {
       case "BECOME_FRIENDS":
         return {

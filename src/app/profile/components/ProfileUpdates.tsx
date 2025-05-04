@@ -4,7 +4,7 @@ import { Clock } from "lucide-react"
 import { formatTimeAgo } from "@/lib/utils"
 import "../style/ProfilePage.css"
 import BecomeFriendUpdate from "./updates/BecomeFriendsUpdate"
-import { UserAcitivity } from "@/types/user/useractivity"
+import { UserActivity } from "@/types/user/useractivity"
 import MovieAddWatchlistUpdate from "./updates/MovieAddWatchlistUpdate"
 import MovieAddWatchedUpdate from "./updates/MovieAddWatchedUpdate"
 import MovieLikedUpdate from "./updates/MovieLikedUpdate"
@@ -26,10 +26,10 @@ interface ProfileUpdate {
 }
 
 interface ProfileUpdatesProps {
-    profileUpdates: UserAcitivity[]
+    profileUpdates: UserActivity[]
 }
 
-function renderUpdateComponent(update: UserAcitivity) {
+function renderUpdateComponent(update: UserActivity) {
     switch (update.type) {
       case "BECOME_FRIENDS":
         return <BecomeFriendUpdate activity={update} />;

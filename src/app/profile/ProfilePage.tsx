@@ -13,7 +13,7 @@ import { useAuth } from "@/app/auth/hooks/AuthContext"
 import ProfileLeftColumn from "./components/ProfileLeftColumn"
 import ProfileStatistics from "./components/ProfileStatistics"
 import ProfileUpdates from "./components/ProfileUpdates"
-import { UserAcitivity } from "@/types/user/useractivity"
+import { UserActivity } from "@/types/user/useractivity"
 
 const mockStats = {
     watched: 0,
@@ -33,7 +33,7 @@ const ProfilePage: React.FC = () => {
     const [user, setUser] = useState<User | null>(null)
     const [friends, setFriends] = useState<User[]>([])
     const [loading, setLoading] = useState(true)
-    const [profileUpdates, setProfileUpdates] = useState<UserAcitivity[]>([])
+    const [profileUpdates, setProfileUpdates] = useState<UserActivity[]>([])
 
     const { user: userMe, sendingRequests, receivedRequests } = useAuth()
 

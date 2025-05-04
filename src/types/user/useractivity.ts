@@ -9,7 +9,7 @@ export interface UserActivityResponse {
     time: number;
 };
 
-export type UserActivity<T extends string, C> = {
+type Activity<T extends string, C> = {
   id: number;
   type: T;
   content: C;
@@ -17,13 +17,13 @@ export type UserActivity<T extends string, C> = {
 };
 
 // Türler
-export type UserAcitivityBecomeFriends = UserActivity<"BECOME_FRIENDS", User>["content"];
-export type UserAcitivityMovieAddToWatchlist = UserActivity<"MOVIE_ADD_WATCHLIST", FrontMovie>["content"];
-export type UserAcitivityMovieAddToWatched = UserActivity<"MOVIE_ADD_WATCHED", FrontMovie>["content"];
-export type UserAcitivityMovieLiked = UserActivity<"MOVIE_LIKED", FrontMovie>["content"];
-export type UserAcitivityMovieCommented = UserActivity<"MOVIE_COMMENT", Comment>["content"];
+export type UserAcitivityBecomeFriends = Activity<"BECOME_FRIENDS", User>["content"];
+export type UserAcitivityMovieAddToWatchlist = Activity<"MOVIE_ADD_WATCHLIST", FrontMovie>["content"];
+export type UserAcitivityMovieAddToWatched = Activity<"MOVIE_ADD_WATCHED", FrontMovie>["content"];
+export type UserAcitivityMovieLiked = Activity<"MOVIE_LIKED", FrontMovie>["content"];
+export type UserAcitivityMovieCommented = Activity<"MOVIE_COMMENT", Comment>["content"];
 
-export type UserAcitivity =
+export type UserActivity =
   | {
       id: number;
       type: "BECOME_FRIENDS";
