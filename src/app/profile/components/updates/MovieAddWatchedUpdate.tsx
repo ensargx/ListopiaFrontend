@@ -14,7 +14,7 @@ const MovieAddWatchedUpdate: React.FC<MovieAddWatchedUpdateProps> = ({ activity 
 
   return (
     <div className="activity-card">
-      <div className="movie-poster">
+      <div className="activitymovie-poster">
         <Link key={movie.movieId} to={movieToSlug(movie)}>
           <img
             src={getPosterUrl(movie.poster) || '/placeholder.svg'}

@@ -22,12 +22,12 @@ const MovieCommentedUpdate: React.FC<MovieCommentedUpdateProps> = ({ activity })
   
   return (
     <div className="activity-card">
-      <div className="movie-poster">
+      <div className="activitymovie-poster">
         <Link key={movie.movieId} to={movieToSlug(movie)}>
           <img
             src={getPosterUrl(movie.poster) || '/placeholder.svg'}
             alt={movie.title}
-            className="movie-img"
+            className="activitymovie-img"
           />
         </Link>
       </div>
