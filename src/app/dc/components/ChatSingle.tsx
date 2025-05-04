@@ -1,4 +1,4 @@
-import { getMessagesSentToUser, getMessagesWithUser, sendMessageToUser } from "@/api/user/usermessage";
+import { getMessagesWithUser, sendMessageToUser } from "@/api/user/usermessage";
 import { User } from "@/types/user";
 import { UserMessage } from "@/types/user/usermessage";
 import { Send } from "lucide-react";
@@ -9,12 +9,38 @@ interface ChatSingleProps {
     friend: User
 }
 
+interface Message {
+    message: UserMessage;
+    isServer: boolean; // TODO: Bu mesaj server mesajı oldu mu ona göre render edilecek cssi değişecek
+}
+
 const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
-    const [messages, setMessages] = useState<UserMessage[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    let addToMessagesSorted = (msgs: UserMessage[]) => {
+        setMessages(prevMessages => {
+            const newMessages = msgs.map((msg) => ({
+                message: msg, // UserMessage
+                isServer: true, // Gelen mesajlar server'dan geldiği için true
+            }))
+            .filter(msg =>
+                !prevMessages.some(existingMessage => existingMessage.message.id === msg.message.id)
+            );
+            // Combine old and new messages
+            const allMessages = [...prevMessages, ...newMessages];
+
+            // Sort messages by 'sent' timestamp
+            const sortedMessages = allMessages.sort((a, b) => {
+                return new Date(a.message.sentAt).getTime() - new Date(b.message.sentAt).getTime();
+            });
+
+            return sortedMessages;
+        });
+    }
 
     const getMessages = async (pageNumber = 0) => {
         setLoading(true);
@@ -23,11 +49,22 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
             setHasMore(false);
         } else {
             setMessages(prevMessages => {
-                const newMessages = response.content.filter(msg => 
-                    !prevMessages.some(existingMessage => existingMessage.id === msg.id)
+                const newMessages = response.content.map((msg) => ({
+                    message: msg, // UserMessage
+                    isServer: true, // Gelen mesajlar server'dan geldiği için true
+                }))
+                .filter(msg =>
+                    !prevMessages.some(existingMessage => existingMessage.message.id === msg.message.id)
                 );
-                // Eski mesajlarla yeni gelen mesajları birleştirerek setliyoruz
-                return [...prevMessages, ...newMessages];
+                // Combine old and new messages
+                const allMessages = [...prevMessages, ...newMessages];
+
+                // Sort messages by 'sent' timestamp
+                const sortedMessages = allMessages.sort((a, b) => {
+                    return new Date(a.message.sentAt).getTime() - new Date(b.message.sentAt).getTime();
+                });
+
+                return sortedMessages;
             });
         }
             setLoading(false);
@@ -35,7 +72,15 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
 
     useEffect(() => {
         getMessages();
-    }, []);
+
+        // Set up polling to check for new messages every second
+        const intervalId = setInterval(() => {
+            getMessages();
+        }, 1000);
+
+        // Cleanup the interval when the component is unmounted
+        return () => clearInterval(intervalId);
+    }, []);  // Empty dependency array ensures this runs only once on mount
 
     const handleSend = async () => {
         const text = inputRef.current?.value.trim();
@@ -44,13 +89,31 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
         if (inputRef.current) inputRef.current.value = ''; // Mesaj kutusunu temizle
         setLoading(true); // Mesaj gönderme sırasında yükleniyor durumunu aktif et
         try {
-            const sent: UserMessage = await sendMessageToUser(text, friend.uuid);
-            setMessages(prev => [...prev, sent]);
+            let toSent: Message = {
+                message: {
+                    id: new Date().getMilliseconds(),
+                    from: user,
+                    recipient: friend,
+                    sentAt: Date.now(),
+                    message: text,
+                    isRead: false,
+                },
+                isServer: false,
+            };
+
+            setMessages(prev => [...prev, toSent]);
+            
+            sendMessageToUser(text, friend.uuid).then((msg) => {
+                addToMessagesSorted([msg]);
+            }).finally(()=>{
+                setMessages(prev => 
+                    prev.filter((msg) => msg.message.id !== toSent.message.id)
+                );
+            });
         } catch (error) {
             console.error("Mesaj gönderilemedi:", error);
-            // Kullanıcıya bir hata mesajı gösterebilirsiniz
         } finally {
-            setLoading(false); // Yükleme durumu sonlandırılıyor
+            setLoading(false);
         }
     };
 
@@ -73,12 +136,12 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
             <div className="messages">
                 {messages.map(msg => (
                     <div
-                        key={msg.id}
-                        className={`message-item ${msg.from.uuid === user.uuid ? 'me' : 'them'}`}
+                        key={msg.message.id}
+                        className={`message-item ${msg.message.from.uuid === user.uuid ? 'me' : 'them'}`}
                     >
-                        <div className="message-text">{msg.message}</div>
+                        <div className="message-text">{msg.message.message}</div>
                         <div className="message-time">
-                            {new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(msg.message.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                     </div>
                 ))}

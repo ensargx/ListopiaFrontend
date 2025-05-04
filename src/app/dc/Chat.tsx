@@ -1,14 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { UserMessage } from "../../types/user/usermessage";
 import './style/Chat.css';
 import type { User } from "@/types/user";
 import { SearchBar } from "@/app/genre/components/SearchBar";
-import {getMessagesSent, sendMessageToUser} from "@/api/user/usermessage";
 import {Navigate} from "react-router-dom";
 import {fetchFriendsByUUID, fetchUserMe} from "@/api/userapi";
 import ChatSingle from './components/ChatSingle';
-
-// Mock users
 
 // FriendContainer component
 type FriendContainerProps = {
@@ -16,11 +12,6 @@ type FriendContainerProps = {
     isSelected: boolean;
     onClick: (friend: User) => void;
 };
-
-type Message ={
-    message: UserMessage;
-    isServer: boolean; // TODO: Bu mesaj server mesajı oldu mu ona göre render edilecek cssi değişecek
-}
 
 const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, onClick }) => (
     <div
