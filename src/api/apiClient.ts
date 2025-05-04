@@ -2,7 +2,7 @@
 import { toast } from 'react-toastify';
 
 const originalFetch = window.fetch.bind(window);
-export const BASE_URL = "https://api.ensargok.com/";
+export const BASE_URL = process.env.VITE_API_BASE_PATH || "https://api.ensargok.com/";
 
 export async function apiFetch(input: RequestInfo, init?: RequestInit) {
     const res = await originalFetch(input, init);
