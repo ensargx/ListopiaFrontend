@@ -57,6 +57,15 @@ export const Navbar: React.FC = () => {
                     >
                         Movies
                     </NavLink>
+                    <NavLink
+                        to="/search"
+                        className={({ isActive }) =>
+                            isActive ? 'navbar-link active' : 'navbar-link'
+                    }
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Search
+                    </NavLink>
 
                     {user ? (
                         <>

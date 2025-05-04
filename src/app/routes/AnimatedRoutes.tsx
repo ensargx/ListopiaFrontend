@@ -7,6 +7,7 @@ import MoviePage from '@/app/movie/MoviePage';
 import ProfilePage from '@/app/profile/ProfilePage';
 import SignPage from '@/app/auth/SignPage';
 import DashboardPage from '@/app/dashboard/AdminDashboardPage';
+import SearchPage  from '@/app/search/SearchPage';
 
 import './AnimatedRoutes.css';
 import NotFoundPage from "@/app/NotFoundPage";
@@ -45,6 +46,7 @@ const AnimatedRoutes: React.FC = () => {
                         <Route path="/privacy-policy" element={<PrivacyPolicyPage/>}/>
                         <Route path="/usage-condition" element={<UsageConditionPage/>}/>
                         <Route path="/cookie-policy" element={<CookiePolicyPage />}/>
+                        <Route path="/search" element={<SearchPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                         {/* …other routes… */}
                     </Routes>

@@ -42,19 +42,19 @@ main {
     margin-bottom: 1rem;
 }
 
-button {
-    background-color: #fff; /* Beyaz arka plan */
-    color: #121212; /* Siyah yazı rengi */
-    cursor: pointer;
-}
+/*button {*/
+/*    background-color: #fff; !* Beyaz arka plan *!*/
+/*    color: #121212; !* Siyah yazı rengi *!*/
+/*    cursor: pointer;*/
+/*}*/
 
-button:hover {
-    background-color: #f0f0f0; /* Hover durumunda açık gri */
-    color: #121212; /* Hover durumunda siyah yazı */
-}
+/*button:hover {*/
+/*    background-color: #f0f0f0; !* Hover durumunda açık gri *!*/
+/*    color: #121212; !* Hover durumunda siyah yazı *!*/
+/*}*/
 
-button:disabled {
-    background-color: #ccc; /* Devre dışı buton rengi */
-    color: #121212; /* Devre dışı yazı rengi */
-    cursor: not-allowed;
-}
+/*button:disabled {*/
+/*    background-color: #ccc; !* Devre dışı buton rengi *!*/
+/*    color: #121212; !* Devre dışı yazı rengi *!*/
+/*    cursor: not-allowed;*/
+/*}*/

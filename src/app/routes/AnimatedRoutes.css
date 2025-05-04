@@ -3,7 +3,7 @@
 .fade-wrapper {
     /* tam ekranı kaplasın */
     background-color: black;
-    min-height: 100vh;
+    min-height: 85vh;
     width: 100%;
 }
 

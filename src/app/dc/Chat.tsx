@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './style/Chat.css';
 import type { User } from "@/types/user";
 import { SearchBar } from "@/app/genre/components/SearchBar";
@@ -129,7 +129,7 @@ const Chat: React.FC = () => {
 
     return (
         <div className="chat-page">
-            {/* Search bar */}
+            {/* search bar */}
             <div className="top-left">
                 <SearchBar
                     value={searchTerm}

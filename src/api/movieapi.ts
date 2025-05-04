@@ -69,7 +69,7 @@ export async function searchFrontMovies(
         word,
     } = options;
 
-    if (!word.trim()) throw new Error('Search word is required');
+    if (!word.trim()) throw new Error('search word is required');
 
     const params = new URLSearchParams({
         pageNumber: pageNumber.toString(),
