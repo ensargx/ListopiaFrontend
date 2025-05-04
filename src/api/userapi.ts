@@ -6,7 +6,7 @@ import { apiFetch as fetch } from './apiClient';
 
 import {BASE_URL} from "./apiClient";
 import { UserFriendRequest } from "@/types/userfriendrequest";
-import { UserAcitivity, UserActivityResponse } from "@/types/user/useractivity";
+import { UserActivity, UserActivityResponse } from "@/types/user/useractivity";
 import { parseUserActivity } from "@/lib/user/useractivity";
 
 ////
@@ -299,7 +299,7 @@ export async function fetchUserActivity(
     uuid: string,
     pageNumber: number = 0,
     pageSize: number = 30
-): Promise<PaginatedResponse<UserAcitivity>> {
+): Promise<PaginatedResponse<UserActivity>> {
     const url = new URL(`${BASE_URL}api/v1/user/uuid/${encodeURIComponent(uuid)}/activity`);
     url.searchParams.append('pageNumber', pageNumber.toString());
     url.searchParams.append('pageSize', pageSize.toString());
