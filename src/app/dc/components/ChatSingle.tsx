@@ -91,7 +91,7 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
         try {
             let toSent: Message = {
                 message: {
-                    id: new Date().getMilliseconds(),
+                    id: new Date().getSeconds(),
                     from: user,
                     recipient: friend,
                     sentAt: Date.now(),
@@ -141,7 +141,7 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
                     >
                         <div className="message-text">{msg.message.message}</div>
                         <div className="message-time">
-                            {new Date(msg.message.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(msg.message.sentAt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                         </div>
                     </div>
                 ))}
