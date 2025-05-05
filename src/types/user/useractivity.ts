@@ -9,48 +9,34 @@ export interface UserActivityResponse {
     time: number;
 };
 
-type Activity<T extends string, C> = {
-  id: number;
-  type: T;
-  content: C;
-  time: number;
-};
-
-// Türler
-export type UserAcitivityBecomeFriends = Activity<"BECOME_FRIENDS", User>["content"];
-export type UserAcitivityMovieAddToWatchlist = Activity<"MOVIE_ADD_WATCHLIST", FrontMovie>["content"];
-export type UserAcitivityMovieAddToWatched = Activity<"MOVIE_ADD_WATCHED", FrontMovie>["content"];
-export type UserAcitivityMovieLiked = Activity<"MOVIE_LIKED", FrontMovie>["content"];
-export type UserAcitivityMovieCommented = Activity<"MOVIE_COMMENT", Comment>["content"];
-
 export type UserActivity =
   | {
       id: number;
       type: "BECOME_FRIENDS";
-      content: UserAcitivityBecomeFriends;
+      content: User;
       time: number;
     }
   | {
       id: number;
       type: "MOVIE_ADD_WATCHLIST";
-      content: UserAcitivityMovieAddToWatchlist;
+      content: FrontMovie;
       time: number;
     }
   | {
       id: number;
       type: "MOVIE_ADD_WATCHED";
-      content: UserAcitivityMovieAddToWatched;
+      content: FrontMovie;
       time: number;
     }
   | {
       id: number;
       type: "MOVIE_LIKED";
-      content: UserAcitivityMovieLiked;
+      content: FrontMovie;
       time: number;
     }
   | {
       id: number;
       type: "MOVIE_COMMENT";
-      content: UserAcitivityMovieCommented;
-      time: number;   
+      content: Comment;
+      time: number;
     };

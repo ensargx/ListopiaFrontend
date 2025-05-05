@@ -25,11 +25,15 @@ export const MoviePage: React.FC = () => {
 
     useEffect(() => {
         if (!movieSlug) {
+            setLoading(false)
             redirect('/');
             return;
         }
         const id = movieIdFromSlug(movieSlug);
-        if (!id) return;
+        if (!id) {
+            setLoading(false)
+            return
+        }
 
         // 1) Film bilgisini çek
         fetchMovieById(id)
