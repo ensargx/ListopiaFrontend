@@ -3,6 +3,7 @@ import React, { useState} from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/auth/hooks/AuthContext';
 import './style.css';
+import { signOut } from '@/api/userapi';
 
 export const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +13,13 @@ export const Navbar: React.FC = () => {
     const toggleMenu = () => setIsOpen(open => !open);
 
     const handleLogout = () => {
+        signOut().then(() => {
+            console.log("Logout successful");
+        }
+        ).catch((error) => {
+            console.error("Logout failed", error);
+        }
+        );
         logout();
         navigate('/');
     };
@@ -107,8 +115,8 @@ export const Navbar: React.FC = () => {
                             <button 
                                 className="navbar-link logout-button"
                                 onClick={() => {
-                                    setIsOpen(false);
                                     handleLogout();
+                                    setIsOpen(false);
                                 }}
                             >
                                 Log Out
