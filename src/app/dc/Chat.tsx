@@ -6,6 +6,7 @@ import {Navigate} from "react-router-dom";
 import {fetchFriendsByUUID, fetchUserMe} from "@/api/userapi";
 import ChatSingle from './components/ChatSingle';
 import { formatTimeAgo } from '@/lib/utils';
+import AdminHeader from "@/app/dc/components/Header";
 
 // FriendContainer component
 type FriendContainerProps = {
@@ -51,35 +52,54 @@ const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, o
 
 // UserInfo component
 const UserInfo: React.FC<{ user: User }> = ({ user }) => (
-    <aside className="top-right" style={{ padding: '16px', backgroundColor: '#2f3136', borderLeft: '1px solid #202225' }}>
+    <aside
+        className="main-right"
+        style={{
+            padding: '16px',
+            backgroundColor: '#2f3136',
+            borderLeft: '1px solid #202225',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+        }}
+    >
         <img
             className="avatar"
             src={user.profilePicture}
             alt={`${user.firstName} ${user.lastName}`}
-            style={{ width: '60px', height: '60px', borderRadius: '50%', marginBottom: '12px' }}
+            style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                marginBottom: '12px',
+            }}
         />
-        <div>
+
         <span style={{ fontWeight: 'bold', display: 'block' }}>
-        {user.firstName} {user.lastName}
-        </span>
-            <span style={{ color: '#aaa', display: 'block', marginBottom: '8px' }}>
-        @{user.username}
-        </span>
-            {user.biography && (
-                <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
-                    {user.biography}
-                </p>
-            )}
-            <span style={{ fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>
-        Role: {user.role}
-        </span>
-            <span style={{ fontSize: '0.8rem', color: '#888' }}>
-        Son Görülme: {new Date(user.lastOnline).toLocaleString([], {
-                hour: '2-digit', minute: '2-digit',
-                day: '2-digit', month: '2-digit', year: 'numeric'
-            })}
-        </span>
+      {user.firstName} {user.lastName}
+    </span>
+        <span style={{ color: '#aaa', display: 'block', marginBottom: '8px' }}>
+      @{user.username}
+    </span>
+
+        <AdminHeader userRole={user.role} />
+
+        <div className="about-section mb-4" style={{ width: '100%' }}>
+            <h3>About</h3>
+            <p>{user.biography || "Hello, I am using Listopia."}</p>
         </div>
+
+        <span style={{ fontSize: '0.8rem', color: '#888' }}>
+      Last Seen:{' '}
+            {new Date(user.lastOnline).toLocaleString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            })}
+    </span>
     </aside>
 );
 
@@ -158,7 +178,7 @@ const Chat: React.FC = () => {
             {selectedFriend ? (
                 <ChatSingle key={selectedFriend.uuid} user={user} friend={selectedFriend} />
                 ) : (
-                    <div className="empty-state">
+                    <div className="empty-state main ">
                         Bir arkadaş seçin ve sohbete başlayın.
                     </div>
                 )
