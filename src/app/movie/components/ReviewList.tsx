@@ -15,6 +15,21 @@ import { movieIdFromSlug } from '@/app/home/util/slug';
 
 const COMMENTS_PER_PAGE = 5;
 
+function parseMentions(message: string) {
+    const mentionRegex = /@([a-zA-Z0-9_]+)/g;
+    return message.split(mentionRegex).map((part, index) => {
+        if (index % 2 === 0) {
+            return part;
+        } else {
+            return (
+                <a key={index} href={`/profile/${part}`} className="mention-link">
+                    @{part}
+                </a>
+            );
+        }
+    });
+}
+
 const ReviewList: React.FC = () => {
     const { movieSlug } = useParams<{ movieSlug: string }>();
     const navigate = useNavigate();
@@ -219,7 +234,7 @@ const ReviewList: React.FC = () => {
                                                 Show Spoiler
                                             </button>
                                         ) : (
-                                            <p className="content">{c.message}</p>
+                                            <p className="content">{parseMentions(c.message)}</p>
                                         )}
                                         <div className="comment-actions">
                                             {user?.uuid === c.user.uuid && (

@@ -247,3 +247,8 @@ textarea {
     color: rgba(255, 255, 255, 0.6);
     margin-left: 0.5rem;
 }
+
+.mention-link {
+    color: #00a9e6;
+    text-decoration: none;
+}
