@@ -8,6 +8,7 @@ import ChatSingle from './components/ChatSingle';
 import { formatTimeAgo } from '@/lib/utils';
 import AdminHeader from "@/app/dc/components/Header";
 import UserInfo from "@/app/dc/components/UserInfo";
+import {Users} from "lucide-react";
 
 // FriendContainer component
 type FriendContainerProps = {
