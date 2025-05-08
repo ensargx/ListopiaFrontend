@@ -163,7 +163,7 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
                     >
                         <div className="message-text">{msg.message.message}</div>
                         <div className="message-time">
-                            {new Date(msg.message.sentAt).toLocaleTimeString([], {
+                            {new Date(msg.message.sentAt * 1000).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",
                             })}
