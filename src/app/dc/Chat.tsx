@@ -7,6 +7,7 @@ import {fetchFriendsByUUID, fetchUserMe} from "@/api/userapi";
 import ChatSingle from './components/ChatSingle';
 import { formatTimeAgo } from '@/lib/utils';
 import AdminHeader from "@/app/dc/components/Header";
+import UserInfo from "@/app/dc/components/UserInfo";
 
 // FriendContainer component
 type FriendContainerProps = {
@@ -50,58 +51,7 @@ const FriendContainer: React.FC<FriendContainerProps> = ({ friend, isSelected, o
     </div>
 );
 
-// UserInfo component
-const UserInfo: React.FC<{ user: User }> = ({ user }) => (
-    <aside
-        className="main-right"
-        style={{
-            padding: '16px',
-            backgroundColor: '#2f3136',
-            borderLeft: '1px solid #202225',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-        }}
-    >
-        <img
-            className="avatar"
-            src={user.profilePicture}
-            alt={`${user.firstName} ${user.lastName}`}
-            style={{
-                width: '60px',
-                height: '60px',
-                borderRadius: '50%',
-                marginBottom: '12px',
-            }}
-        />
 
-        <span style={{ fontWeight: 'bold', display: 'block' }}>
-      {user.firstName} {user.lastName}
-    </span>
-        <span style={{ color: '#aaa', display: 'block', marginBottom: '8px' }}>
-      @{user.username}
-    </span>
-
-        <AdminHeader userRole={user.role} />
-
-        <div className="about-section mb-4" style={{ width: '100%' }}>
-            <h3>About</h3>
-            <p>{user.biography || "Hello, I am using Listopia."}</p>
-        </div>
-
-        <span style={{ fontSize: '0.8rem', color: '#888' }}>
-      Last Seen:{' '}
-            {new Date(user.lastOnline).toLocaleString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-            })}
-    </span>
-    </aside>
-);
 
 // Main Chat component
 const Chat: React.FC = () => {
@@ -110,6 +60,7 @@ const Chat: React.FC = () => {
     const [user, setUser] = useState<User|null>(null);
     const [friends, setFriends] = useState<User[]>([]);
     const [isLoading, setLoading] = useState(true);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     document.title = `Chat - Listopia`;
 
@@ -126,6 +77,19 @@ const Chat: React.FC = () => {
         })
     }, []);
 
+    // Toggle mobile menu
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    // Close mobile menu when a friend is selected
+    const openChatAndCloseMobileMenu = (friend: User) => {
+        if (friend !== selectedFriend) {
+            setSelectedFriend(friend);
+        }
+        setIsMobileMenuOpen(false);
+    };
+
     if(isLoading){
         return <div>Loading...</div>
     }
@@ -133,12 +97,6 @@ const Chat: React.FC = () => {
     if(!user){
         return <Navigate to="/" replace />;
     }
-
-    // Open chat with selected friend
-    const openChat = (friend: User) => {
-        if (friend == selectedFriend) return; 
-        setSelectedFriend(friend);
-    };
 
     // Filter friends by search term
     const filteredFriends = friends
@@ -149,8 +107,19 @@ const Chat: React.FC = () => {
 
     return (
         <div className="chat-page">
+            {/* Hamburger button for mobile */}
+            <button
+                className="hamburger-menu"
+                onClick={toggleMobileMenu}
+                aria-label="Toggle menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             {/* search bar */}
-            <div className="top-left">
+            <div className={`top-left ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                 <SearchBar
                     value={searchTerm}
                     onChange={(v: string) => setSearchTerm(v)}
@@ -159,7 +128,7 @@ const Chat: React.FC = () => {
             </div>
 
             {/* Friends list */}
-            <section className="main-left">
+            <section className={`main-left ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                 <div className="friends-header">
                     <h2>Friends</h2>
                 </div>
@@ -169,11 +138,16 @@ const Chat: React.FC = () => {
                             key={friend.uuid}
                             friend={friend}
                             isSelected={selectedFriend?.uuid === friend.uuid}
-                            onClick={openChat}
+                            onClick={openChatAndCloseMobileMenu}
                         />
                     ))}
                 </div>
             </section>
+
+            {/* Overlay for mobile */}
+            {isMobileMenuOpen && (
+                <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+            )}
 
             {selectedFriend ? (
                 <ChatSingle key={selectedFriend.uuid} user={user} friend={selectedFriend} />
