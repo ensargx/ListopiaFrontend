@@ -3,123 +3,130 @@ import { User } from "@/types/user";
 import { UserMessage } from "@/types/user/usermessage";
 import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import DoubleCheck from "@/app/dc/components/DoubleCheck";
 
 interface ChatSingleProps {
-    user: User
-    friend: User
+    user: User;
+    friend: User;
 }
 
 interface Message {
     message: UserMessage;
-    isServer: boolean; // TODO: Bu mesaj server mesajı oldu mu ona göre render edilecek cssi değişecek
+    isServer: boolean;
 }
 
 const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
+
+    // polling için: sadece yeni mesajlar
+    const [loadingNew, setLoadingNew] = useState(false);
+    // load-more için: eski mesajlar
+    const [loadingOld, setLoadingOld] = useState(false);
+
+    const [pageNumber, setPageNumber] = useState(0);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const hasScrolledToBottom = useRef(false);
 
-    let addToMessagesSorted = (msgs: UserMessage[]) => {
-        setMessages(prevMessages => {
-            const newMessages = msgs.map((msg) => ({
-                message: msg, // UserMessage
-                isServer: true, // Gelen mesajlar server'dan geldiği için true
-            }))
-            .filter(msg =>
-                !prevMessages.some(existingMessage => existingMessage.message.id === msg.message.id)
-            );
-            // Combine old and new messages
-            const allMessages = [...prevMessages, ...newMessages];
-
-            // Sort messages by 'sent' timestamp
-            const sortedMessages = allMessages.sort((a, b) => {
-                return new Date(a.message.sentAt).getTime() - new Date(b.message.sentAt).getTime();
-            });
-
-            return sortedMessages;
+    // Ortak ekleme/sıralama
+    const mergeMessages = (incoming: UserMessage[]) => {
+        setMessages(prev => {
+            const wrapped = incoming.map(m => ({ message: m, isServer: true }));
+            const deduped = wrapped.filter(w => !prev.some(p => p.message.id === w.message.id));
+            const all = [...prev, ...deduped];
+            return all.sort((a, b) => a.message.sentAt - b.message.sentAt);
         });
-    }
-
-    const getMessages = async (pageNumber = 0) => {
-        setLoading(true);
-        const response = await getMessagesWithUser(friend.uuid, pageNumber);
-        if (response.content.length === 0) {
-            setHasMore(false);
-        } else {
-            setMessages(prevMessages => {
-                const newMessages = response.content.map((msg) => ({
-                    message: msg, // UserMessage
-                    isServer: true, // Gelen mesajlar server'dan geldiği için true
-                }))
-                .filter(msg =>
-                    !prevMessages.some(existingMessage => existingMessage.message.id === msg.message.id)
-                );
-                // Combine old and new messages
-                const allMessages = [...prevMessages, ...newMessages];
-
-                // Sort messages by 'sent' timestamp
-                const sortedMessages = allMessages.sort((a, b) => {
-                    return new Date(a.message.sentAt).getTime() - new Date(b.message.sentAt).getTime();
-                });
-
-                return sortedMessages;
-            });
-        }
-            setLoading(false);
     };
 
+    // Yeni mesajları çek (polling)
+    const fetchNew = async () => {
+        setLoadingNew(true);
+        try {
+            const res = await getMessagesWithUser(friend.uuid, 0);
+            // Sadece sayfa 0'den gelenleri ekle
+            mergeMessages(res.content);
+        } catch (err) {
+            console.error("Yeni mesaj yükleme hatası:", err);
+        } finally {
+            setLoadingNew(false);
+        }
+    };
+
+    // Eski mesajları yükle
+    const fetchOld = async () => {
+        if (!hasMore || loadingOld) return;
+        setLoadingOld(true);
+        const nextPage = pageNumber + 1;
+        try {
+            const res = await getMessagesWithUser(friend.uuid, nextPage);
+            if (res.content.length === 0) {
+                setHasMore(false);
+            } else {
+                mergeMessages(res.content);
+                setPageNumber(nextPage);
+            }
+        } catch (err) {
+            console.error("Eski mesaj yükleme hatası:", err);
+        } finally {
+            setLoadingOld(false);
+        }
+    };
+
+    // İlk yükleme ve friend değiştiğinde sıfırlama + polling başlatma
     useEffect(() => {
-        getMessages();
+        setMessages([]);
+        setPageNumber(0);
+        setHasMore(true);
+        hasScrolledToBottom.current = false;
 
-        // Set up polling to check for new messages every second
-        const intervalId = setInterval(() => {
-            getMessages();
-        }, 1000);
+        // İlk defa hem eski (sayfa 0) hem de polling tetiklemesi
+        fetchNew();
+        const iv = setInterval(fetchNew, 1000);
+        return () => clearInterval(iv);
+    }, [friend.uuid]);
 
-        // Cleanup the interval when the component is unmounted
-        return () => clearInterval(intervalId);
-    }, []);  // Empty dependency array ensures this runs only once on mount
+    // Scroll otomatiği: yeni mesaj gelince en alta in
+    useEffect(() => {
+        if (!hasScrolledToBottom.current && messages.length) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            hasScrolledToBottom.current = true;
+        }
+    }, [messages]);
 
+    // Mesaj gönderme
     const handleSend = async () => {
         const text = inputRef.current?.value.trim();
-        if (!text || !friend) return;
+        if (!text) return;
+        inputRef.current!.value = "";
 
-        if (inputRef.current) inputRef.current.value = ''; // Mesaj kutusunu temizle
-        setLoading(true); // Mesaj gönderme sırasında yükleniyor durumunu aktif et
+        // geçici mesaj
+        const tempId = Date.now();
+        const outgoing: Message = {
+            message: {
+                id: tempId,
+                from: user,
+                recipient: friend,
+                sentAt: Date.now(),
+                message: text,
+                isRead: false,
+            },
+            isServer: false,
+        };
+        setMessages(prev => [...prev, outgoing]);
+        hasScrolledToBottom.current = false;
+
         try {
-            let toSent: Message = {
-                message: {
-                    id: new Date().getSeconds(),
-                    from: user,
-                    recipient: friend,
-                    sentAt: Date.now(),
-                    message: text,
-                    isRead: false,
-                },
-                isServer: false,
-            };
-
-            setMessages(prev => [...prev, toSent]);
-            
-            sendMessageToUser(text, friend.uuid).then((msg) => {
-                addToMessagesSorted([msg]);
-            }).finally(()=>{
-                setMessages(prev => 
-                    prev.filter((msg) => msg.message.id !== toSent.message.id)
-                );
-            });
-        } catch (error) {
-            console.error("Mesaj gönderilemedi:", error);
+            const saved = await sendMessageToUser(text, friend.uuid);
+            mergeMessages([saved]);
+        } catch (e) {
+            console.error("Mesaj gönderilemedi:", e);
         } finally {
-            setLoading(false);
+            // Geçici mesajı kaldır
+            setMessages(prev => prev.filter(m => m.message.id !== tempId));
         }
     };
-
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
 
     return (
         <section className="main chat-panel">
@@ -130,35 +137,58 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
                     alt={`${friend.firstName} ${friend.lastName}`}
                 />
                 <div>
-                    <span className="name">{friend.firstName} {friend.lastName}</span>
+          <span className="name">
+            {friend.firstName} {friend.lastName}
+          </span>
                 </div>
             </div>
+
             <div className="messages">
+                {hasMore && (
+                    <button
+                        onClick={fetchOld}
+                        disabled={loadingOld}
+                        className="load-more"
+                    >
+                        {loadingOld ? "Loading older..." : "View old messages"}
+                    </button>
+                )}
+
                 {messages.map(msg => (
                     <div
                         key={msg.message.id}
-                        className={`message-item ${msg.message.from.uuid === user.uuid ? 'me' : 'them'}`}
+                        className={`message-item ${
+                            msg.message.from.uuid === user.uuid ? "me" : "them"
+                        }`}
                     >
                         <div className="message-text">{msg.message.message}</div>
                         <div className="message-time">
-                            {new Date(msg.message.sentAt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                            {new Date(msg.message.sentAt).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            })}
+                            {msg.message.from.uuid === user.uuid && (
+                                <DoubleCheck read={msg.message.isRead} />
+                            )}
                         </div>
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
             </div>
+
             <div className="message-input">
                 <input
                     ref={inputRef}
                     type="text"
                     placeholder="Message..."
-                    onKeyDown={e => e.key === 'Enter' && handleSend()}
+                    onKeyDown={e => e.key === "Enter" && handleSend()}
                 />
-                <button onClick={handleSend}>
+                <button onClick={handleSend} disabled={loadingNew}>
                     <Send size={18} />
                 </button>
             </div>
         </section>
-    )
-}
+    );
+};
+
 export default ChatSingle;
