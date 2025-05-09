@@ -78,6 +78,14 @@ const Chat: React.FC = () => {
         })
     }, []);
 
+    useEffect(() => {
+        const stored = localStorage.getItem('selectedFriend');
+        if (stored) {
+            setSelectedFriend(JSON.parse(stored));
+            localStorage.removeItem('selectedFriend'); // sadece bir kerelik kullanılsın
+        }
+    }, []);
+
     // Toggle mobile menu
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);

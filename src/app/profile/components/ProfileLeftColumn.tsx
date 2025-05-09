@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { formatTimeAgo } from "@/lib/utils";
 import { userProfilePath } from "@/app/home/util/slug";
 import type { User } from "@/types/user";
@@ -50,7 +50,7 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
     const [localSent, setLocalSent] = useState<User[]>(sentRequests);
     const [localReceived, setLocalReceived] = useState<User[]>(receivedRequests);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
+    const navigate = useNavigate();
     // Sync props → local state
     useEffect(() => {
         setLocalSent(sentRequests);
@@ -121,6 +121,12 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
         }
     };
 
+    const handleMessageClick = async () => {
+        setIsProcessing(true);
+        localStorage.setItem('selectedFriend', JSON.stringify(user));
+        navigate('/chat');
+        setIsProcessing(false);
+    }
     return (
         <div className="profile-left-column">
             {/* Avatar */}
@@ -179,13 +185,13 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                 </span>
                             </button>
 
-                            <Link
-                                to={userProfilePath(user)}
+                            <button
+                                onClick={handleMessageClick}
                                 className="stat-item flex items-center"
                             >
                                 <MessageCircle size={24} />
                                 <span className="stat-label ml-1">Message</span>
-                            </Link>
+                            </button>
                         </>
                     )}
                 </div>
