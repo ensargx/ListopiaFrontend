@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MessageCircle, UserPlus, UserMinus, Clock } from "lucide-react";
+import { MessageCircle, UserPlus, UserMinus, Clock, UserX, UserCheck } from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";
 import { formatTimeAgo } from "@/lib/utils";
 import { userProfilePath } from "@/app/home/util/slug";
@@ -35,6 +35,10 @@ const getCreatedAt = (user: User): string =>  {
         return "now";
     return res;
 }
+
+const includesByUUID = (list: User[], uuid: string) => {
+    return list.some(item => (typeof item === 'string' ? item : item.uuid) === uuid);
+  };
 
 const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
                                                                  user,
@@ -140,88 +144,105 @@ const ProfileLeftColumn: React.FC<ProfileLeftColumnProps> = ({
 
             {/* Friend/Add buttons */}
             {!isOwn && (
-                <div className="social-stats flex space-x-2 mb-4">
-                    {!isFriend ? (
-                        <button
-                            className="stat-item flex items-center"
-                            onClick={
-                                hasSentRequest
-                                    ? () => handleCancel(user.uuid)
-                                    : handleAddFriend
-                            }
-                            disabled={isProcessing}
-                        >
-                            {isProcessing ? (
-                                <Clock size={24} className="animate-spin" />
-                            ) : hasSentRequest ? (
-                                <Clock size={24} />
-                            ) : (
-                                <UserPlus size={24} />
-                            )}
-                            <span className="stat-label ml-1">
-                {isProcessing
-                    ? hasSentRequest
-                        ? "Cancelling..."
-                        : "Sending..."
-                    : hasSentRequest
-                        ? "Pending"
-                        : "Add Friend"}
-              </span>
-                        </button>
-                    ) : (
-                        <>
-                            <button
-                                className="stat-item flex items-center"
-                                onClick={handleRemoveFriend}
-                                disabled={isProcessing}
-                            >
-                                {isProcessing ? (
-                                    <Clock size={24} className="animate-spin" />
-                                ) : (
-                                    <UserMinus size={24} />
-                                )}
-                                <span className="stat-label ml-1">
-                  {isProcessing ? "Removing..." : "Remove Friend"}
-                </span>
-                            </button>
-
-                            <button
-                                onClick={handleMessageClick}
-                                className="stat-item flex items-center"
-                            >
-                                <MessageCircle size={24} />
-                                <span className="stat-label ml-1">Message</span>
-                            </button>
-                        </>
-                    )}
-                </div>
+  <div className="social-stats flex space-x-2 mb-4">
+    {!isFriend ? (
+      includesByUUID(receivedRequests, user.uuid) ? (
+        <>
+          {/* Accept Friend Request */}
+          <button
+            className="stat-item flex items-center"
+            onClick={() => handleAccept(user.uuid)}
+            disabled={isProcessing}
+          >
+            {isProcessing ? (
+              <Clock size={24} className="animate-spin" />
+            ) : (
+              <UserCheck size={24} />
             )}
+            <span className="stat-label ml-1">
+              {isProcessing ? "Accepting..." : "Accept"}
+            </span>
+          </button>
 
-            {/* Incoming requests (if it's your own profile) */}
-            {!isOwn && !isFriend && hasReceivedRequest && (
-                <section className="received-requests mb-4">
-                    <ul>
-                        {localReceived.map((u) => (
-                            <li key={u.uuid} className="flex items-center mb-2">
-                                <button
-                                    onClick={() => handleAccept(u.uuid)}
-                                    className="ml-auto btn btn-sm"
-                                    disabled={isProcessing}
-                                >
-                                    Accept
-                                </button>
-                                <button
-                                    onClick={() => handleDecline(u.uuid)}
-                                    className="ml-2 btn btn-sm btn-danger"
-                                    disabled={isProcessing}
-                                >
-                                    Decline
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
+          {/* Cancel Incoming Friend Request */}
+          <button
+            className="stat-item flex items-center"
+            onClick={() => handleCancel(user.uuid)}
+            disabled={isProcessing}
+          >
+            {isProcessing ? (
+              <Clock size={24} className="animate-spin" />
+            ) : (
+              <UserX size={24} />
             )}
+            <span className="stat-label ml-1">
+              {isProcessing ? "Cancelling..." : "Decline"}
+            </span>
+          </button>
+        </>
+      ) : hasSentRequest ? (
+        // You sent a request → show Pending (clickable to cancel)
+        <button
+          className="stat-item flex items-center"
+          onClick={() => handleCancel(user.uuid)}
+          disabled={isProcessing}
+        >
+          {isProcessing ? (
+            <Clock size={24} className="animate-spin" />
+          ) : (
+            <UserX size={24} />
+          )}
+          <span className="stat-label ml-1">
+            {isProcessing ? "Cancelling..." : "Cancel"}
+          </span>
+        </button>
+      ) : (
+        // No one sent a request yet
+        <button
+          className="stat-item flex items-center"
+          onClick={handleAddFriend}
+          disabled={isProcessing}
+        >
+          {isProcessing ? (
+            <Clock size={24} className="animate-spin" />
+          ) : (
+            <UserPlus size={24} />
+          )}
+          <span className="stat-label ml-1">
+            {isProcessing ? "Sending..." : "Add Friend"}
+          </span>
+        </button>
+      )
+    ) : (
+      <>
+        {/* Already friends: remove + message */}
+        <button
+          className="stat-item flex items-center"
+          onClick={handleRemoveFriend}
+          disabled={isProcessing}
+        >
+          {isProcessing ? (
+            <Clock size={24} className="animate-spin" />
+          ) : (
+            <UserMinus size={24} />
+          )}
+          <span className="stat-label ml-1">
+            {isProcessing ? "Removing..." : "Remove Friend"}
+          </span>
+        </button>
+
+        <button
+          onClick={handleMessageClick}
+          className="stat-item flex items-center"
+        >
+          <MessageCircle size={24} />
+          <span className="stat-label ml-1">Message</span>
+        </button>
+      </>
+    )}
+  </div>
+)}
+
 
             {/* User info */}
             <div className="user-info mb-4">
