@@ -1,9 +1,11 @@
-import { getMessagesWithUser, sendMessageToUser } from "@/api/user/usermessage";
-import { User } from "@/types/user";
-import { UserMessage } from "@/types/user/usermessage";
-import { Send } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {getMessagesWithUser, sendMessageToUser} from "@/api/user/usermessage";
+import {User} from "@/types/user";
+import {UserMessage} from "@/types/user/usermessage";
+import {Send} from "lucide-react";
+import {useEffect, useRef, useState} from "react";
 import DoubleCheck from "@/app/dc/components/DoubleCheck";
+import {Link} from "react-router-dom";
+import {userProfilePath} from "@/app/home/util/slug";
 
 interface ChatSingleProps {
     user: User;
@@ -15,7 +17,7 @@ interface Message {
     isServer: boolean;
 }
 
-const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
+const ChatSingle: React.FC<ChatSingleProps> = ({user, friend}) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [hasMore, setHasMore] = useState(true);
 
@@ -33,7 +35,7 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
     // Ortak ekleme/sıralama
     const mergeMessages = (incoming: UserMessage[]) => {
         setMessages(prev => {
-            const wrapped = incoming.map(m => ({ message: m, isServer: true }));
+            const wrapped = incoming.map(m => ({message: m, isServer: true}));
             const deduped = wrapped.filter(w => !prev.some(p => p.message.id === w.message.id));
             const all = [...prev, ...deduped];
             return all.sort((a, b) => a.message.sentAt - b.message.sentAt);
@@ -90,7 +92,7 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
     // Scroll otomatiği: yeni mesaj gelince en alta in
     useEffect(() => {
         if (!hasScrolledToBottom.current && messages.length) {
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
             hasScrolledToBottom.current = true;
         }
     }, [messages]);
@@ -130,18 +132,21 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
 
     return (
         <section className="main chat-panel">
-            <div className="chat-header">
-                <img
-                    className="avatar"
-                    src={friend.profilePicture}
-                    alt={`${friend.firstName} ${friend.lastName}`}
-                />
-                <div>
+            <Link to={userProfilePath(friend)}>
+                <div className="chat-header">
+                    <img
+                        className="avatar"
+                        src={friend.profilePicture}
+                        alt={`${friend.firstName} ${friend.lastName}`}
+                    />
+                    <div>
           <span className="name">
             {friend.firstName} {friend.lastName}
           </span>
+                    </div>
                 </div>
-            </div>
+            </Link>
+
 
             <div className="messages">
                 {hasMore && (
@@ -168,12 +173,12 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
                                 minute: "2-digit",
                             })}
                             {msg.message.from.uuid === user.uuid && (
-                                <DoubleCheck read={msg.message.isRead} />
+                                <DoubleCheck read={msg.message.isRead}/>
                             )}
                         </div>
                     </div>
                 ))}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef}/>
             </div>
 
             <div className="message-input">
@@ -184,7 +189,7 @@ const ChatSingle: React.FC<ChatSingleProps> = ({ user, friend }) => {
                     onKeyDown={e => e.key === "Enter" && handleSend()}
                 />
                 <button onClick={handleSend} disabled={loadingNew}>
-                    <Send size={18} />
+                    <Send size={18}/>
                 </button>
             </div>
         </section>

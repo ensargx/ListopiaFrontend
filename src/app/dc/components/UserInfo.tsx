@@ -9,7 +9,7 @@ interface UserInfoProps {
 
 const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     return (
-        <aside className="main-right" style={{ padding: '16px', backgroundColor: '#2f3136', borderLeft: '1px solid #202225' }}>
+        <aside className="main-right" style={{ padding: '50px', backgroundColor: '#2f3136', borderLeft: '1px solid #202225' }}>
 
             <img
                 className="avatar"
@@ -29,7 +29,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
             <AdminHeader userRole={user.role} />
 
             <div className="about-section mb-4" style={{ width: '100%' }}>
-                <h3>About</h3>
                 <p>{user.biography || 'Hello, I am using Listopia.'}</p>
             </div>
 
