@@ -722,4 +722,20 @@
     font-size: 12px;
     margin-top: 8px;
   }
-  
+
+.profile-updates .show-more {
+    display: block;
+    margin: 1rem auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    background: transparent;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.profile-updates .show-more:hover {
+    color: #fff;
+    border-color: #888;
+}
