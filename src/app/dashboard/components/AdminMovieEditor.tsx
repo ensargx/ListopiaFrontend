@@ -20,7 +20,7 @@ const AdminMovieEditor: React.FC = () => {
         try {
             const fetched = await fetchExternalAdminMovieById(Number(idInput));
             setMovie(fetched);
-            toast.success('Veri kaynaktan çekildi');
+            toast.success('Data fetched from source');
         } catch (e) {
             alert((e as Error).message);
         } finally {
@@ -33,7 +33,7 @@ const AdminMovieEditor: React.FC = () => {
         try {
             const updated = await updateAdminMovieById(movie.movieId, movie);
             setMovie(updated);
-            toast.success('Film başarıyla güncellendi');
+            toast.success('Movie updated successfully');
         } catch (e) {
             alert((e as Error).message);
         }
@@ -52,7 +52,7 @@ const AdminMovieEditor: React.FC = () => {
 
     return (
         <div className="admin-movie-editor">
-            <h2>Film Düzenle</h2>
+            <h2>Edit Movie</h2>
 
             <div className="controls">
                 <input
@@ -62,7 +62,7 @@ const AdminMovieEditor: React.FC = () => {
                     onChange={e => setIdInput(e.target.value)}
                 />
                 <button onClick={fetchMovie} disabled={loading}>
-                    {loading ? 'Yükleniyor…' : 'Çek'}
+                    {loading ? 'Loading...' : 'Fetch'}
                 </button>
             </div>
 
@@ -74,7 +74,7 @@ const AdminMovieEditor: React.FC = () => {
                     </div>
 
                     <div className="form-row">
-                        <label>Başlık</label>
+                        <label>Title</label>
                         <input
                             type="text"
                             value={movie.title}
@@ -83,7 +83,7 @@ const AdminMovieEditor: React.FC = () => {
                     </div>
 
                     <div className="form-row">
-                        <label>Orijinal Başlık</label>
+                        <label>Original Title</label>
                         <input
                             type="text"
                             value={movie.originalTitle}
@@ -92,7 +92,7 @@ const AdminMovieEditor: React.FC = () => {
                     </div>
 
                     <div className="form-row">
-                        <label>Dil</label>
+                        <label>Language</label>
                         <input
                             type="text"
                             value={movie.originalLanguage}
@@ -103,7 +103,7 @@ const AdminMovieEditor: React.FC = () => {
                     </div>
 
                     <div className="form-row">
-                        <label>Özet</label>
+                        <label>Overview</label>
                         <textarea
                             value={movie.overview}
                             onChange={e => handleChange('overview', e.target.value)}
@@ -120,7 +120,7 @@ const AdminMovieEditor: React.FC = () => {
                     </div>
 
                     <div className="form-row">
-                        <label>Çıkış Tarihi</label>
+                        <label>Release Date</label>
                         <input
                             type="date"
                             value={movie.releaseDate}
@@ -129,7 +129,7 @@ const AdminMovieEditor: React.FC = () => {
                     </div>
 
                     <div className="form-row">
-                        <label>Fragman Linki</label>
+                        <label>Trailer Link</label>
                         <input
                             type="url"
                             value={movie.trailerLink || ''}
@@ -139,7 +139,7 @@ const AdminMovieEditor: React.FC = () => {
 
                     <div className="actions">
                         <button type="button" onClick={saveMovie}>
-                            Kaydet
+                            Save
                         </button>
                     </div>
                 </form>

@@ -3,28 +3,27 @@ import { toast } from 'react-toastify';
 import { User } from '@/types/user';
 import { SearchCategory, searchUsersMovies } from '@/api/searchadminapi';
 import { PaginatedResponse } from '@/types/friends';
-import { adminUpdateUserByUuid, adminDeleteUserByUuid } from '@/api/adminapi'; // Gerçek API fonksiyonları
+import { adminUpdateUserByUuid, adminDeleteUserByUuid } from '@/api/adminapi';
+import '../styles/AdminUserEditor.css';
 
 const AdminUserEditor: React.FC = () => {
     const [nameInput, setNameInput] = useState('');
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [searchRes, setSearchRes] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
-    const [editedUser, setEditedUser] = useState<User | null>(null); // Kullanıcı düzenleme state'i
-    const [saving, setSaving] = useState(false); // Save butonunu devre dışı bırakmak için
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // Silme onayı state'i
+    const [editedUser, setEditedUser] = useState<User | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-    // URL ile profil fotoğrafı değişimi
     const handleProfilePictureUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (editedUser) {
             setEditedUser({
                 ...editedUser,
-                profilePicture: e.target.value, // URL ile fotoğrafı güncelle
+                profilePicture: e.target.value,
             });
         }
     };
 
-    // Kullanıcıları arama
     const fetchUser = async () => {
         if (!nameInput) return;
         setLoading(true);
@@ -36,7 +35,7 @@ const AdminUserEditor: React.FC = () => {
                     const userRes = res as { results: { users: PaginatedResponse<User> } };
                     setSearchRes(userRes.results.users.content);
                 });
-            toast.success('Veri kaynaktan çekildi');
+            toast.success('Data fetched from source');
         } catch (e) {
             alert((e as Error).message);
         } finally {
@@ -44,13 +43,11 @@ const AdminUserEditor: React.FC = () => {
         }
     };
 
-    // Kullanıcıyı seçme
     const handleUserSelect = (user: User) => {
         setSelectedUser(user);
-        setEditedUser({ ...user }); // Düzenleme formu için seçilen kullanıcıyı yüklüyoruz
+        setEditedUser({ ...user });
     };
 
-    // Kullanıcı düzenleme input değişikliklerini yönetme
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
@@ -62,48 +59,44 @@ const AdminUserEditor: React.FC = () => {
         }
     };
 
-    // Kullanıcıyı güncelleme
     const handleSaveChanges = async () => {
         if (editedUser) {
-            setSaving(true); // Kaydetme işlemi başladığında state'i true yap
+            setSaving(true);
             try {
-                // Kullanıcıyı API üzerinden güncelleme
-                await adminUpdateUserByUuid(editedUser.uuid, editedUser); // API çağrısı burada yapılacak
+                await adminUpdateUserByUuid(editedUser.uuid, editedUser);
                 console.log("user new: ", editedUser);
-                toast.success('Kullanıcı başarıyla güncellendi');
+                toast.success('User updated successfully');
                 setEditedUser(null);
                 setSelectedUser(null);
-                fetchUser(); // Güncellenen verileri tekrar al
+                fetchUser();
             } catch (e) {
-                toast.error('Kullanıcı güncellenirken hata oluştu');
+                toast.error('Error updating user');
             } finally {
-                setSaving(false); // Kaydetme işlemi tamamlandığında state'i false yap
+                setSaving(false);
             }
         }
     };
 
-    // Kullanıcıyı silme
     const handleDeleteUser = async () => {
         if (selectedUser) {
             try {
-                await adminDeleteUserByUuid(selectedUser.uuid); // Kullanıcıyı API üzerinden sil
-                toast.success('Kullanıcı başarıyla silindi');
+                await adminDeleteUserByUuid(selectedUser.uuid);
+                toast.success('User deleted successfully');
                 setEditedUser(null);
                 setSelectedUser(null);
-                fetchUser(); // Kullanıcı silindiği için kullanıcı listesi tekrar alınacak
+                fetchUser();
             } catch (e) {
-                toast.error('Kullanıcı silinirken hata oluştu');
+                toast.error('Error deleting user');
             }
         }
     };
 
-    // Silme onayı işlemi
     const handleDeleteConfirm = () => {
-        setShowDeleteConfirm(true); // Silme onayı ekranını göster
+        setShowDeleteConfirm(true);
     };
 
     const handleCancelDelete = () => {
-        setShowDeleteConfirm(false); // Silme onayı ekranını kapat
+        setShowDeleteConfirm(false);
     };
 
     return (
@@ -118,7 +111,7 @@ const AdminUserEditor: React.FC = () => {
                     onChange={(e) => setNameInput(e.target.value)}
                 />
                 <button onClick={fetchUser} disabled={loading}>
-                    {loading ? 'Yükleniyor…' : 'Search'}
+                    {loading ? 'Loading…' : 'Search'}
                 </button>
             </div>
 
@@ -192,7 +185,6 @@ const AdminUserEditor: React.FC = () => {
                 <div style={{ marginTop: '20px', padding: '10px', border: '1px solid #ccc' }}>
                     <h3>Edit User: {editedUser.firstName} {editedUser.lastName}</h3>
 
-                    {/* Username */}
                     <div>
                         <label>Username: </label>
                         <input
@@ -203,7 +195,6 @@ const AdminUserEditor: React.FC = () => {
                         />
                     </div>
 
-                    {/* First Name */}
                     <div>
                         <label>First Name: </label>
                         <input
@@ -214,7 +205,6 @@ const AdminUserEditor: React.FC = () => {
                         />
                     </div>
 
-                    {/* Last Name */}
                     <div>
                         <label>Last Name: </label>
                         <input
@@ -225,7 +215,6 @@ const AdminUserEditor: React.FC = () => {
                         />
                     </div>
 
-                    {/* Biography */}
                     <div>
                         <label>Biography: </label>
                         <textarea
@@ -235,7 +224,6 @@ const AdminUserEditor: React.FC = () => {
                         />
                     </div>
 
-                    {/* Role */}
                     <div>
                         <label>Role: </label>
                         <input
@@ -246,7 +234,6 @@ const AdminUserEditor: React.FC = () => {
                         />
                     </div>
 
-                    {/* Profil Fotoğrafı (URL ile) */}
                     <div>
                         <label>Profile Picture (Enter URL): </label>
                         <input
@@ -257,7 +244,6 @@ const AdminUserEditor: React.FC = () => {
                         />
                     </div>
 
-                    {/* Kaydetme ve iptal butonları */}
                     <div>
                         <button onClick={handleSaveChanges} disabled={saving}>
                             {saving ? 'Saving…' : 'Save Changes'}
@@ -266,7 +252,6 @@ const AdminUserEditor: React.FC = () => {
                         <button onClick={() => setEditedUser(null)}>Cancel</button>
                     </div>
 
-                    {/* Silme butonu */}
                     <div>
                         <button
                             onClick={handleDeleteConfirm}
@@ -276,7 +261,6 @@ const AdminUserEditor: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* Silme onayı */}
                     {showDeleteConfirm && (
                         <div style={{ marginTop: '10px', color: 'red' }}>
                             <p>Are you sure you want to delete this user?</p>

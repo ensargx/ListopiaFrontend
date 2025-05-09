@@ -41,8 +41,8 @@ const AdminStats: React.FC = () => {
         })();
     }, []);
 
-    if (loading) return <div className="admin-stats__loading">Yükleniyor…</div>;
-    if (error)   return <div className="admin-stats__error">Hata: {error}</div>;
+    if (loading) return <div className="admin-stats__loading">Loading…</div>;
+    if (error)   return <div className="admin-stats__error">Error: {error}</div>;
     if (!stats)  return null;
 
     // sadece ilk 5 elemanı alıyoruz
@@ -61,54 +61,54 @@ const AdminStats: React.FC = () => {
         <div className="admin-stats-grid">
             {/* Özet Kartları */}
             <div className="summary-card">
-                <h4>Toplam Film</h4>
+                <h4>Total Movies</h4>
                 <span>{stats.movieCount.toLocaleString()}</span>
             </div>
             <div className="summary-card">
-                <h4>Toplam Kullanıcı</h4>
+                <h4>Total Users</h4>
                 <span>{stats.userCount.toLocaleString()}</span>
             </div>
 
-            {/* Filmler Çubuk Grafikleri */}
+            {/* Movie Bar Charts */}
             <section className="chart-card">
-                <h3>En Çok İzlenen Filmler</h3>
+                <h3>Most Watched Movies</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={topWatchedMovies}>
                         <XAxis dataKey="title" tick={{ fill: '#e0e0e0', fontSize: 12 }} />
                         <YAxis tick={{ fill: '#e0e0e0' }} />
                         <Tooltip />
-                        <Bar dataKey="watchCount" fill={COLORS[0]} name="İzlenme" />
+                        <Bar dataKey="watchCount" fill={COLORS[0]} name="Views" />
                     </BarChart>
                 </ResponsiveContainer>
             </section>
 
             <section className="chart-card">
-                <h3>En Çok Beğenilen Filmler</h3>
+                <h3>Most Liked Movies</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={topLikedMovies}>
                         <XAxis dataKey="title" tick={{ fill: '#e0e0e0', fontSize: 12 }} />
                         <YAxis tick={{ fill: '#e0e0e0' }} />
                         <Tooltip />
-                        <Bar dataKey="likeCount" fill={COLORS[1]} name="Beğeni" />
+                        <Bar dataKey="likeCount" fill={COLORS[1]} name="Likes" />
                     </BarChart>
                 </ResponsiveContainer>
             </section>
 
             <section className="chart-card">
-                <h3>En Çok Ziyaret Edilen Filmler</h3>
+                <h3>Most Visited Movies</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={topVisitedMovies}>
                         <XAxis dataKey="title" tick={{ fill: '#e0e0e0', fontSize: 12 }} />
                         <YAxis tick={{ fill: '#e0e0e0' }} />
                         <Tooltip />
-                        <Bar dataKey="clickCount" fill={COLORS[2]} name="Tıklama" />
+                        <Bar dataKey="clickCount" fill={COLORS[2]} name="Clicks" />
                     </BarChart>
                 </ResponsiveContainer>
             </section>
 
-            {/* Türler Pasta Grafikleri */}
+            {/* Genre Pie Charts */}
             <section className="chart-card">
-                <h3>En Çok İzlenen Türler</h3>
+                <h3>Most Watched Genres</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                         <Pie
@@ -132,22 +132,20 @@ const AdminStats: React.FC = () => {
             </section>
 
             <section className="chart-card">
-                <h3>En Çok Beğenilen Türler</h3>
-                { (
-                    <ResponsiveContainer width="100%" height={200}>
-                        <BarChart data={topLikedGenres}>
-                            <XAxis dataKey="name" tick={{ fill: 'var(--text-main)', fontSize: 12 }} />
-                            <YAxis tick={{ fill: 'var(--text-main)' }} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="likeCount" name="Beğeni" fill={COLORS[1]} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                ) }
+                <h3>Most Liked Genres</h3>
+                <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={topLikedGenres}>
+                        <XAxis dataKey="name" tick={{ fill: 'var(--text-main)', fontSize: 12 }} />
+                        <YAxis tick={{ fill: 'var(--text-main)' }} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="likeCount" name="Likes" fill={COLORS[1]} />
+                    </BarChart>
+                </ResponsiveContainer>
             </section>
 
             <section className="chart-card">
-                <h3>En Çok Ziyaret Edilen Türler</h3>
+                <h3>Most Visited Genres</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                         <Pie
@@ -170,27 +168,27 @@ const AdminStats: React.FC = () => {
                 </ResponsiveContainer>
             </section>
 
-            {/* Kullanıcılar Çubuk Grafikleri */}
+            {/* User Bar Charts */}
             <section className="chart-card">
-                <h3>En Aktif İzleyen Kullanıcılar</h3>
+                <h3>Most Active Watchers</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={topUsersByWatched}>
                         <XAxis dataKey="username" tick={{ fill: '#e0e0e0', fontSize: 12 }} />
                         <YAxis tick={{ fill: '#e0e0e0' }} />
                         <Tooltip />
-                        <Bar dataKey="watchedCount" fill={COLORS[3]} name="İzleme" />
+                        <Bar dataKey="watchedCount" fill={COLORS[3]} name="Watch Count" />
                     </BarChart>
                 </ResponsiveContainer>
             </section>
 
             <section className="chart-card">
-                <h3>En Aktif Beğenen Kullanıcılar</h3>
+                <h3>Most Active Likers</h3>
                 <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={topUsersByLiked}>
                         <XAxis dataKey="username" tick={{ fill: '#e0e0e0', fontSize: 12 }} />
                         <YAxis tick={{ fill: '#e0e0e0' }} />
                         <Tooltip />
-                        <Bar dataKey="likedCount" fill={COLORS[4]} name="Beğeni" />
+                        <Bar dataKey="likedCount" fill={COLORS[4]} name="Like Count" />
                     </BarChart>
                 </ResponsiveContainer>
             </section>
