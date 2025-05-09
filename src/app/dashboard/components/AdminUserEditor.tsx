@@ -30,14 +30,12 @@ const AdminUserEditor: React.FC = () => {
         setSelectedUser(null);
         setSearchRes([]);
         try {
-            searchUsersMovies(nameInput, SearchCategory.USERS)
-                .then((res) => {
-                    const userRes = res as { results: { users: PaginatedResponse<User> } };
-                    setSearchRes(userRes.results.users.content);
-                });
+            const res = await searchUsersMovies(nameInput, SearchCategory.USERS);
+            const userRes = res as { results: { users: PaginatedResponse<User> } };
+            setSearchRes(userRes.results.users.content);
             toast.success('Data fetched from source');
         } catch (e) {
-            alert((e as Error).message);
+            toast.error((e as Error).message);
         } finally {
             setLoading(false);
         }
@@ -64,12 +62,11 @@ const AdminUserEditor: React.FC = () => {
             setSaving(true);
             try {
                 await adminUpdateUserByUuid(editedUser.uuid, editedUser);
-                console.log("user new: ", editedUser);
                 toast.success('User updated successfully');
                 setEditedUser(null);
                 setSelectedUser(null);
                 fetchUser();
-            } catch (e) {
+            } catch {
                 toast.error('Error updating user');
             } finally {
                 setSaving(false);
@@ -85,7 +82,7 @@ const AdminUserEditor: React.FC = () => {
                 setEditedUser(null);
                 setSelectedUser(null);
                 fetchUser();
-            } catch (e) {
+            } catch {
                 toast.error('Error deleting user');
             }
         }
@@ -116,19 +113,12 @@ const AdminUserEditor: React.FC = () => {
             </div>
 
             {searchRes.length > 0 && (
-                <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                <ul>
                     {searchRes.map((user) => (
                         <li
                             key={user.uuid}
+                            className={selectedUser?.uuid === user.uuid ? 'selected' : ''}
                             onClick={() => handleUserSelect(user)}
-                            style={{
-                                padding: '10px',
-                                border: '1px solid #ccc',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                backgroundColor:
-                                    selectedUser?.uuid === user.uuid ? '#a0c4ff' : 'transparent',
-                            }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <img
@@ -157,11 +147,21 @@ const AdminUserEditor: React.FC = () => {
             )}
 
             {selectedUser && !editedUser && (
-                <div style={{ marginTop: '20px', padding: '10px', border: '1px solid #ccc' }}>
-                    <h3>{selectedUser.firstName} {selectedUser.lastName}</h3>
-                    <p><strong>Username:</strong> {selectedUser.username}</p>
-                    <p><strong>Biography:</strong> {selectedUser.biography || 'No biography available'}</p>
-                    <p><strong>Last Online:</strong> {new Date(selectedUser.lastOnline).toLocaleString()}</p>
+                <div className="user-info">
+                    <h3>
+                        {selectedUser.firstName} {selectedUser.lastName}
+                    </h3>
+                    <p>
+                        <strong>Username:</strong> {selectedUser.username}
+                    </p>
+                    <p>
+                        <strong>Biography:</strong>{' '}
+                        {selectedUser.biography || 'No biography available'}
+                    </p>
+                    <p>
+                        <strong>Last Online:</strong>{' '}
+                        {new Date(selectedUser.lastOnline).toLocaleString()}
+                    </p>
                     <img
                         src={selectedUser.profilePicture}
                         alt={selectedUser.username}
@@ -175,102 +175,92 @@ const AdminUserEditor: React.FC = () => {
                     <button onClick={() => setEditedUser({ ...selectedUser })}>
                         Edit User
                     </button>
-                    <button onClick={handleDeleteConfirm} style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white' }}>
+                    <button
+                        onClick={handleDeleteConfirm}
+                        style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white' }}
+                    >
                         Delete User
                     </button>
                 </div>
             )}
 
             {editedUser && (
-                <div style={{ marginTop: '20px', padding: '10px', border: '1px solid #ccc' }}>
-                    <h3>Edit User: {editedUser.firstName} {editedUser.lastName}</h3>
+                <div className="edit-user">
+                    <h3>
+                        Edit User: {editedUser.firstName} {editedUser.lastName}
+                    </h3>
 
-                    <div>
-                        <label>Username: </label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={editedUser.username}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                    <label>Username:</label>
+                    <input
+                        type="text"
+                        name="username"
+                        value={editedUser.username}
+                        onChange={handleInputChange}
+                    />
 
-                    <div>
-                        <label>First Name: </label>
-                        <input
-                            type="text"
-                            name="firstName"
-                            value={editedUser.firstName}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                    <label>First Name:</label>
+                    <input
+                        type="text"
+                        name="firstName"
+                        value={editedUser.firstName}
+                        onChange={handleInputChange}
+                    />
 
-                    <div>
-                        <label>Last Name: </label>
-                        <input
-                            type="text"
-                            name="lastName"
-                            value={editedUser.lastName}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                    <label>Last Name:</label>
+                    <input
+                        type="text"
+                        name="lastName"
+                        value={editedUser.lastName}
+                        onChange={handleInputChange}
+                    />
 
-                    <div>
-                        <label>Biography: </label>
-                        <textarea
-                            name="biography"
-                            value={editedUser.biography || ''}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                    <label>Biography:</label>
+                    <textarea
+                        name="biography"
+                        value={editedUser.biography || ''}
+                        onChange={handleInputChange}
+                    />
 
-                    <div>
-                        <label>Role: </label>
-                        <input
-                            type="text"
-                            name="role"
-                            value={editedUser.role || ''}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                    <label>Role:</label>
+                    <input
+                        type="text"
+                        name="role"
+                        value={editedUser.role || ''}
+                        onChange={handleInputChange}
+                    />
 
-                    <div>
-                        <label>Profile Picture (Enter URL): </label>
-                        <input
-                            type="text"
-                            placeholder="Enter image URL"
-                            value={editedUser.profilePicture || ''}
-                            onChange={handleProfilePictureUrlChange}
-                        />
-                    </div>
+                    <label>Profile Picture (URL):</label>
+                    <input
+                        type="text"
+                        placeholder="Enter image URL"
+                        value={editedUser.profilePicture || ''}
+                        onChange={handleProfilePictureUrlChange}
+                    />
 
-                    <div>
+                    <div className="actions">
                         <button onClick={handleSaveChanges} disabled={saving}>
                             {saving ? 'Saving…' : 'Save Changes'}
                         </button>
-                        <br />
-                        <button onClick={() => setEditedUser(null)}>Cancel</button>
+                        <button className="cancel" onClick={() => setEditedUser(null)}>
+                            Cancel
+                        </button>
                     </div>
 
-                    <div>
-                        <button
-                            onClick={handleDeleteConfirm}
-                            style={{ marginTop: '10px', backgroundColor: 'red', color: 'white' }}
-                        >
+                    <div className="delete-confirm">
+                        <button className="confirm" onClick={handleDeleteConfirm}>
                             Delete User
                         </button>
                     </div>
 
                     {showDeleteConfirm && (
-                        <div style={{ marginTop: '10px', color: 'red' }}>
+                        <div className="delete-confirm">
                             <p>Are you sure you want to delete this user?</p>
-                            <button
-                                onClick={handleDeleteUser}
-                                style={{ marginRight: '10px', backgroundColor: 'red', color: 'white' }}
-                            >
+                            <button className="confirm" onClick={handleDeleteUser}>
                                 Yes, Delete
                             </button>
-                            <button onClick={handleCancelDelete}>Cancel</button>
+                            <button className="cancel" onClick={handleCancelDelete}>
+                                Cancel
+                            </button>
                         </div>
                     )}
                 </div>
