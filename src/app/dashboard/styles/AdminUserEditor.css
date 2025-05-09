@@ -220,3 +220,14 @@
         width: 100%;
     }
 }
+/* AdminUserEditor.css */
+.admin-user-editor .edit-user select {
+    width: 100%;
+    padding: 0.6rem;
+    background: #2a2a2a;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font: inherit;
+    margin-top: 0.25rem;
+}

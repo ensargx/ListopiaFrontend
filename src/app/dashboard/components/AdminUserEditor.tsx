@@ -47,7 +47,9 @@ const AdminUserEditor: React.FC = () => {
     };
 
     const handleInputChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >
     ) => {
         if (editedUser) {
             setEditedUser({
@@ -222,12 +224,15 @@ const AdminUserEditor: React.FC = () => {
                     />
 
                     <label>Role:</label>
-                    <input
-                        type="text"
+                    <select
                         name="role"
-                        value={editedUser.role || ''}
+                        value={editedUser.role || 'USER'}
                         onChange={handleInputChange}
-                    />
+                    >
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="MODERATOR">MODERATOR</option>
+                    </select>
 
                     <label>Profile Picture (URL):</label>
                     <input
