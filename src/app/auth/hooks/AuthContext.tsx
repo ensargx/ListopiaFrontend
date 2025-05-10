@@ -3,8 +3,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@/types/user";
 import { getUserFromStorage, saveUserToStorage, clearUserFromStorage } from "../../../lib/auth";
-import {fetchFriendsByUUID, fetchSentFriendRequests, fetchReceivedFriendRequests, fetchUserMe} from "@/api/userapi";
+import {fetchFriendsByUUID, fetchSentFriendRequests, fetchReceivedFriendRequests} from "@/api/userapi";
 import { PaginatedResponse } from "@/types/friends";
+import { BASE_URL } from "@/api/apiClient";
 
 interface AuthContextType {
     user: User | null;
@@ -21,6 +22,17 @@ interface AuthContextType {
 
 interface AuthProviderProps {
     children: ReactNode;
+}
+
+async function getMe(): Promise<User> { 
+    const res = await fetch(`${BASE_URL}api/v1/user/me`, { 
+        method: "GET", credentials: "include" 
+    }); 
+    if (!res.ok) { 
+        const errorText = await res.text(); 
+        return Promise.reject(errorText) 
+    } 
+    return res.json() 
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,12 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 
     useEffect(() => {
-         fetchUserMe().then((res)=>{
-             if(res){
-                 setUser(res)
-             }
-         })
-
+        getMe().then(setUser)
     }, []);
 
     // 2) user değiştiğinde uuid’yi ayarla
