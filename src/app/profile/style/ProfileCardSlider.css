@@ -22,7 +22,7 @@
 /* Individual cards */
 .profile-card-slider .profile-card {
     flex: 0 0 auto;
-    width: 60px;
+    width: 80px;
     margin: 0 1.5rem;
     transition: transform 0.3s;
     position: relative;
@@ -81,7 +81,7 @@
 }
 
 /* Tablets 768–991px */
-@media (max-width: 1024px) and (min-width: 768px) {
+@media (max-width: 1024px) and (min-width: 973px) {
     .profile-card-slider .profile-card {
         width: 200px;
         margin: 0 1rem;
@@ -93,39 +93,27 @@
     }
 }
 
-/* Mobile ≤767px */
-@media (max-width: 767px) {
+
+
+@media (max-width: 550px) {
     .profile-card-slider .profile-card {
-        width: 140px;
-        margin: 0 0.8rem;
+        width: 60px;
+        margin: 0 1rem;
     }
     .profile-card-slider .profile-nav {
-        width: 34px;
-        height: 34px;
-        font-size: 1.2rem;
-    }
-    .profile-card-slider .profile-nav{
-        display: none;
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
     }
 }
-
-/* Small phones ≤480px */
-@media (max-width: 540px) {
+@media (max-width: 550px) {
     .profile-card-slider .profile-card {
-        width: 120px;
-        margin: 0 0.5rem;
+        width: 60px;
+        margin: 0 1rem;
     }
-    .profile-card-slider .profile-nav{
-        display: none;
-    }
-}
-
-@media (max-width: 432px) {
-    .profile-card-slider .profile-card {
-        width: 100px;
-        margin: 0 0.5rem;
-    }
-    .profile-card-slider .profile-nav{
-        display: none;
+    .profile-card-slider .profile-nav {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
     }
 }
